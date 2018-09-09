@@ -5,7 +5,7 @@ C:\me\Idris\colDivSeq>idris ProofColDivSeqBase.idr -o run
 
 C:\me\Idris\colDivSeq>run
 [Just [1, -1, 4], Just [1, 2, -3, 1, 1, 5, 4], Nothing, Just [1, 0, -1, 2, 3, 4], Just [4, -3, -1, 1, 2, 1, 4, 1, 3, 1, 2, 3, 4], Nothing, Just [4, -2, -2, 3, 1, 1, 5, 4], Nothing, Just [2, -3, 0, 1, 2, 2, 4, 1, 1, 2, 3, 4], Just [2, 0, -2, 2, 1, 3, 1, 2, 3, 4], Just [2, -1, -1, 1, 1, 5, 4], Just [2, -2, 1, 1, 2, 3, 4]]
-šššª‘S‚Ä‚ÌŠ„”—ñ‚ª—LŒÀ€‚Å‚ ‚éššš
+â˜…â˜…â˜…â†‘ã€€allDivSeq 0 2ã€€ã®å…¨ã¦ã®å‰²æ•°åˆ—ãŒæœ‰é™é …ã§ã‚ã‚‹â˜…â˜…â˜…
 C:\me\Idris\colDivSeq>
 
 
