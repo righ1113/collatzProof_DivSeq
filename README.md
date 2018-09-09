@@ -1,0 +1,2 @@
+# collatzProof_DivSeq
+割数列を用いたコラッツ予想の証明
