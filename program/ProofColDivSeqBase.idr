@@ -5,6 +5,7 @@ module ProofColDivSeqBase
 -- %language ElabReflection
 %access export
 
+
 -- mod2
 public export
 data Parity : Nat -> Type where
@@ -23,10 +24,10 @@ parity (S (S k)) with (parity k)
 
 -- mod3
 public export
-data Odd3 : Nat -> Type where
-  ThreeZero : Odd3 (n + n + n)
-  ThreeOne  : Odd3 (S (n + n + n))
-  ThreeTwo  : Odd3 (S (S (n + n + n)))
+data Mod3 : Nat -> Type where
+  ThreeZero : Mod3 (n + n + n)
+  ThreeOne  : Mod3 (S (n + n + n))
+  ThreeTwo  : Mod3 (S (S (n + n + n)))
 helpThreeZero : (j:Nat) -> (plus (plus (S j) (S j)) (S j)) = S (S (S (plus (plus j j) j)))
 helpThreeZero j = rewrite sym $ plusSuccRightSucc j j in
                   rewrite sym $ plusSuccRightSucc (plus j j) j in Refl
@@ -34,7 +35,7 @@ helpThreeOne : (j:Nat) -> S (plus (plus (S j) (S j)) (S j)) = S (S (S (S (plus (
 helpThreeOne j = cong {f=S} $ helpThreeZero j
 helpThreeTwo : (j:Nat) -> S (S (plus (plus (S j) (S j)) (S j))) = S (S (S (S (S (plus (plus j j) j)))))
 helpThreeTwo j = cong {f=S} $ helpThreeOne j
-mod3 : (n:Nat) -> Odd3 n
+mod3 : (n:Nat) -> Mod3 n
 mod3 Z         = ThreeZero {n=Z}
 mod3 (S Z)     = ThreeOne {n=Z}
 mod3 (S (S Z)) = ThreeTwo {n=Z}
@@ -45,14 +46,16 @@ mod3 (S (S (S k))) with (mod3 k)
     rewrite sym $ helpThreeOne j in ThreeOne {n=S j}
   mod3 (S (S (S (S (S (j + j + j)))))) | ThreeTwo =
     rewrite sym $ helpThreeTwo j in ThreeTwo {n=S j}
+-- ---------------------------------
 
 
+-- allDivSeqの実装に必要な関数
 dsp : List Integer -> Maybe (List Integer) -> Maybe (List Integer)
 dsp xs                 Nothing          = Nothing
 dsp xs                 (Just [])        = Nothing
 dsp []                 (Just (y :: ys)) = Nothing
 dsp (x :: [])          (Just (y :: ys)) = Nothing
-dsp (x1 :: (x2 :: xs)) (Just (y :: ys)) = Just (x1::(x2+y)::ys)
+dsp (x1 :: (x2 :: xs)) (Just (y :: ys)) = Just (x1 :: (x2+y) :: ys)
 
 dsp2 : List Integer -> Maybe (List Integer) -> Maybe (List Integer)
 dsp2 xs        Nothing          = Nothing
@@ -85,57 +88,74 @@ divSeq' coll acc = let even = \x=> mod x 2 == 0 in
 partial
 divSeq : Integer -> List Integer
 divSeq x = divSeq' (col x) []
+-- ---------------------------------
 
+
+-- allDivSeqの実装
 mutual
   partial
   allDivSeq : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeq x Z = if x `mod` 2 == 0 then [Nothing]
                     else [Just (divSeq $ toIntegerNat x)]
-  allDivSeq x lv = allDivSeqA x lv
+                      ++ [Just (divSeq $ toIntegerNat ((x+7)*3 `div` 4))]
+                      ++ [Just (divSeq $ toIntegerNat (x*6+3))]
+                      ++ [Just (divSeq $ toIntegerNat (x*3+6))]
+                      ++ [Just (divSeq $ toIntegerNat ((x+1)*3 `div` 2))]
+                      ++ [Just (divSeq $ toIntegerNat (x*12+9))]
+                      ++ [Just (divSeq $ toIntegerNat ((x+3)*3 `div` 8))]
+                      ++ [Just (divSeq $ toIntegerNat ((x `minus` 21) `div` 64))]
+  allDivSeq x (S lv) = allDivSeq x lv
+                ++ (allDivSeqA x lv
                 ++ allDivSeqB x lv
                 ++ allDivSeqC x lv
                 ++ allDivSeqD x lv
                 ++ allDivSeqE x lv
                 ++ allDivSeqF x lv
-                ++ allDivSeqG x lv
+                ++ allDivSeqG x lv)
   partial
   allDivSeqA : Nat -> Nat -> List (Maybe (List Integer))
-  allDivSeqA x lv =
+  allDivSeqA x Z =
     if (x+7) `mod` 4 == 0
-      then map ([6,-4] `dsp`) $ allDivSeq ((x+7)*3 `div` 4) (lv `minus` 1)
+      then [[6,-4] `dsp` (Just (divSeq $ toIntegerNat ((x+7)*3 `div` 4)))]
+      else []
+  allDivSeqA x (S lv) =
+    if (x+7) `mod` 4 == 0
+      then map ([6,-4] `dsp`) $ allDivSeq ((x+7)*3 `div` 4) (S lv)
       else []
   partial
   allDivSeqB : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqB x lv =
-      map ([1,-2] `dsp`) $ allDivSeq (x*6+3) (lv `minus` 1)
+      map ([1,-2] `dsp`) $ allDivSeq (x*6+3) lv
   partial
   allDivSeqC : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqC x lv =
-      map ([4,-4] `dsp`) $ allDivSeq (x*3+6) (lv `minus` 1)
+      map ([4,-4] `dsp`) $ allDivSeq (x*3+6) lv
   partial
   allDivSeqD : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqD x lv =
     if (x+1) `mod` 2 == 0
-      then map ([3,-2] `dsp`) $ allDivSeq ((x+1)*3 `div` 2) (lv `minus` 1)
+      then map ([3,-2] `dsp`) $ allDivSeq ((x+1)*3 `div` 2) lv
       else []
   partial
   allDivSeqE : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqE x lv =
-      map ([2,-4] `dsp`) $ allDivSeq (x*12+9) (lv `minus` 1)
+      map ([2,-4] `dsp`) $ allDivSeq (x*12+9) lv
   partial
   allDivSeqF : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqF x lv =
     if (x+3) `mod` 8 == 0
-      then map ([5,-2] `dsp`) $ allDivSeq ((x+3)*3 `div` 8) (lv `minus` 1)
+      then map ([5,-2] `dsp`) $ allDivSeq ((x+3)*3 `div` 8) lv
       else []
   partial
   allDivSeqG : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqG x lv =
     if (x `minus` 21) `mod` 64 == 0 && x > 21
-      then map ([6] `dsp2`) $ allDivSeq ((x `minus` 21) `div` 64) (lv `minus` 1)
+      then map ([6] `dsp2`) $ allDivSeq ((x `minus` 21) `div` 64) lv
       else []
+-- ---------------------------------
 
 
+-- 無限降下法
 limited : Maybe (List Integer) -> Bool
 limited Nothing          = True
 limited (Just [])        = True
@@ -145,21 +165,19 @@ unLimited = not . limited
 
 partial
 P : Nat -> Nat -> Type
-P n lv = any unLimited $ allDivSeq (n+n+n) lv = True
+P n lv = any unLimited $ allDivSeq n lv = True
 
 -- 無限降下法（の変形）　Isabelleで証明した
 postulate infiniteDescent : ((n:Nat) -> P (S n) 2 -> (m ** (LTE (S m) (S n), P m 2)))
             -> any unLimited $ allDivSeq Z 2 = False
-              -> any unLimited $ allDivSeq (n+n+n) 2 = False
+              -> any unLimited $ allDivSeq n 2 = False
 
 -- mainの結果より、保証される
-postulate base0 : any unLimited $ allDivSeq Z 2 = False
+postulate base0 : any unLimited $ allDivSeq 0 2 = False
 
--- レベルを下げる関数
-partial
-lvDown : (n:Nat) -> (lv:Nat) -> P n lv -> P n (pred lv)
-lvDown n Z prf      = prf
-lvDown n (S lv) prf = lvDown n (S lv) prf
+-- ProofColDivSeqLvDown.idrでlvDown'を証明したからOK
+postulate lvDown : (n, lv:Nat) -> P n lv -> P n (pred lv)
+-- ---------------------------------
 
 
 
@@ -169,12 +187,8 @@ lvDown n (S lv) prf = lvDown n (S lv) prf
 
 
 
+
+-- allDivSeq 0 2が有限項である事を示すため、mainを使う（ビルドして）
 partial
 main : IO ()
 main = print $ allDivSeq 0 2
-
-
-
-
-
-

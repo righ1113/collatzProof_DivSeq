@@ -1,6 +1,7 @@
 module ProofColDivSeqMain
 
 import ProofColDivSeqBase
+import ProofColDivSeqLvDown
 import Sub01Apply18x3
 import Sub02Apply54x12
 
@@ -20,21 +21,29 @@ unifi n prf with (mod3 n)
   unifi (S (j + j + j))     prf | ThreeOne = ?rhs2
   unifi (S (S (j + j + j))) prf | ThreeTwo = ?rhs3
 
-allDivSeqInfFalse' : any unLimited (allDivSeq (n+n+n) 2) = False
+allDivSeqInfFalse' : any ProofColDivSeqBase.unLimited (allDivSeq (n+n+n) 2) = False
 allDivSeqInfFalse' = infiniteDescent unifi base0
 
+-- anyがFalseなら、全ての要素がFalseなので
+postulate unfold2 : (x, lv:Nat)
+  -> any ProofColDivSeqBase.unLimited (allDivSeq x lv
+                                                            ++ allDivSeqA x lv
+                                                            ++ allDivSeqB x lv
+                                                            ++ allDivSeqC x lv
+                                                            ++ allDivSeqD x lv
+                                                            ++ allDivSeqE x lv
+                                                            ++ allDivSeqF x lv
+                                                            ++ allDivSeqG x lv) = False
+    -> any ProofColDivSeqBase.unLimited (allDivSeq x lv) = False
+-- レベルを下げる関数2
 lvDown2 : (n:Nat) -> (lv:Nat)
-  -> any unLimited (allDivSeq (n+n+n) lv) = False
-    -> any unLimited (allDivSeq (n+n+n) (pred lv)) = False
-lvDown2 n Z prf = prf
-lvDown2 n (S k) prf = lvDown2 n (S k) prf
+  -> any ProofColDivSeqBase.unLimited (allDivSeq (n+n+n) lv) = False
+    -> any ProofColDivSeqBase.unLimited (allDivSeq (n+n+n) (pred lv)) = False
+lvDown2 n Z = \y => y
+lvDown2 n (S lv) = rewrite unfold (n+n+n) lv in \y => unfold2 (n+n+n) lv y
+
 
 -- 最終的な定理
 allDivSeqInfFalse : (n:Nat)
-  -> any unLimited (allDivSeq (n+n+n) 0) = False
+  -> any ProofColDivSeqBase.unLimited (allDivSeq (n+n+n) 0) = False
 allDivSeqInfFalse n = lvDown2 n 1 $ lvDown2 n 2 allDivSeqInfFalse'
-
-
-
-
-
