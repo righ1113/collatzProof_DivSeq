@@ -6,13 +6,12 @@ import ProofColDivSeqBase
 -- %language ElabReflection
 
 
--- イ 3(18x+4) --A[6,-4]->E[2,-4]--> 3(2x)
+-- 3(18x+4) --A[6,-4]->E[2,-4]--> 3(2x)
 postulate ae54x12To6x' :
   (l:Nat) -> P (S (S (plus (plus (plus (plus (plus l l) l) (plus (plus l l) l))
                               (S (plus (plus (plus l l) l) (plus (plus l l) l))))
                         (S (plus (plus (plus l l) l) (plus (plus l l) l)))))) 1
     -> P (plus l l) 3
-partial
 ae54x12To6x :
   (l:Nat) -> P (S (S (plus (plus (plus (plus (plus l l) l) (plus (plus l l) l))
                               (S (plus (plus (plus l l) l) (plus (plus l l) l))))
@@ -25,7 +24,6 @@ ae54x12To6x l prf =
                     prf in
     let prf3 = ae54x12To6x' l prf2 in lvDown (plus l l) 3 prf3
 export
-partial
 apply54x12 : P (S (S (plus (plus (plus (plus (plus l l) l) (plus (plus l l) l))
                             (S (plus (plus (plus l l) l) (plus (plus l l) l))))
                       (S (plus (plus (plus l l) l) (plus (plus l l) l)))))) 2

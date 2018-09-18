@@ -9,14 +9,12 @@ import ProofColDivSeqBase
 -- 3(6x+1) --B[1,-2]--> 3x
 postulate b18x3To3x' :
   (k:Nat) -> P (S (plus (plus (plus k k) (plus k k)) (plus k k))) 1 -> P k 2
-partial
 b18x3To3x :
   (k:Nat) -> P (S (plus (plus (plus k k) (plus k k)) (plus k k))) 2 -> P k 2
 b18x3To3x k prf =
   let prf2 = lvDown (S (plus (plus (plus k k) (plus k k)) (plus k k))) 2 prf in
     b18x3To3x' k prf2
 export
-partial
 apply18x3 : P (S (plus (plus (plus k k) (plus k k)) (plus k k))) 2
   -> (m : Nat **
       (LTE (S m) (S (plus (plus (plus k k) (plus k k)) (plus k k))), P m 2))
