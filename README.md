@@ -15,7 +15,7 @@
 # 割数列とは
 （5chより）  
 # 証明
-[Wiki](/wiki)をみてね  
+[Wiki](https://github.com/righ1113/collatzProof_DivSeq/wiki)をみてね  
   
   
   
