@@ -63,47 +63,59 @@ dsp2 xs        (Just [])        = Nothing
 dsp2 []        (Just (y :: ys)) = Nothing
 dsp2 (x :: xs) (Just (y :: ys)) = Just ((x+y)::ys)
 
-partial
-takeWhileSt : (a -> Bool) -> Stream a -> List a
-takeWhileSt p (x :: xs) = if p x then x :: takeWhileSt p xs else []
-partial
-collatz : Integer -> Integer
-collatz 0 = 0
-collatz 1 = 1
-collatz n = if n `mod` 2 == 0 then n `div` 2 else 3 * n + 1
-partial
-col : Integer -> List Integer
-col n = takeWhileSt (>1) (iterate collatz n) ++ [1]
-myTail : List Integer -> List Integer -> List Integer
-myTail xs []        = xs
-myTail xs (x :: ys) = ys
-partial
-divSeq' : List Integer -> List Integer -> List Integer
-divSeq' [1] acc = acc
-divSeq' coll acc = let even = \x=> mod x 2 == 0 in
-                   let coll1 = toIntegerNat $ length $ takeWhile even $ myTail [] coll in
-                   let coll2 = dropWhile even $ myTail [] coll in
-  divSeq' coll2 (acc ++ [coll1])
+takeWhileSt : (a -> Bool) -> Nat -> Stream a -> List a
+takeWhileSt p Z       (x :: xs) = []
+takeWhileSt p (S cnt) (x :: xs) = if p x then x :: takeWhileSt p cnt xs else []
+
+divHelp : Nat -> Nat -> Nat -> Nat
+divHelp Z     Z     c = 1
+divHelp Z     (S y) c = 0
+divHelp (S x) Z     c = 1 + divHelp x c c
+divHelp (S x) (S y) c = divHelp x y c
+myDiv : Nat -> Nat -> Nat
+myDiv _     Z     = 0
+myDiv Z     (S y) = 0
+myDiv (S x) (S y) = divHelp (S x) (S y) y
+myMod : Nat -> Nat -> Nat
+myMod x y = x `minus` (y * (myDiv x y))
+
+collatz : Nat -> Nat
+collatz Z = Z
+collatz (S Z) = (S Z)
+collatz (S (S k)) = let n = (S (S k)) in
+  if (n `myMod` 2) == 0 then n `myDiv` 2 else 3 * n + 1
+
+col : Nat -> List Nat
+col n = takeWhileSt (>1) 150 (iterate collatz n) ++ [1]
+
+divSeq' : List Nat -> Nat -> List Nat -> List Nat
+divSeq' _       Z       acc = acc
+divSeq' []      (S cnt) acc = acc
+divSeq' [S Z]   (S cnt) acc = acc
+divSeq' (x::xs) (S cnt) acc = let even = \x=> (myMod x 2) == 0 in
+                              let coll1 = length $ takeWhile even xs in
+                              let coll2 = dropWhile even xs in
+  divSeq' coll2 cnt (acc ++ [coll1])
+
 -- odd only!
-partial
-divSeq : Integer -> List Integer
-divSeq x = divSeq' (col x) []
+divSeq : Nat -> List Integer
+divSeq x = let xs = col x in
+  map toIntegerNat $ divSeq' xs (length xs) []
 -- ---------------------------------
 
 
 -- allDivSeqの実装
 mutual
-  partial
   allDivSeq : Nat -> Nat -> List (Maybe (List Integer))
-  allDivSeq x Z = if x `mod` 2 == 0 then [Nothing]
-                    else [Just (divSeq $ toIntegerNat x)]
-                      ++ [Just (divSeq $ toIntegerNat ((x+7)*3 `div` 4))]
-                      ++ [Just (divSeq $ toIntegerNat (x*6+3))]
-                      ++ [Just (divSeq $ toIntegerNat (x*3+6))]
-                      ++ [Just (divSeq $ toIntegerNat ((x+1)*3 `div` 2))]
-                      ++ [Just (divSeq $ toIntegerNat (x*12+9))]
-                      ++ [Just (divSeq $ toIntegerNat ((x+3)*3 `div` 8))]
-                      ++ [Just (divSeq $ toIntegerNat ((x `minus` 21) `div` 64))]
+  allDivSeq x Z = if (x `myMod` 2) == 0 then [Nothing]
+                    else [Just (divSeq x)]
+                      ++ [Just (divSeq ((x+7)*3 `myDiv` 4))]
+                      ++ [Just (divSeq (x*6+3))]
+                      ++ [Just (divSeq (x*3+6))]
+                      ++ [Just (divSeq ((x+1)*3 `myDiv` 2))]
+                      ++ [Just (divSeq (x*12+9))]
+                      ++ [Just (divSeq ((x+3)*3 `myDiv` 8))]
+                      ++ [Just (divSeq ((x `minus` 21) `myDiv` 64))]
   allDivSeq x (S lv) = allDivSeq x lv
                 ++ (allDivSeqA x lv
                 ++ allDivSeqB x lv
@@ -112,45 +124,38 @@ mutual
                 ++ allDivSeqE x lv
                 ++ allDivSeqF x lv
                 ++ allDivSeqG x lv)
-  partial
   allDivSeqA : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqA x Z =
-    if (x+7) `mod` 4 == 0
-      then [[6,-4] `dsp` (Just (divSeq $ toIntegerNat ((x+7)*3 `div` 4)))]
+    if ((x+7) `myMod` 4) == 0
+      then [[6,-4] `dsp` (Just (divSeq ((x+7)*3 `myDiv` 4)))]
       else []
   allDivSeqA x (S lv) =
-    if (x+7) `mod` 4 == 0
-      then map ([6,-4] `dsp`) $ allDivSeq ((x+7)*3 `div` 4) (S lv)
+    if ((x+7) `myMod` 4) == 0
+      then map ([6,-4] `dsp`) $ allDivSeq ((x+7)*3 `myDiv` 4) (S lv)
       else []
-  partial
   allDivSeqB : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqB x lv =
       map ([1,-2] `dsp`) $ allDivSeq (x*6+3) lv
-  partial
   allDivSeqC : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqC x lv =
       map ([4,-4] `dsp`) $ allDivSeq (x*3+6) lv
-  partial
   allDivSeqD : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqD x lv =
-    if (x+1) `mod` 2 == 0
-      then map ([3,-2] `dsp`) $ allDivSeq ((x+1)*3 `div` 2) lv
+    if ((x+1) `myMod` 2) == 0
+      then map ([3,-2] `dsp`) $ allDivSeq ((x+1)*3 `myDiv` 2) lv
       else []
-  partial
   allDivSeqE : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqE x lv =
       map ([2,-4] `dsp`) $ allDivSeq (x*12+9) lv
-  partial
   allDivSeqF : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqF x lv =
-    if (x+3) `mod` 8 == 0
-      then map ([5,-2] `dsp`) $ allDivSeq ((x+3)*3 `div` 8) lv
+    if ((x+3) `myMod` 8) == 0
+      then map ([5,-2] `dsp`) $ allDivSeq ((x+3)*3 `myDiv` 8) lv
       else []
-  partial
   allDivSeqG : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqG x lv =
-    if (x `minus` 21) `mod` 64 == 0 && x > 21
-      then map ([6] `dsp2`) $ allDivSeq ((x `minus` 21) `div` 64) lv
+    if ((x `minus` 21) `myMod` 64) == 0 && x > 21
+      then map ([6] `dsp2`) $ allDivSeq ((x `minus` 21) `myDiv` 64) lv
       else []
 -- ---------------------------------
 
@@ -163,7 +168,6 @@ limited (Just (x :: xs)) = let l = last (x::xs) in True
 unLimited : Maybe (List Integer) -> Bool
 unLimited = not . limited
 
-partial
 P : Nat -> Nat -> Type
 P n lv = any unLimited $ allDivSeq n lv = True
 
@@ -174,6 +178,16 @@ postulate infiniteDescent : ((n:Nat) -> P (S n) 2 -> (m ** (LTE (S m) (S n), P m
 
 -- mainの結果より、保証される
 postulate base0 : any unLimited $ allDivSeq 0 2 = False
+
+unfold : (x, lv:Nat) -> allDivSeq x (S lv) = allDivSeq x lv
+                                          ++ allDivSeqA x lv
+                                          ++ allDivSeqB x lv
+                                          ++ allDivSeqC x lv
+                                          ++ allDivSeqD x lv
+                                          ++ allDivSeqE x lv
+                                          ++ allDivSeqF x lv
+                                          ++ allDivSeqG x lv
+unfold x lv = Refl
 
 -- ProofColDivSeqLvDown.idrでlvDown'を証明したからOK
 postulate lvDown : (n, lv:Nat) -> P n lv -> P n (pred lv)
@@ -189,6 +203,6 @@ postulate lvDown : (n, lv:Nat) -> P n lv -> P n (pred lv)
 
 
 -- allDivSeq 0 2が有限項である事を示すため、mainを使う（ビルドして）
-partial
 main : IO ()
 main = print $ allDivSeq 0 2
+

@@ -5,7 +5,7 @@ import ProofColDivSeqLvDown
 import Sub01Apply18x3
 import Sub02Apply54x12
 
-%default partial
+%default total
 -- %language ElabReflection
 
 
@@ -47,3 +47,7 @@ lvDown2 n (S lv) = rewrite unfold (n+n+n) lv in \y => unfold2 (n+n+n) lv y
 allDivSeqInfFalse : (n:Nat)
   -> any ProofColDivSeqBase.unLimited (allDivSeq (n+n+n) 0) = False
 allDivSeqInfFalse n = lvDown2 n 1 $ lvDown2 n 2 allDivSeqInfFalse'
+
+
+
+
