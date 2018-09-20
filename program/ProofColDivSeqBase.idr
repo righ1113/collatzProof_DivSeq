@@ -109,14 +109,14 @@ divSeq x = let xs = col x in
 mutual
   allDivSeq : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeq x Z = if (x `myMod` 2) == 0 then [Nothing]
-                    else [Just (divSeq x)]
-                      ++ [Just (divSeq ((x+7)*3 `myDiv` 4))]
-                      ++ [Just (divSeq (x*6+3))]
-                      ++ [Just (divSeq (x*3+6))]
-                      ++ [Just (divSeq ((x+1)*3 `myDiv` 2))]
-                      ++ [Just (divSeq (x*12+9))]
-                      ++ [Just (divSeq ((x+3)*3 `myDiv` 8))]
-                      ++ [Just (divSeq ((x `minus` 21) `myDiv` 64))]
+    else [Just (divSeq x)]
+      ++ (if ((x+7) `myMod` 4) == 0 && (((x+7) `myMod` 4) `myMod` 2) == 1 then [[6,-4] `dsp` (Just (divSeq ((x+7)*3 `myDiv` 4)))] else [])
+      ++ (if ((x*6+3) `myMod` 2) == 1 then [[1,-2] `dsp` (Just (divSeq (x*6+3)))] else [])
+      ++ (if ((x*3+6) `myMod` 2) == 1 then [[4,-4] `dsp` (Just (divSeq (x*3+6)))] else [])
+      ++ (if ((x+1) `myMod` 2) == 0 && (((x+1) `myMod` 2) `myMod` 2) == 1 then [[3,-2] `dsp` (Just (divSeq ((x+1)*3 `myDiv` 2)))] else [])
+      ++ (if ((x*12+9) `myMod` 2) == 1 then [[2,-4] `dsp` (Just (divSeq (x*12+9)))] else [])
+      ++ (if ((x+3) `myMod` 8) == 0 && (((x+3) `myMod` 8) `myMod` 2) == 1 then [[5,-2] `dsp` (Just (divSeq ((x+3)*3 `myDiv` 8)))] else [])
+      ++ (if ((x `minus` 21) `myMod` 64) == 0 && x > 21 && (((x `minus` 21) `myMod` 64) `myMod` 2) == 1 then [[6] `dsp2` (Just (divSeq ((x `minus` 21) `myDiv` 64)))] else [])
   allDivSeq x (S lv) = allDivSeq x lv
                     ++ allDivSeqA x lv
                     ++ allDivSeqB x lv
@@ -125,51 +125,64 @@ mutual
                     ++ allDivSeqE x lv
                     ++ allDivSeqF x lv
                     ++ allDivSeqG x lv
+
   allDivSeqA : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqA x Z =
-    if ((x+7) `myMod` 4) == 0
+    if ((x+7) `myMod` 4) == 0 && (((x+7) `myMod` 4) `myMod` 2) == 1
       then [[6,-4] `dsp` (Just (divSeq ((x+7)*3 `myDiv` 4)))]
       else []
   allDivSeqA x (S lv) =
     if ((x+7) `myMod` 4) == 0
       then map ([6,-4] `dsp`) $ allDivSeq ((x+7)*3 `myDiv` 4) (S lv)
       else []
+
   allDivSeqB : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqB x Z =
-      [[1,-2] `dsp` (Just (divSeq (x*6+3)))]
+    if ((x*6+3) `myMod` 2) == 1
+      then [[1,-2] `dsp` (Just (divSeq (x*6+3)))]
+      else []
   allDivSeqB x (S lv) =
       map ([1,-2] `dsp`) $ allDivSeq (x*6+3) (S lv)
+
   allDivSeqC : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqC x Z =
-      [[4,-4] `dsp` (Just (divSeq (x*3+6)))]
+    if ((x*3+6) `myMod` 2) == 1
+      then [[4,-4] `dsp` (Just (divSeq (x*3+6)))]
+      else []
   allDivSeqC x (S lv) =
       map ([4,-4] `dsp`) $ allDivSeq (x*3+6) (S lv)
+
   allDivSeqD : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqD x Z =
-    if ((x+1) `myMod` 2) == 0
+    if ((x+1) `myMod` 2) == 0 && (((x+1) `myMod` 2) `myMod` 2) == 1
       then [[3,-2] `dsp` (Just (divSeq ((x+1)*3 `myDiv` 2)))]
       else []
   allDivSeqD x (S lv) =
     if ((x+1) `myMod` 2) == 0
       then map ([3,-2] `dsp`) $ allDivSeq ((x+1)*3 `myDiv` 2) (S lv)
       else []
+
   allDivSeqE : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqE x Z =
-      [[2,-4] `dsp` (Just (divSeq (x*12+9)))]
+    if ((x*12+9) `myMod` 2) == 1
+      then [[2,-4] `dsp` (Just (divSeq (x*12+9)))]
+      else []
   allDivSeqE x (S lv) =
       map ([2,-4] `dsp`) $ allDivSeq (x*12+9) (S lv)
+
   allDivSeqF : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqF x Z =
-    if ((x+3) `myMod` 8) == 0
+    if ((x+3) `myMod` 8) == 0 && (((x+3) `myMod` 8) `myMod` 2) == 1
       then [[5,-2] `dsp` (Just (divSeq ((x+3)*3 `myDiv` 8)))]
       else []
   allDivSeqF x (S lv) =
     if ((x+3) `myMod` 8) == 0
       then map ([5,-2] `dsp`) $ allDivSeq ((x+3)*3 `myDiv` 8) (S lv)
       else []
+
   allDivSeqG : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqG x Z =
-    if ((x `minus` 21) `myMod` 64) == 0 && x > 21
+    if ((x `minus` 21) `myMod` 64) == 0 && x > 21 && (((x `minus` 21) `myMod` 64) `myMod` 2) == 1
       then [[6] `dsp2` (Just (divSeq ((x `minus` 21) `myDiv` 64)))]
       else []
   allDivSeqG x (S lv) =
@@ -223,5 +236,5 @@ postulate lvDown : (n, lv:Nat) -> P n lv -> P n (pred lv)
 
 -- allDivSeq 0 2が有限項である事を示すため、mainを使う（ビルドして）
 main : IO ()
-main = print $ allDivSeq 0 2
+main = traverse_ (putStrLn . show) $ allDivSeq 0 2
 
