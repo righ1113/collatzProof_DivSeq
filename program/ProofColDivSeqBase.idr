@@ -201,7 +201,7 @@ unLimited : Maybe (List Integer) -> Bool
 unLimited = not . limited
 
 P : Nat -> Nat -> Type
-P n lv = any unLimited $ allDivSeq n lv = True
+P n lv = any unLimited $ allDivSeq (n+n+n) lv = True
 
 -- 無限降下法（の変形）　Isabelleで証明した
 postulate infiniteDescent : ((n:Nat) -> P (S n) 2 -> (m ** (LTE (S m) (S n), P m 2)))
