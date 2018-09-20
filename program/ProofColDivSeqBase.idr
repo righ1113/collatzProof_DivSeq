@@ -77,7 +77,8 @@ myDiv _     Z     = 0
 myDiv Z     (S y) = 0
 myDiv (S x) (S y) = divHelp (S x) (S y) y
 myMod : Nat -> Nat -> Nat
-myMod x y = x `minus` (y * (myDiv x y))
+myMod x y =
+  if x < y then x else x `minus` (y * (myDiv x y))
 
 collatz : Nat -> Nat
 collatz Z = Z
@@ -117,13 +118,13 @@ mutual
                       ++ [Just (divSeq ((x+3)*3 `myDiv` 8))]
                       ++ [Just (divSeq ((x `minus` 21) `myDiv` 64))]
   allDivSeq x (S lv) = allDivSeq x lv
-                ++ (allDivSeqA x lv
-                ++ allDivSeqB x lv
-                ++ allDivSeqC x lv
-                ++ allDivSeqD x lv
-                ++ allDivSeqE x lv
-                ++ allDivSeqF x lv
-                ++ allDivSeqG x lv)
+                    ++ allDivSeqA x lv
+                    ++ allDivSeqB x lv
+                    ++ allDivSeqC x lv
+                    ++ allDivSeqD x lv
+                    ++ allDivSeqE x lv
+                    ++ allDivSeqF x lv
+                    ++ allDivSeqG x lv
   allDivSeqA : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqA x Z =
     if ((x+7) `myMod` 4) == 0
@@ -134,28 +135,46 @@ mutual
       then map ([6,-4] `dsp`) $ allDivSeq ((x+7)*3 `myDiv` 4) (S lv)
       else []
   allDivSeqB : Nat -> Nat -> List (Maybe (List Integer))
-  allDivSeqB x lv =
-      map ([1,-2] `dsp`) $ allDivSeq (x*6+3) lv
+  allDivSeqB x Z =
+      [[1,-2] `dsp` (Just (divSeq (x*6+3)))]
+  allDivSeqB x (S lv) =
+      map ([1,-2] `dsp`) $ allDivSeq (x*6+3) (S lv)
   allDivSeqC : Nat -> Nat -> List (Maybe (List Integer))
-  allDivSeqC x lv =
-      map ([4,-4] `dsp`) $ allDivSeq (x*3+6) lv
+  allDivSeqC x Z =
+      [[4,-4] `dsp` (Just (divSeq (x*3+6)))]
+  allDivSeqC x (S lv) =
+      map ([4,-4] `dsp`) $ allDivSeq (x*3+6) (S lv)
   allDivSeqD : Nat -> Nat -> List (Maybe (List Integer))
-  allDivSeqD x lv =
+  allDivSeqD x Z =
     if ((x+1) `myMod` 2) == 0
-      then map ([3,-2] `dsp`) $ allDivSeq ((x+1)*3 `myDiv` 2) lv
+      then [[3,-2] `dsp` (Just (divSeq ((x+1)*3 `myDiv` 2)))]
+      else []
+  allDivSeqD x (S lv) =
+    if ((x+1) `myMod` 2) == 0
+      then map ([3,-2] `dsp`) $ allDivSeq ((x+1)*3 `myDiv` 2) (S lv)
       else []
   allDivSeqE : Nat -> Nat -> List (Maybe (List Integer))
-  allDivSeqE x lv =
-      map ([2,-4] `dsp`) $ allDivSeq (x*12+9) lv
+  allDivSeqE x Z =
+      [[2,-4] `dsp` (Just (divSeq (x*12+9)))]
+  allDivSeqE x (S lv) =
+      map ([2,-4] `dsp`) $ allDivSeq (x*12+9) (S lv)
   allDivSeqF : Nat -> Nat -> List (Maybe (List Integer))
-  allDivSeqF x lv =
+  allDivSeqF x Z =
     if ((x+3) `myMod` 8) == 0
-      then map ([5,-2] `dsp`) $ allDivSeq ((x+3)*3 `myDiv` 8) lv
+      then [[5,-2] `dsp` (Just (divSeq ((x+3)*3 `myDiv` 8)))]
+      else []
+  allDivSeqF x (S lv) =
+    if ((x+3) `myMod` 8) == 0
+      then map ([5,-2] `dsp`) $ allDivSeq ((x+3)*3 `myDiv` 8) (S lv)
       else []
   allDivSeqG : Nat -> Nat -> List (Maybe (List Integer))
-  allDivSeqG x lv =
+  allDivSeqG x Z =
     if ((x `minus` 21) `myMod` 64) == 0 && x > 21
-      then map ([6] `dsp2`) $ allDivSeq ((x `minus` 21) `myDiv` 64) lv
+      then [[6] `dsp2` (Just (divSeq ((x `minus` 21) `myDiv` 64)))]
+      else []
+  allDivSeqG x (S lv) =
+    if ((x `minus` 21) `myMod` 64) == 0 && x > 21
+      then map ([6] `dsp2`) $ allDivSeq ((x `minus` 21) `myDiv` 64) (S lv)
       else []
 -- ---------------------------------
 
