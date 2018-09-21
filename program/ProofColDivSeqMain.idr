@@ -1,9 +1,11 @@
 module ProofColDivSeqMain
 
 import ProofColDivSeqBase
+import ProofColDivSeqPostulate
 import ProofColDivSeqLvDown
 import Sub01Apply18x3
 import Sub02Apply54x12
+import Sub05Apply9x6
 
 %default total
 -- %language ElabReflection
@@ -18,23 +20,12 @@ unifi n prf with (mod3 n)
       unifi (S ((l+l+l)+(l+l+l)) + S ((l+l+l)+(l+l+l)) + S ((l+l+l)+(l+l+l))) prf | ThreeZero | Odd | ThreeZero = apply54x12 prf
       unifi (S ((S (l+l+l))+(S (l+l+l))) + S ((S (l+l+l))+(S (l+l+l))) + S ((S (l+l+l))+(S (l+l+l)))) prf | ThreeZero | Odd | ThreeOne = ?rhs6
       unifi (S ((S (S (l+l+l)))+(S (S (l+l+l)))) + S ((S (S (l+l+l)))+(S (S (l+l+l)))) + S ((S (S (l+l+l)))+(S (S (l+l+l))))) prf | ThreeZero | Odd | ThreeTwo = ?rhs7
-  unifi (S (j + j + j))     prf | ThreeOne = ?rhs2
+  unifi (S (j + j + j))     prf | ThreeOne = apply9x6 prf
   unifi (S (S (j + j + j))) prf | ThreeTwo = ?rhs3
 
 allDivSeqInfFalse' : any unLimited (allDivSeq (n+n+n) 2) = False
 allDivSeqInfFalse' = infiniteDescent unifi base0
 
--- anyがFalseなら、全ての要素がFalseなので
-postulate aDSFalse : (x, lv:Nat)
-  -> any unLimited (allDivSeq x lv
-                ++ allDivSeqA x lv
-                ++ allDivSeqB x lv
-                ++ allDivSeqC x lv
-                ++ allDivSeqD x lv
-                ++ allDivSeqE x lv
-                ++ allDivSeqF x lv
-                ++ allDivSeqG x lv) = False
-    -> any unLimited (allDivSeq x lv) = False
 -- レベルを下げる関数2
 lvDown2 : (n, lv:Nat)
   -> any unLimited (allDivSeq (n+n+n) lv) = False

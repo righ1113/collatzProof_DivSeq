@@ -1,14 +1,13 @@
 module Sub01Apply18x3
 
 import ProofColDivSeqBase
+import ProofColDivSeqPostulate
 
 %default total
 -- %language ElabReflection
 
 
 -- 3(6x+1) --B[1,-2]--> 3x
-postulate b18x3To3x' :
-  (k:Nat) -> P (S (plus (plus (plus k k) (plus k k)) (plus k k))) 1 -> P k 2
 b18x3To3x :
   (k:Nat) -> P (S (plus (plus (plus k k) (plus k k)) (plus k k))) 2 -> P k 2
 b18x3To3x k prf =

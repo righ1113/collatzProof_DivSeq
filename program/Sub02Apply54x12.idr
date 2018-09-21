@@ -1,17 +1,13 @@
 module Sub02Apply54x12
 
 import ProofColDivSeqBase
+import ProofColDivSeqPostulate
 
 %default total
 -- %language ElabReflection
 
 
 -- 3(18x+4) --A[6,-4]->E[2,-4]--> 3(2x)
-postulate ae54x12To6x' :
-  (l:Nat) -> P (S (S (plus (plus (plus (plus (plus l l) l) (plus (plus l l) l))
-                              (S (plus (plus (plus l l) l) (plus (plus l l) l))))
-                        (S (plus (plus (plus l l) l) (plus (plus l l) l)))))) 1
-    -> P (plus l l) 3
 ae54x12To6x :
   (l:Nat) -> P (S (S (plus (plus (plus (plus (plus l l) l) (plus (plus l l) l))
                               (S (plus (plus (plus l l) l) (plus (plus l l) l))))

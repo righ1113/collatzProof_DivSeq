@@ -192,7 +192,7 @@ mutual
 -- ---------------------------------
 
 
--- 無限降下法
+-- その他関数
 limited : Maybe (List Integer) -> Bool
 limited Nothing          = True
 limited (Just [])        = True
@@ -202,14 +202,6 @@ unLimited = not . limited
 
 P : Nat -> Nat -> Type
 P n lv = any unLimited $ allDivSeq (n+n+n) lv = True
-
--- 無限降下法（の変形）　Isabelleで証明した
-postulate infiniteDescent : ((n:Nat) -> P (S n) 2 -> (m ** (LTE (S m) (S n), P m 2)))
-            -> any unLimited $ allDivSeq Z 2 = False
-              -> any unLimited $ allDivSeq n 2 = False
-
--- mainの結果より、保証される
-postulate base0 : any unLimited $ allDivSeq 0 2 = False
 
 unfold : (x, lv:Nat) -> allDivSeq x (S lv) = allDivSeq x lv
                                           ++ allDivSeqA x lv
@@ -221,8 +213,9 @@ unfold : (x, lv:Nat) -> allDivSeq x (S lv) = allDivSeq x lv
                                           ++ allDivSeqG x lv
 unfold x lv = Refl
 
--- ProofColDivSeqLvDown.idrでlvDown'を証明したからOK
-postulate lvDown : (n, lv:Nat) -> P n lv -> P n (pred lv)
+myAny : (a->Bool) -> List a -> Bool
+myAny pp [] = False
+myAny pp (x :: xs) = (pp x) || myAny pp xs
 -- ---------------------------------
 
 
