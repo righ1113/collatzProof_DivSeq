@@ -97,8 +97,14 @@ postulate ae54x12To6x' :
                         (S (plus (plus (plus l l) l) (plus (plus l l) l)))))) 1
     -> P (plus l l) 3
 
+-- 03 3(18x+10) --A[6,-4]->C[4,-4]--> 3(8x+3)
+postulate ac54x30To24x9' :
+  (l:Nat) -> P (S (S (S (plus (plus (plus (plus (plus l l) l) (S (plus (plus l l) l))) (S (S (plus (plus (plus l l) l) (S (plus (plus l l) l))))))
+                         (S (S (plus (plus (plus l l) l) (S (plus (plus l l) l))))))))) 1
+    -> P (S (S (S (plus (plus (plus l l) (plus l l)) (plus (plus l l) (plus l l)))))) 3
+
 -- 05 3(3x+2) --C[4,-4]--> 3x
-postulate b9x6To3x' :
+postulate c9x6To3x' :
   (j:Nat) -> P (S (S (plus (plus j j) j))) 1 -> P j 2
 -- ########################################
 

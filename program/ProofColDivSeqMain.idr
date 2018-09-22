@@ -5,6 +5,7 @@ import ProofColDivSeqPostulate
 import ProofColDivSeqLvDown
 import Sub01Apply18x3
 import Sub02Apply54x12
+import Sub03Apply54x30
 import Sub05Apply9x6
 
 %default total
@@ -18,7 +19,7 @@ unifi n prf with (mod3 n)
     unifi ((k+k) + (k+k) + (k+k))       prf | ThreeZero | Even = apply18x3 prf
     unifi (S (k+k) + S (k+k) + S (k+k)) prf | ThreeZero | Odd with (mod3 k)
       unifi (S ((l+l+l)+(l+l+l)) + S ((l+l+l)+(l+l+l)) + S ((l+l+l)+(l+l+l))) prf | ThreeZero | Odd | ThreeZero = apply54x12 prf
-      unifi (S ((S (l+l+l))+(S (l+l+l))) + S ((S (l+l+l))+(S (l+l+l))) + S ((S (l+l+l))+(S (l+l+l)))) prf | ThreeZero | Odd | ThreeOne = ?rhs6
+      unifi (S ((S (l+l+l))+(S (l+l+l))) + S ((S (l+l+l))+(S (l+l+l))) + S ((S (l+l+l))+(S (l+l+l)))) prf | ThreeZero | Odd | ThreeOne = apply54x30 prf
       unifi (S ((S (S (l+l+l)))+(S (S (l+l+l)))) + S ((S (S (l+l+l)))+(S (S (l+l+l)))) + S ((S (S (l+l+l)))+(S (S (l+l+l))))) prf | ThreeZero | Odd | ThreeTwo = ?rhs7
   unifi (S (j + j + j))     prf | ThreeOne = apply9x6 prf
   unifi (S (S (j + j + j))) prf | ThreeTwo = ?rhs3
