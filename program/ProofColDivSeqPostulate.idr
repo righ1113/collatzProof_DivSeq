@@ -118,6 +118,13 @@ postulate c9x6To3x' :
 postulate e36x9To3x' :
   (l:Nat) -> P (S (S (S (plus (plus (plus (plus l l) (plus l l)) (plus (plus l l) (plus l l))) (plus (plus l l) (plus l l)))))) 1 -> P l 2
 
+-- 07 3(36x+6) --F[5,-2]->E[2,-4]--> 3(8x+1)
+postulate fe108x18To24x3' :
+  (o:Nat) -> P (S (S (S (S (plus (plus (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (S (plus (plus (plus o o) o) (plus (plus o o) o))))
+                                  (S (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (S (plus (plus (plus o o) o) (plus (plus o o) o))))))
+                            (S (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (S (plus (plus (plus o o) o) (plus (plus o o) o)))))))))) 1
+    -> P (S (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o)))) 3
+
 -- ########################################
 
 
