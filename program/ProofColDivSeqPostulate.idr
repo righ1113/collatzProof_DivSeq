@@ -13,7 +13,7 @@ import ProofColDivSeqBase
 postulate infiniteDescent :
   ((n:Nat) -> P (S n) 2 -> (m ** (LTE (S m) (S n), P m 2)))
     -> any unLimited $ allDivSeq Z 2 = False
-      -> any unLimited $ allDivSeq n 2 = False
+      -> any unLimited $ allDivSeq (n+n+n) 2 = False
 
 -- mainの結果より、保証される
 postulate base0 : any unLimited $ allDivSeq Z 2 = False
@@ -134,6 +134,17 @@ postulate fc108x54To96x45' :
     -> P (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (plus (plus (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))) (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))))
                                                             (plus (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))) (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o)))))))))))))))))))) 3
 
+-- 09 3(36x+30) --F[5,-2]->B[1,-2]--> 3(16x+13)
+postulate fb108x90To48x39' :
+  (o:Nat) -> P (S (S (S (S (S (S (plus (plus (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))
+                                              (S (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))))))
+                                        (S (S (S (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))
+                                                       (S (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))))))))))
+                                  (S (S (S (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))
+                                                 (S (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))))))))))))))))) 1
+    -> P (S (S (S (S (S (S (S (S (S (S (S (S (S (plus (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))) (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))))))))))))))))) 3
+
+
 
 -- ########################################
 
@@ -153,7 +164,6 @@ postulate aDSFalse : (x, lv:Nat)
                 ++ allDivSeqG x lv) = False
     -> any unLimited (allDivSeq x lv) = False
 -- ########################################
-
 
 
 

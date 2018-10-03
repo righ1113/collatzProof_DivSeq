@@ -11,6 +11,7 @@ import Sub05Apply9x6
 import Sub06Apply36x9
 import Sub07Apply108x18
 import Sub08Apply108x54
+import Sub09Apply108x90
 
 %default total
 -- %language ElabReflection
@@ -32,7 +33,7 @@ unifi n prf with (mod3 n)
       unifi (S (S ((S (l+l)+S (l+l)) + (S (l+l)+S (l+l)) + (S (l+l)+S (l+l))))) prf | ThreeTwo | Even | Odd with (mod3 l)
         unifi (S (S ((S ((o+o+o)+(o+o+o))+S ((o+o+o)+(o+o+o))) + (S ((o+o+o)+(o+o+o))+S ((o+o+o)+(o+o+o))) + (S ((o+o+o)+(o+o+o))+S ((o+o+o)+(o+o+o)))))) prf | ThreeTwo | Even | Odd | ThreeZero = apply108x18 prf
         unifi (S (S ((S (S (o+o+o)+S (o+o+o))+S (S (o+o+o)+ S (o+o+o))) + (S (S (o+o+o)+ S (o+o+o))+S (S (o+o+o)+ S (o+o+o))) + (S (S (o+o+o)+ S (o+o+o))+S (S (o+o+o)+ S (o+o+o)))))) prf | ThreeTwo | Even | Odd | ThreeOne = apply108x54 prf
-        unifi (S (S ((S (S (S (o+o+o))+S (S (o+o+o)))+S (S (S (o+o+o))+ S (S (o+o+o))) + (S (S (S (o+o+o))+ S (S (o+o+o)))+S (S (S (o+o+o))+ S (S (o+o+o)))) + (S (S (S (o+o+o))+ S (S (o+o+o)))+S (S (S (o+o+o))+ S (S (o+o+o)))))))) prf | ThreeTwo | Even | Odd | ThreeTwo = ?ccc3
+        unifi (S (S ((S (S (S (o+o+o))+S (S (o+o+o)))+S (S (S (o+o+o))+ S (S (o+o+o))) + (S (S (S (o+o+o))+ S (S (o+o+o)))+S (S (S (o+o+o))+ S (S (o+o+o)))) + (S (S (S (o+o+o))+ S (S (o+o+o)))+S (S (S (o+o+o))+ S (S (o+o+o)))))))) prf | ThreeTwo | Even | Odd | ThreeTwo = apply108x90 prf
     unifi (S (S (S (k+k) + S (k+k) + S (k+k)))) prf | ThreeTwo | Odd with (parity k)
       unifi (S (S (S ((l+l)+(l+l)) + S ((l+l)+(l+l)) + S ((l+l)+(l+l))))) prf | ThreeTwo | Odd | Even with (mod3 l)
         unifi (S (S (S (((o+o+o)+(o+o+o))+((o+o+o)+(o+o+o))) + S (((o+o+o)+(o+o+o))+((o+o+o)+(o+o+o))) + S (((o+o+o)+(o+o+o))+((o+o+o)+(o+o+o)))))) prf | ThreeTwo | Odd | Even | ThreeZero = ?bbb1
@@ -58,7 +59,5 @@ lvDown2 n (S lv) = rewrite unfold (n+n+n) lv in \y => aDSFalse (n+n+n) lv y
 allDivSeqInfFalse : (n:Nat)
   -> any unLimited (allDivSeq (n+n+n) 0) = False
 allDivSeqInfFalse n = lvDown2 n 1 $ lvDown2 n 2 allDivSeqInfFalse'
-
-
 
 
