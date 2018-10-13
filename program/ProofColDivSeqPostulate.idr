@@ -118,33 +118,41 @@ postulate c9x6To3x' :
 postulate e36x9To3x' :
   (l:Nat) -> P (S (S (S (plus (plus (plus (plus l l) (plus l l)) (plus (plus l l) (plus l l))) (plus (plus l l) (plus l l)))))) 1 -> P l 2
 
--- 07 3(36x+6) --F[5,-2]->E[2,-4]--> 3(8x+1)
-postulate fe108x18To24x3' :
+-- 07 3(36x+9) --F[5,-2]->C[4,-4]--> 3(32x+7)
+postulate fc108x27To96x21' :
   (o:Nat) -> P (S (S (S (S (plus (plus (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (S (plus (plus (plus o o) o) (plus (plus o o) o))))
                                   (S (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (S (plus (plus (plus o o) o) (plus (plus o o) o))))))
                             (S (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (S (plus (plus (plus o o) o) (plus (plus o o) o)))))))))) 1
-    -> P (S (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o)))) 3
+    -> P (S (S (S (S (S (S (S (plus (plus (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))) (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))))
+                                                            (plus (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))) (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o)))))))))))) 3
 
--- 08 3(36x+18) --F[5,-2]->C[4,-4]--> 3(32x+15)
-postulate fc108x54To96x45' :
+-- 08 3(36x+21) --F[5,-2]->B[1,-2]--> 3(16x+9)
+postulate fb108x63To48x27' :
   (o:Nat) -> P (S (S (S (S (S (plus (plus (plus (plus (plus (plus o o) o) (S (plus (plus o o) o)))
                                            (S (S (plus (plus (plus o o) o) (S (plus (plus o o) o))))))
                                      (S (S (plus (plus (plus (plus o o) o) (S (plus (plus o o) o))) (S (S (plus (plus (plus o o) o) (S (plus (plus o o) o)))))))))
                                (S (S (plus (plus (plus (plus o o) o) (S (plus (plus o o) o))) (S (S (plus (plus (plus o o) o) (S (plus (plus o o) o)))))))))))))) 1
-    -> P (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (plus (plus (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))) (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))))
-                                                            (plus (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))) (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o)))))))))))))))))))) 3
+    -> P (S (S (S (S (S (S (S (S (S (plus (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))) (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))))))))))))) 3
 
--- 09 3(36x+30) --F[5,-2]->B[1,-2]--> 3(16x+13)
-postulate fb108x90To48x39' :
+-- 09 3(36x+33) --F[5,-2]->E[2,-4]--> 3(8x+7)
+postulate fe108x99To24x21' :
   (o:Nat) -> P (S (S (S (S (S (S (plus (plus (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))
                                               (S (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))))))
                                         (S (S (S (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))
                                                        (S (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))))))))))
                                   (S (S (S (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))
                                                  (S (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))))))))))))))))) 1
-    -> P (S (S (S (S (S (S (S (S (S (S (S (S (S (plus (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))) (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))))))))))))))))) 3
+    -> P (S (S (S (S (S (S (S (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o)))))))))) 3
 
-
+{--
+-- 10 3(36x+9) --F[5,-2]->C[4,-4]--> 3(32x+7)
+postulate fc108x27To96x21' :
+  (o:Nat) ->  P (S (S (S (S (plus (plus (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (plus (plus (plus o o) o) (plus (plus o o) o)))
+                                  (S (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (plus (plus (plus o o) o) (plus (plus o o) o)))))
+                            (S (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (plus (plus (plus o o) o) (plus (plus o o) o))))))))) 1
+    -> P (S (S (S (S (S (S (S (plus (plus (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))) (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))))
+                                                            (plus (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))) (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o)))))))))))) 3
+--}
 
 -- ########################################
 
