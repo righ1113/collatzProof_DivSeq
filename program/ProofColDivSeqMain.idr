@@ -15,6 +15,9 @@ import Sub09Apply108x99
 import Sub10Apply108x18
 import Sub11Apply108x54
 import Sub12Apply108x90
+import Sub13Apply108x36
+import Sub14Apply108x72
+import Sub15Apply108x108
 
 %default total
 -- %language ElabReflection
@@ -43,9 +46,9 @@ unifi n prf with (mod3 n)
         unifi (S (S (S ((S (o+o+o)+S (o+o+o))+(S (o+o+o)+S (o+o+o))) + S ((S (o+o+o)+S (o+o+o))+(S (o+o+o)+S (o+o+o))) + S ((S (o+o+o)+S (o+o+o))+(S (o+o+o)+S (o+o+o)))))) prf | ThreeTwo | Odd | Even | ThreeOne = apply108x54 prf
         unifi (S (S (S ((S (S (o+o+o))+S (S (o+o+o)))+(S (S (o+o+o))+S (S (o+o+o)))) + S ((S (S (o+o+o))+S (S (o+o+o)))+(S (S (o+o+o))+S (S (o+o+o)))) + S ((S (S (o+o+o))+S (S (o+o+o)))+(S (S (o+o+o))+S (S (o+o+o))))))) prf | ThreeTwo | Odd | Even | ThreeTwo = apply108x90 prf
       unifi (S (S (S (S (l+l)+ S (l+l)) + S (S (l+l)+S (l+l)) + S (S (l+l)+S (l+l))))) prf | ThreeTwo | Odd | Odd with (mod3 l)
-        unifi (S (S (S (S ((o+o+o)+(o+o+o))+ S ((o+o+o)+(o+o+o))) + S (S ((o+o+o)+(o+o+o))+S ((o+o+o)+(o+o+o))) + S (S ((o+o+o)+(o+o+o))+S ((o+o+o)+(o+o+o)))))) prf | ThreeTwo | Odd | Odd | ThreeZero = ?ddd1
-        unifi (S (S (S (S (S (o+o+o)+S (o+o+o))+ S (S (o+o+o)+S (o+o+o))) + S (S (S (o+o+o)+S (o+o+o))+S (S (o+o+o)+S (o+o+o))) + S (S (S (o+o+o)+S (o+o+o))+S (S (o+o+o)+S (o+o+o)))))) prf | ThreeTwo | Odd | Odd | ThreeOne = ?ddd2
-        unifi (S (S (S (S (S (S (o+o+o))+S (S (o+o+o)))+ S (S (S (o+o+o))+S (S (o+o+o)))) + S (S (S (S (o+o+o))+S (S (o+o+o)))+S (S (S (o+o+o))+S (S (o+o+o)))) + S (S (S (S (o+o+o))+S (S (o+o+o)))+S (S (S (o+o+o))+S (S (o+o+o))))))) prf | ThreeTwo | Odd | Odd | ThreeTwo = ?ddd3
+        unifi (S (S (S (S ((o+o+o)+(o+o+o))+ S ((o+o+o)+(o+o+o))) + S (S ((o+o+o)+(o+o+o))+S ((o+o+o)+(o+o+o))) + S (S ((o+o+o)+(o+o+o))+S ((o+o+o)+(o+o+o)))))) prf | ThreeTwo | Odd | Odd | ThreeZero = apply108x36 prf
+        unifi (S (S (S (S (S (o+o+o)+S (o+o+o))+ S (S (o+o+o)+S (o+o+o))) + S (S (S (o+o+o)+S (o+o+o))+S (S (o+o+o)+S (o+o+o))) + S (S (S (o+o+o)+S (o+o+o))+S (S (o+o+o)+S (o+o+o)))))) prf | ThreeTwo | Odd | Odd | ThreeOne = apply108x72 prf
+        unifi (S (S (S (S (S (S (o+o+o))+S (S (o+o+o)))+ S (S (S (o+o+o))+S (S (o+o+o)))) + S (S (S (S (o+o+o))+S (S (o+o+o)))+S (S (S (o+o+o))+S (S (o+o+o)))) + S (S (S (S (o+o+o))+S (S (o+o+o)))+S (S (S (o+o+o))+S (S (o+o+o))))))) prf | ThreeTwo | Odd | Odd | ThreeTwo = apply108x108 prf
 
 allDivSeqInfFalse' : any unLimited (allDivSeq (n+n+n) 2) = False
 allDivSeqInfFalse' = infiniteDescent unifi base0
