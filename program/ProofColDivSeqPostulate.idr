@@ -15,7 +15,7 @@ postulate infiniteDescent :
     -> any unLimited $ allDivSeq Z 2 = False
       -> any unLimited $ allDivSeq (n+n+n) 2 = False
 
--- mainの結果より、保証される
+-- BaseLog0.txtより、保証される
 postulate base0 : any unLimited $ allDivSeq Z 2 = False
 -- ########################################
 
@@ -194,15 +194,6 @@ postulate fc108x108To96x93' :
     -> P (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (plus (plus (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))) (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))))
                                                             (plus (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))) (plus (plus (plus o o) (plus o o)) (plus (plus o o)
             (plus o o)))))))))))))))))))))))))))))))))))) 3
-
-
-
-
-
-
-
-
-
 -- ########################################
 
 
