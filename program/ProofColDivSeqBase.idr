@@ -67,24 +67,11 @@ takeWhileSt : (a -> Bool) -> Nat -> Stream a -> List a
 takeWhileSt p Z       (x :: xs) = []
 takeWhileSt p (S cnt) (x :: xs) = if p x then x :: takeWhileSt p cnt xs else []
 
-divHelp : Nat -> Nat -> Nat -> Nat
-divHelp Z     Z     c = 1
-divHelp Z     (S y) c = 0
-divHelp (S x) Z     c = 1 + divHelp x c c
-divHelp (S x) (S y) c = divHelp x y c
-myDiv : Nat -> Nat -> Nat
-myDiv _     Z     = 0
-myDiv Z     (S y) = 0
-myDiv (S x) (S y) = divHelp (S x) (S y) y
-myMod : Nat -> Nat -> Nat
-myMod x y =
-  if x < y then x else x `minus` (y * (myDiv x y))
-
 collatz : Nat -> Nat
 collatz Z = Z
 collatz (S Z) = (S Z)
 collatz (S (S k)) = let n = (S (S k)) in
-  if (n `myMod` 2) == 0 then n `myDiv` 2 else 3 * n + 1
+  if (modNatNZ n 2 SIsNotZ) == 0 then divNatNZ n 2 SIsNotZ else 3 * n + 1
 
 col : Nat -> List Nat
 col n = takeWhileSt (>1) 150 (iterate collatz n) ++ [1]
@@ -93,7 +80,7 @@ divSeq' : List Nat -> Nat -> List Nat -> List Nat
 divSeq' _       Z       acc = acc
 divSeq' []      (S cnt) acc = acc
 divSeq' [S Z]   (S cnt) acc = acc
-divSeq' (x::xs) (S cnt) acc = let even = \x=> (myMod x 2) == 0 in
+divSeq' (x::xs) (S cnt) acc = let even = \x=> (modNatNZ x 2 SIsNotZ) == 0 in
                               let coll1 = length $ takeWhile even xs in
                               let coll2 = dropWhile even xs in
   divSeq' coll2 cnt (acc ++ [coll1])
@@ -108,15 +95,15 @@ divSeq x = let xs = col x in
 -- allDivSeqの実装
 mutual
   allDivSeq : Nat -> Nat -> List (Maybe (List Integer))
-  allDivSeq x Z = if (x `myMod` 2) == 0 then [Nothing]
+  allDivSeq x Z = if (modNatNZ x 2 SIsNotZ) == 0 then [Nothing]
     else [Just (divSeq x)]
-      ++ (if ((x+7) `myMod` 4) == 0 && (((x+7) `myMod` 4) `myMod` 2) == 1 then [[6,-4] `dsp` (Just (divSeq ((x+7)*3 `myDiv` 4)))] else [])
-      ++ (if ((x*6+3) `myMod` 2) == 1 then [[1,-2] `dsp` (Just (divSeq (x*6+3)))] else [])
-      ++ (if ((x*3+6) `myMod` 2) == 1 then [[4,-4] `dsp` (Just (divSeq (x*3+6)))] else [])
-      ++ (if ((x+1) `myMod` 2) == 0 && (((x+1) `myMod` 2) `myMod` 2) == 1 then [[3,-2] `dsp` (Just (divSeq ((x+1)*3 `myDiv` 2)))] else [])
-      ++ (if ((x*12+9) `myMod` 2) == 1 then [[2,-4] `dsp` (Just (divSeq (x*12+9)))] else [])
-      ++ (if ((x+3) `myMod` 8) == 0 && (((x+3) `myMod` 8) `myMod` 2) == 1 then [[5,-2] `dsp` (Just (divSeq ((x+3)*3 `myDiv` 8)))] else [])
-      ++ (if ((x `minus` 21) `myMod` 64) == 0 && x > 21 && (((x `minus` 21) `myMod` 64) `myMod` 2) == 1 then [[6] `dsp2` (Just (divSeq ((x `minus` 21) `myDiv` 64)))] else [])
+      ++ (if (modNatNZ (x+7) 4 SIsNotZ) == 0 && (modNatNZ (modNatNZ (x+7) 4 SIsNotZ) 2 SIsNotZ) == 1 then [[6,-4] `dsp` (Just (divSeq (divNatNZ ((x+7)*3) 4 SIsNotZ)))] else [])
+      ++ (if (modNatNZ (x*6+3) 2 SIsNotZ) == 1 then [[1,-2] `dsp` (Just (divSeq (x*6+3)))] else [])
+      ++ (if (modNatNZ (x*3+6) 2 SIsNotZ) == 1 then [[4,-4] `dsp` (Just (divSeq (x*3+6)))] else [])
+      ++ (if (modNatNZ (x+1) 2 SIsNotZ) == 0 && (modNatNZ (modNatNZ (x+1) 2 SIsNotZ) 2 SIsNotZ) == 1 then [[3,-2] `dsp` (Just (divSeq (divNatNZ ((x+1)*3) 2 SIsNotZ)))] else [])
+      ++ (if (modNatNZ (x*12+9) 2 SIsNotZ) == 1 then [[2,-4] `dsp` (Just (divSeq (x*12+9)))] else [])
+      ++ (if (modNatNZ (x+3) 8 SIsNotZ) == 0 && (modNatNZ (modNatNZ (x+3) 8 SIsNotZ) 2 SIsNotZ) == 1 then [[5,-2] `dsp` (Just (divSeq (divNatNZ ((x+3)*3) 8 SIsNotZ)))] else [])
+      ++ (if (modNatNZ (x `minus` 21) 64 SIsNotZ) == 0 && x > 21 && (modNatNZ (modNatNZ (x `minus` 21) 64 SIsNotZ) 2 SIsNotZ) == 1 then [[6] `dsp2` (Just (divSeq (divNatNZ (x `minus` 21) 64 SIsNotZ)))] else [])
   allDivSeq x (S lv) = allDivSeq x lv
                     ++ allDivSeqA x lv
                     ++ allDivSeqB x lv
@@ -128,17 +115,17 @@ mutual
 
   allDivSeqA : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqA x Z =
-    if ((x+7) `myMod` 4) == 0 && (((x+7) `myMod` 4) `myMod` 2) == 1
-      then [[6,-4] `dsp` (Just (divSeq ((x+7)*3 `myDiv` 4)))]
+    if (modNatNZ (x+7) 4 SIsNotZ) == 0 && (modNatNZ (modNatNZ (x+7) 4 SIsNotZ) 2 SIsNotZ) == 1
+      then [[6,-4] `dsp` (Just (divSeq (divNatNZ ((x+7)*3) 4 SIsNotZ)))]
       else []
   allDivSeqA x (S lv) =
-    if ((x+7) `myMod` 4) == 0
-      then map ([6,-4] `dsp`) $ allDivSeq ((x+7)*3 `myDiv` 4) (S lv)
+    if (modNatNZ (x+7) 4 SIsNotZ) == 0
+      then map ([6,-4] `dsp`) $ allDivSeq (divNatNZ ((x+7)*3) 4 SIsNotZ) (S lv)
       else []
 
   allDivSeqB : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqB x Z =
-    if ((x*6+3) `myMod` 2) == 1
+    if (modNatNZ (x*6+3) 2 SIsNotZ) == 1
       then [[1,-2] `dsp` (Just (divSeq (x*6+3)))]
       else []
   allDivSeqB x (S lv) =
@@ -146,7 +133,7 @@ mutual
 
   allDivSeqC : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqC x Z =
-    if ((x*3+6) `myMod` 2) == 1
+    if (modNatNZ (x*3+6) 2 SIsNotZ) == 1
       then [[4,-4] `dsp` (Just (divSeq (x*3+6)))]
       else []
   allDivSeqC x (S lv) =
@@ -154,17 +141,17 @@ mutual
 
   allDivSeqD : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqD x Z =
-    if ((x+1) `myMod` 2) == 0 && (((x+1) `myMod` 2) `myMod` 2) == 1
-      then [[3,-2] `dsp` (Just (divSeq ((x+1)*3 `myDiv` 2)))]
+    if (modNatNZ (x+1) 2 SIsNotZ) == 0 && (modNatNZ (modNatNZ (x+1) 2 SIsNotZ) 2 SIsNotZ) == 1
+      then [[3,-2] `dsp` (Just (divSeq (divNatNZ ((x+1)*3) 2 SIsNotZ)))]
       else []
   allDivSeqD x (S lv) =
-    if ((x+1) `myMod` 2) == 0
-      then map ([3,-2] `dsp`) $ allDivSeq ((x+1)*3 `myDiv` 2) (S lv)
+    if (modNatNZ (x+1) 2 SIsNotZ) == 0
+      then map ([3,-2] `dsp`) $ allDivSeq (divNatNZ ((x+1)*3) 2 SIsNotZ) (S lv)
       else []
 
   allDivSeqE : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqE x Z =
-    if ((x*12+9) `myMod` 2) == 1
+    if (modNatNZ (x*12+9) 2 SIsNotZ) == 1
       then [[2,-4] `dsp` (Just (divSeq (x*12+9)))]
       else []
   allDivSeqE x (S lv) =
@@ -172,22 +159,22 @@ mutual
 
   allDivSeqF : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqF x Z =
-    if ((x+3) `myMod` 8) == 0 && (((x+3) `myMod` 8) `myMod` 2) == 1
-      then [[5,-2] `dsp` (Just (divSeq ((x+3)*3 `myDiv` 8)))]
+    if (modNatNZ (x+3) 8 SIsNotZ) == 0 && (modNatNZ (modNatNZ (x+3) 8 SIsNotZ) 2 SIsNotZ) == 1
+      then [[5,-2] `dsp` (Just (divSeq (divNatNZ ((x+3)*3) 8 SIsNotZ)))]
       else []
   allDivSeqF x (S lv) =
-    if ((x+3) `myMod` 8) == 0
-      then map ([5,-2] `dsp`) $ allDivSeq ((x+3)*3 `myDiv` 8) (S lv)
+    if (modNatNZ (x+3) 8 SIsNotZ) == 0
+      then map ([5,-2] `dsp`) $ allDivSeq (divNatNZ ((x+3)*3) 8 SIsNotZ) (S lv)
       else []
 
   allDivSeqG : Nat -> Nat -> List (Maybe (List Integer))
   allDivSeqG x Z =
-    if ((x `minus` 21) `myMod` 64) == 0 && x > 21 && (((x `minus` 21) `myMod` 64) `myMod` 2) == 1
-      then [[6] `dsp2` (Just (divSeq ((x `minus` 21) `myDiv` 64)))]
+    if (modNatNZ (x `minus` 21) 64 SIsNotZ) == 0 && x > 21 && (modNatNZ (modNatNZ (x `minus` 21) 64 SIsNotZ) 2 SIsNotZ) == 1
+      then [[6] `dsp2` (Just (divSeq (divNatNZ (x `minus` 21) 64 SIsNotZ)))]
       else []
   allDivSeqG x (S lv) =
-    if ((x `minus` 21) `myMod` 64) == 0 && x > 21
-      then map ([6] `dsp2`) $ allDivSeq ((x `minus` 21) `myDiv` 64) (S lv)
+    if (modNatNZ (x `minus` 21) 64 SIsNotZ) == 0 && x > 21
+      then map ([6] `dsp2`) $ allDivSeq (divNatNZ (x `minus` 21) 64 SIsNotZ) (S lv)
       else []
 -- ---------------------------------
 
