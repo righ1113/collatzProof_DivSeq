@@ -29,7 +29,7 @@
     [(/ (+ (* 3 x) 1) (** 2 (car sequ))) (cdr sequ)] ))
 
 
-;; > egison -t ProofColDivSeqExtension.egi で実行
+;; > egison -t Extension.egi で実行
 ;; star変換1回
 (test (io (print "(map (lambda [$f1] (map (lambda [$y] (eq? (extCollatz [x {y s}]) (extCollatz (extCollatz (f1 [x {y s}]))))) {4 3 2 1})) {A B C D E F})")))
 (test (map (lambda [$f1] (map (lambda [$y] (eq? (extCollatz [x {y s}]) (extCollatz (extCollatz (f1 [x {y s}]))))) {4 3 2 1})) {A B C D E F}))
