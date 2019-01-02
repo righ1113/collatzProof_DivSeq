@@ -10,7 +10,7 @@ import ProofColDivSeqPostulate
 orToEither : (b1, b2, b3, b4, b5, b6, b7, b8:Bool)
   -> (b1 || b2 || b3 || b4 || b5 || b6 || b7 || b8 = True)
     -> Either (b1=True) (Either (b2=True) (Either (b3=True) (Either (b4=True) (Either (b5=True) (Either (b6=True) (Either (b7=True) (b8=True)))))))
-orToEither False False False False False False False False prf = (void . uninhabited) prf
+orToEither False False False False False False False False prf = absurd prf
 orToEither False False False False False False False True  prf = Right (Right (Right (Right (Right (Right (Right Refl))))))
 orToEither False False False False False False True  _     prf = Right (Right (Right (Right (Right (Right (Left Refl))))))
 orToEither False False False False False True  _     _     prf = Right (Right (Right (Right (Right (Left Refl)))))
