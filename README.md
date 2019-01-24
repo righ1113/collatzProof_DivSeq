@@ -6,7 +6,9 @@
 18/09/20　program：ver0.5をリリース　レベルを下げる関数の変更完了  
 18/10/01　Wiki：第2部を作成完了  
 18/11/03　Wiki：第1部を作成完了  
-18/11/18　program：ver1.0をリリース　program、Wiki共にひとまず完成    
+18/11/18　program：ver1.0をリリース　program、Wiki共にひとまず完成  
+19/01/25　program：ver1.1をリリース　divSeqの実装をunfoldrに変更  
+
 # コラッツ予想とは
 コラッツの問題は、「任意の正の整数 n をとり、  
   
