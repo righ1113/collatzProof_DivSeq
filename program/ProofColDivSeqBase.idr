@@ -1,5 +1,5 @@
 module ProofColDivSeqBase
--- module Main -- ビルドするときはこっち　> idris ProofColDivSeqBase.idr -o run
+-- module Main -- ビルドするときはこっち > idris ProofColDivSeqBase.idr -o run
 
 %default total
 -- %language ElabReflection
@@ -50,51 +50,62 @@ mod3 (S (S (S k))) with (mod3 k)
 
 
 -- allDivSeqの実装に必要な関数
-dsp : List Integer -> Maybe (List Integer) -> Maybe (List Integer)
+-- from libs/contrib/Data/CoList.idr
+public export
+codata CoList : Type -> Type where
+  Nil : CoList a
+  (::) : a -> CoList a -> CoList a
+
+implementation Functor CoList where
+  map f []      = []
+  map f (x::xs) = f x :: map f xs
+
+implementation Show a => Show (CoList a) where
+  show xs = "[" ++ show' "" 20 xs ++ "]" where
+    show' : String -> (n : Nat) -> (xs : CoList a) -> String
+    show' acc Z _             = acc ++ "..."
+    show' acc (S n) []        = acc
+    show' acc (S n) [x]       = acc ++ show x
+    show' acc (S n) (x :: xs) = show' (acc ++ (show x) ++ ", ") n xs
+
+unfoldr : (a -> Maybe (b, a)) -> a -> CoList b
+unfoldr f x =
+  case f x of
+    Just (y, new_x) => y :: (unfoldr f new_x)
+    _               => []
+
+
+dsp : List Integer -> Maybe (CoList Integer) -> Maybe (CoList Integer)
 dsp xs                 Nothing          = Nothing
 dsp xs                 (Just [])        = Nothing
 dsp []                 (Just (y :: ys)) = Nothing
 dsp (x :: [])          (Just (y :: ys)) = Nothing
 dsp (x1 :: (x2 :: xs)) (Just (y :: ys)) = Just (x1 :: (x2+y) :: ys)
 
-dsp2 : List Integer -> Maybe (List Integer) -> Maybe (List Integer)
+dsp2 : List Integer -> Maybe (CoList Integer) -> Maybe (CoList Integer)
 dsp2 xs        Nothing          = Nothing
 dsp2 xs        (Just [])        = Nothing
 dsp2 []        (Just (y :: ys)) = Nothing
-dsp2 (x :: xs) (Just (y :: ys)) = Just ((x+y)::ys)
+dsp2 (x :: xs) (Just (y :: ys)) = Just ((x+y) :: ys)
 
-takeWhileSt : (a -> Bool) -> Nat -> Stream a -> List a
-takeWhileSt p Z       (x :: xs) = []
-takeWhileSt p (S cnt) (x :: xs) = if p x then x :: takeWhileSt p cnt xs else []
-
-collatz : Nat -> Nat
-collatz Z = Z
-collatz (S Z) = (S Z)
-collatz (S (S k)) = let n = (S (S k)) in
-  if (modNatNZ n 2 SIsNotZ) == 0 then divNatNZ n 2 SIsNotZ else 3 * n + 1
-
-col : Nat -> List Nat
-col n = takeWhileSt (>1) 150 (iterate collatz n) ++ [1]
-
-divSeq' : List Nat -> Nat -> List Nat -> List Nat
-divSeq' _       Z       acc = acc
-divSeq' []      (S cnt) acc = acc
-divSeq' [S Z]   (S cnt) acc = acc
-divSeq' (x::xs) (S cnt) acc = let even = \x=> (modNatNZ x 2 SIsNotZ) == 0 in
-                              let coll1 = length $ takeWhile even xs in
-                              let coll2 = dropWhile even xs in
-  divSeq' coll2 cnt (acc ++ [coll1])
+countEven : Nat -> Nat -> Nat -> (Nat, Nat)
+countEven n Z      acc = (acc, n)
+countEven n (S nn) acc =
+  if (modNatNZ n 2 SIsNotZ) == 1
+    then (acc, n)
+    else countEven (divNatNZ n 2 SIsNotZ) nn (acc+1)
 
 -- odd only!
-divSeq : Nat -> List Integer
-divSeq x = let xs = col x in
-  map toIntegerNat $ divSeq' xs (length xs) []
+divSeq : Nat -> CoList Integer
+divSeq = (map toIntegerNat) .
+  unfoldr (\b => if b==1 then Nothing
+                         else Just (countEven (b*3+1) (b*3+1) 0) )
 -- ---------------------------------
 
 
 -- allDivSeqの実装
 mutual
-  allDivSeq : Nat -> Nat -> List (Maybe (List Integer))
+  allDivSeq : Nat -> Nat -> List (Maybe (CoList Integer))
   allDivSeq x Z = if (modNatNZ x 2 SIsNotZ) == 0 then [Nothing]
     else [Just (divSeq x)]
       ++ (if (modNatNZ (x+7) 4 SIsNotZ) == 0 && (modNatNZ (modNatNZ (x+7) 4 SIsNotZ) 2 SIsNotZ) == 1 then [[6,-4] `dsp` (Just (divSeq (divNatNZ ((x+7)*3) 4 SIsNotZ)))] else [])
@@ -113,7 +124,7 @@ mutual
                     ++ allDivSeqF x lv
                     ++ allDivSeqG x lv
 
-  allDivSeqA : Nat -> Nat -> List (Maybe (List Integer))
+  allDivSeqA : Nat -> Nat -> List (Maybe (CoList Integer))
   allDivSeqA x Z =
     if (modNatNZ (x+7) 4 SIsNotZ) == 0 && (modNatNZ (modNatNZ (x+7) 4 SIsNotZ) 2 SIsNotZ) == 1
       then [[6,-4] `dsp` (Just (divSeq (divNatNZ ((x+7)*3) 4 SIsNotZ)))]
@@ -123,7 +134,7 @@ mutual
       then map ([6,-4] `dsp`) $ allDivSeq (divNatNZ ((x+7)*3) 4 SIsNotZ) (S lv)
       else []
 
-  allDivSeqB : Nat -> Nat -> List (Maybe (List Integer))
+  allDivSeqB : Nat -> Nat -> List (Maybe (CoList Integer))
   allDivSeqB x Z =
     if (modNatNZ (x*6+3) 2 SIsNotZ) == 1
       then [[1,-2] `dsp` (Just (divSeq (x*6+3)))]
@@ -131,7 +142,7 @@ mutual
   allDivSeqB x (S lv) =
       map ([1,-2] `dsp`) $ allDivSeq (x*6+3) (S lv)
 
-  allDivSeqC : Nat -> Nat -> List (Maybe (List Integer))
+  allDivSeqC : Nat -> Nat -> List (Maybe (CoList Integer))
   allDivSeqC x Z =
     if (modNatNZ (x*3+6) 2 SIsNotZ) == 1
       then [[4,-4] `dsp` (Just (divSeq (x*3+6)))]
@@ -139,7 +150,7 @@ mutual
   allDivSeqC x (S lv) =
       map ([4,-4] `dsp`) $ allDivSeq (x*3+6) (S lv)
 
-  allDivSeqD : Nat -> Nat -> List (Maybe (List Integer))
+  allDivSeqD : Nat -> Nat -> List (Maybe (CoList Integer))
   allDivSeqD x Z =
     if (modNatNZ (x+1) 2 SIsNotZ) == 0 && (modNatNZ (modNatNZ (x+1) 2 SIsNotZ) 2 SIsNotZ) == 1
       then [[3,-2] `dsp` (Just (divSeq (divNatNZ ((x+1)*3) 2 SIsNotZ)))]
@@ -149,7 +160,7 @@ mutual
       then map ([3,-2] `dsp`) $ allDivSeq (divNatNZ ((x+1)*3) 2 SIsNotZ) (S lv)
       else []
 
-  allDivSeqE : Nat -> Nat -> List (Maybe (List Integer))
+  allDivSeqE : Nat -> Nat -> List (Maybe (CoList Integer))
   allDivSeqE x Z =
     if (modNatNZ (x*12+9) 2 SIsNotZ) == 1
       then [[2,-4] `dsp` (Just (divSeq (x*12+9)))]
@@ -157,7 +168,7 @@ mutual
   allDivSeqE x (S lv) =
       map ([2,-4] `dsp`) $ allDivSeq (x*12+9) (S lv)
 
-  allDivSeqF : Nat -> Nat -> List (Maybe (List Integer))
+  allDivSeqF : Nat -> Nat -> List (Maybe (CoList Integer))
   allDivSeqF x Z =
     if (modNatNZ (x+3) 8 SIsNotZ) == 0 && (modNatNZ (modNatNZ (x+3) 8 SIsNotZ) 2 SIsNotZ) == 1
       then [[5,-2] `dsp` (Just (divSeq (divNatNZ ((x+3)*3) 8 SIsNotZ)))]
@@ -167,7 +178,7 @@ mutual
       then map ([5,-2] `dsp`) $ allDivSeq (divNatNZ ((x+3)*3) 8 SIsNotZ) (S lv)
       else []
 
-  allDivSeqG : Nat -> Nat -> List (Maybe (List Integer))
+  allDivSeqG : Nat -> Nat -> List (Maybe (CoList Integer))
   allDivSeqG x Z =
     if (modNatNZ (x `minus` 21) 64 SIsNotZ) == 0 && x > 21 && (modNatNZ (modNatNZ (x `minus` 21) 64 SIsNotZ) 2 SIsNotZ) == 1
       then [[6] `dsp2` (Just (divSeq (divNatNZ (x `minus` 21) 64 SIsNotZ)))]
@@ -180,16 +191,6 @@ mutual
 
 
 -- その他関数
-limited : Maybe (List Integer) -> Bool
-limited Nothing          = True
-limited (Just [])        = True
-limited (Just (x :: xs)) = let l = last (x::xs) in True
-unLimited : Maybe (List Integer) -> Bool
-unLimited = not . limited
-
-P : Nat -> Nat -> Type
-P n lv = any unLimited $ allDivSeq (n+n+n) lv = True
-
 unfold : (x, lv:Nat) -> allDivSeq x (S lv) = allDivSeq x lv
                                           ++ allDivSeqA x lv
                                           ++ allDivSeqB x lv

@@ -22,17 +22,17 @@ orToEither True  _     _     _     _     _     _     _     prf = Left Refl
 
 
 mutual
-  lvDown''' : (n, lv:Nat) -> myAny (\t => not (limited t)) $ allDivSeq n (S lv) = True
-    -> Either (myAny (\t => not (limited t)) $ allDivSeq n lv = True)
-        (Either (myAny (\t => not (limited t)) (allDivSeqA n lv) = True)
-          (Either (myAny (\t => not (limited t)) (allDivSeqB n lv) = True)
-            (Either (myAny (\t => not (limited t)) (allDivSeqC n lv) = True)
-              (Either (myAny (\t => not (limited t)) (allDivSeqD n lv) = True)
-                (Either (myAny (\t => not (limited t)) (allDivSeqE n lv) = True)
-                  (Either (myAny (\t => not (limited t)) (allDivSeqF n lv) = True)
-                          (myAny (\t => not (limited t)) (allDivSeqG n lv) = True)))))))
+  lvDown''' : (n, lv:Nat) -> myAny p.unLimited $ allDivSeq n (S lv) = True
+    -> Either (myAny p.unLimited $ allDivSeq n lv = True)
+        (Either (myAny p.unLimited (allDivSeqA n lv) = True)
+          (Either (myAny p.unLimited (allDivSeqB n lv) = True)
+            (Either (myAny p.unLimited (allDivSeqC n lv) = True)
+              (Either (myAny p.unLimited (allDivSeqD n lv) = True)
+                (Either (myAny p.unLimited (allDivSeqE n lv) = True)
+                  (Either (myAny p.unLimited (allDivSeqF n lv) = True)
+                          (myAny p.unLimited (allDivSeqG n lv) = True)))))))
   lvDown''' n lv = rewrite unfold n lv in
-                    rewrite any1 (\t => not (limited t)) (allDivSeq n lv) (
+                    rewrite any1 p.unLimited (allDivSeq n lv) (
                       allDivSeqA n lv
                       ++ allDivSeqB n lv
                       ++ allDivSeqC n lv
@@ -40,53 +40,53 @@ mutual
                       ++ allDivSeqE n lv
                       ++ allDivSeqF n lv
                       ++ allDivSeqG n lv) in
-                    rewrite any1 (\t => not (limited t)) (allDivSeqA n lv) (
+                    rewrite any1 p.unLimited (allDivSeqA n lv) (
                       allDivSeqB n lv
                       ++ allDivSeqC n lv
                       ++ allDivSeqD n lv
                       ++ allDivSeqE n lv
                       ++ allDivSeqF n lv
                       ++ allDivSeqG n lv) in
-                    rewrite any1 (\t => not (limited t)) (allDivSeqB n lv) (
+                    rewrite any1 p.unLimited (allDivSeqB n lv) (
                       allDivSeqC n lv
                       ++ allDivSeqD n lv
                       ++ allDivSeqE n lv
                       ++ allDivSeqF n lv
                       ++ allDivSeqG n lv) in
-                    rewrite any1 (\t => not (limited t)) (allDivSeqC n lv) (
+                    rewrite any1 p.unLimited (allDivSeqC n lv) (
                       allDivSeqD n lv
                       ++ allDivSeqE n lv
                       ++ allDivSeqF n lv
                       ++ allDivSeqG n lv) in
-                    rewrite any1 (\t => not (limited t)) (allDivSeqD n lv) (
+                    rewrite any1 p.unLimited (allDivSeqD n lv) (
                       allDivSeqE n lv
                       ++ allDivSeqF n lv
                       ++ allDivSeqG n lv) in
-                    rewrite any1 (\t => not (limited t)) (allDivSeqE n lv) (
+                    rewrite any1 p.unLimited (allDivSeqE n lv) (
                       allDivSeqF n lv
                       ++ allDivSeqG n lv) in
-                    rewrite any1 (\t => not (limited t)) (allDivSeqF n lv) (
+                    rewrite any1 p.unLimited (allDivSeqF n lv) (
                       allDivSeqG n lv) in
-                      \y => orToEither  (myAny (\t => not (limited t)) (allDivSeq n lv))
-                                        (myAny (\t => not (limited t)) (allDivSeqA n lv))
-                                        (myAny (\t => not (limited t)) (allDivSeqB n lv))
-                                        (myAny (\t => not (limited t)) (allDivSeqC n lv))
-                                        (myAny (\t => not (limited t)) (allDivSeqD n lv))
-                                        (myAny (\t => not (limited t)) (allDivSeqE n lv))
-                                        (myAny (\t => not (limited t)) (allDivSeqF n lv))
-                                        (myAny (\t => not (limited t)) (allDivSeqG n lv))
+                      \y => orToEither  (myAny p.unLimited (allDivSeq n lv))
+                                        (myAny p.unLimited (allDivSeqA n lv))
+                                        (myAny p.unLimited (allDivSeqB n lv))
+                                        (myAny p.unLimited (allDivSeqC n lv))
+                                        (myAny p.unLimited (allDivSeqD n lv))
+                                        (myAny p.unLimited (allDivSeqE n lv))
+                                        (myAny p.unLimited (allDivSeqF n lv))
+                                        (myAny p.unLimited (allDivSeqG n lv))
                                         y
 
   lvDown'' : (n,lv:Nat)
-    -> Either (myAny (\t => not (limited t)) $ allDivSeq n lv = True)
-        (Either (myAny (\t => not (limited t)) (allDivSeqA n lv) = True)
-          (Either (myAny (\t => not (limited t)) (allDivSeqB n lv) = True)
-            (Either (myAny (\t => not (limited t)) (allDivSeqC n lv) = True)
-              (Either (myAny (\t => not (limited t)) (allDivSeqD n lv) = True)
-                (Either (myAny (\t => not (limited t)) (allDivSeqE n lv) = True)
-                  (Either (myAny (\t => not (limited t)) (allDivSeqF n lv) = True)
-                          (myAny (\t => not (limited t)) (allDivSeqG n lv) = True)))))))
-      -> myAny (\t => not (limited t)) $ allDivSeq n lv = True
+    -> Either (myAny p.unLimited $ allDivSeq n lv = True)
+        (Either (myAny p.unLimited (allDivSeqA n lv) = True)
+          (Either (myAny p.unLimited (allDivSeqB n lv) = True)
+            (Either (myAny p.unLimited (allDivSeqC n lv) = True)
+              (Either (myAny p.unLimited (allDivSeqD n lv) = True)
+                (Either (myAny p.unLimited (allDivSeqE n lv) = True)
+                  (Either (myAny p.unLimited (allDivSeqF n lv) = True)
+                          (myAny p.unLimited (allDivSeqG n lv) = True)))))))
+      -> myAny p.unLimited $ allDivSeq n lv = True
   lvDown'' n Z (Left l) = l
   lvDown'' n Z (Right (Left l)) = let prf = changeA0 n l in
     rewrite unfold0 n in Right (Left prf)
@@ -119,8 +119,8 @@ mutual
     rewrite unfold3 n (S lv) in (Right (Right (Right (Right (Right (Right (Right (lvDown' (divNatNZ (n `minus` 21) 64 SIsNotZ) (S lv) prf))))))))
 
   -- レベルを下げる事ができる
-  lvDown' : (n, lv:Nat) -> myAny (\t => not (limited t)) $ allDivSeq n lv = True
-                        -> myAny (\t => not (limited t)) $ allDivSeq n (pred lv) = True
+  lvDown' : (n, lv:Nat) -> myAny p.unLimited $ allDivSeq n lv = True
+                        -> myAny p.unLimited $ allDivSeq n (pred lv) = True
   lvDown' n Z      prf = prf
   lvDown' n (S lv) prf = lvDown'' n lv $ lvDown''' n lv prf
 -- ---------------------------------
