@@ -3,7 +3,7 @@ module Sub11Apply108x54
 import ProofColDivSeqBase
 import ProofColDivSeqPostulate
 
-%default total
+%default partial
 -- %language ElabReflection
 
 

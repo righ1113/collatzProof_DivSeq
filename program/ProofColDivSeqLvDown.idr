@@ -3,7 +3,7 @@ module ProofColDivSeqLvDown
 import ProofColDivSeqBase
 import ProofColDivSeqPostulate
 
-%default total
+%default partial
 -- %language ElabReflection
 
 
@@ -22,6 +22,7 @@ orToEither True  _     _     _     _     _     _     _     prf = Left Refl
 
 
 mutual
+  partial
   lvDown''' : (n, lv:Nat) -> myAny p.unLimited $ allDivSeq n (S lv) = True
     -> Either (myAny p.unLimited $ allDivSeq n lv = True)
         (Either (myAny p.unLimited (allDivSeqA n lv) = True)
@@ -77,6 +78,7 @@ mutual
                                         (myAny p.unLimited (allDivSeqG n lv))
                                         y
 
+  partial
   lvDown'' : (n,lv:Nat)
     -> Either (myAny p.unLimited $ allDivSeq n lv = True)
         (Either (myAny p.unLimited (allDivSeqA n lv) = True)
@@ -119,6 +121,7 @@ mutual
     rewrite unfold3 n (S lv) in (Right (Right (Right (Right (Right (Right (Right (lvDown' (divNatNZ (n `minus` 21) 64 SIsNotZ) (S lv) prf))))))))
 
   -- レベルを下げる事ができる
+  partial
   lvDown' : (n, lv:Nat) -> myAny p.unLimited $ allDivSeq n lv = True
                         -> myAny p.unLimited $ allDivSeq n (pred lv) = True
   lvDown' n Z      prf = prf

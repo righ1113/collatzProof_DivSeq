@@ -2,7 +2,7 @@ module ProofColDivSeqPostulate
 
 import ProofColDivSeqBase
 
-%default total
+%default partial
 -- %language ElabReflection
 %access export
 
@@ -11,12 +11,10 @@ import ProofColDivSeqBase
 -- ########################################
 -- 全域性を破れば定義できるので問題ない
 namespace p
-  postulate unLimited : Maybe (CoList Integer) -> Bool
-{--
+  unLimited : Maybe (CoList Integer) -> Bool
   unLimited Nothing          = False
   unLimited (Just [])        = False
   unLimited (Just (_ :: xs)) = unLimited (Just xs)
---}
 
 -- ロード順の関係上ここに置く
 P : Nat -> Nat -> Type

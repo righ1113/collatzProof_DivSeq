@@ -19,7 +19,7 @@ import Sub13Apply108x36
 import Sub14Apply108x72
 import Sub15Apply108x108
 
-%default total
+%default partial
 -- %language ElabReflection
 
 
