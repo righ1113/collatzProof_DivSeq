@@ -19,6 +19,7 @@ ae54x12To6x l prf =
                         (S (plus (plus (plus l l) l) (plus (plus l l) l)))))) 2
                     prf in
     let prf3 = ae54x12To6x' l prf2 in lvDown (plus l l) 3 prf3
+
 export
 apply54x12 : P (S (S (plus (plus (plus (plus (plus l l) l) (plus (plus l l) l))
                             (S (plus (plus (plus l l) l) (plus (plus l l) l))))
@@ -57,3 +58,8 @@ apply54x12 {l} col = let col2 = ae54x12To6x l col in ((plus l l) ** (lte54x12 l,
     rewrite (sym (plusSuccRightSucc (plus (plus (plus (plus k k) k) (plus (plus k k) k)) (S (plus (plus (plus k k) k) (plus (plus k k) k)))) (S (plus (plus (plus k k) k) (plus (plus k k) k))))) in
       (lteSuccRight . lteSuccRight . lteSuccRight . lteSuccRight . lteSuccRight . lteSuccRight . lteSuccRight . lteSuccRight . lteSuccRight . lteSuccRight . lteSuccRight . lteSuccRight . lteSuccRight . lteSuccRight . lteSuccRight . lteSuccRight . LTESucc . LTESucc) lemma
 -- ---------------------------
+
+
+
+
+
