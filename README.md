@@ -2,7 +2,7 @@
 割数列を用いたコラッツ予想の証明
 
 # 変更履歴
-19/03/17　[English version Wiki is here](http://vixra.org/abs/1903.0296).  
+19/03/17　<a href="http://vixra.org/abs/1903.0296" target="_blank">English version Wiki is here.</a>  
 19/01/25　program：ver1.1をリリース　divSeqの実装をunfoldrに変更  
 18/11/18　program：ver1.0をリリース　program、Wiki共にひとまず完成  
 18/11/03　Wiki：第1部を作成完了  
