@@ -50,7 +50,7 @@ mod3 (S (S (S k))) with (mod3 k)
 
 
 -- allDivSeqの実装に必要な関数
--- from libs/contrib/Data/CoList.idr
+-- ----- from libs/contrib/Data/CoList.idr -----
 public export
 codata CoList : Type -> Type where
   Nil : CoList a
@@ -73,6 +73,19 @@ unfoldr f x =
   case f x of
     Just (y, new_x) => y :: (unfoldr f new_x)
     _               => []
+-- ----- from libs/contrib/Data/CoList.idr -----
+
+-- ----- from libs/base/Data/List/Quantifiers.idr -----
+public export
+data Any : (P : a -> Type) -> List a -> Type where
+  Here  : {P : a -> Type} -> {xs : List a} -> P x -> Any P (x :: xs)
+  There : {P : a -> Type} -> {xs : List a} -> Any P xs -> Any P (x :: xs)
+
+public export
+data All : (P : a -> Type) -> List a -> Type where
+  NilA : {P : a -> Type} -> All P Nil
+  Cons : {P : a -> Type} -> {xs : List a} -> P x -> All P xs -> All P (x :: xs)
+-- ----- from libs/base/Data/List/Quantifiers.idr -----
 
 
 dsp : List Integer -> Maybe (CoList Integer) -> Maybe (CoList Integer)
@@ -201,9 +214,22 @@ unfold : (x, lv:Nat) -> allDivSeq x (S lv) = allDivSeq x lv
                                           ++ allDivSeqG x lv
 unfold x lv = Refl
 
-myAny : (a->Bool) -> List a -> Bool
-myAny pp [] = False
-myAny pp (x :: xs) = (pp x) || myAny pp xs
+-- myAny : (a->Bool) -> List a -> Bool
+-- myAny pp [] = False
+-- myAny pp (x :: xs) = (pp x) || myAny pp xs
+
+limitedNStep : Maybe (CoList Integer) -> Nat -> Bool
+limitedNStep Nothing          _     = True
+limitedNStep (Just [])        _     = True
+limitedNStep (Just (_ :: _))  Z     = False
+limitedNStep (Just (_ :: xs)) (S n) = limitedNStep (Just xs) n
+
+public export
+data Limited : Maybe (CoList Integer) -> Type where
+  IsLimited : (n : Nat ** limitedNStep xs n = True) -> Limited xs
+
+P : Nat -> Nat -> Type
+P n lv = Not $ All Limited $ allDivSeq (n+n+n) lv
 -- ---------------------------------
 
 
@@ -218,4 +244,6 @@ myAny pp (x :: xs) = (pp x) || myAny pp xs
 -- allDivSeq 0 2が有限項である事を示すため、mainを使う（ビルドして）
 main : IO ()
 main = traverse_ (putStrLn . show) $ allDivSeq 0 2
+
+
 

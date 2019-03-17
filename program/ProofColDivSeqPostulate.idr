@@ -9,27 +9,14 @@ import ProofColDivSeqBase
 
 --            from ProofColDivSeqBase
 -- ########################################
--- 全域性を破れば定義できるので問題ない
-namespace p
-  postulate unLimited : Maybe (CoList Integer) -> Bool
-{--
-  unLimited Nothing          = False
-  unLimited (Just [])        = False
-  unLimited (Just (_ :: xs)) = unLimited (Just xs)
---}
-
--- ロード順の関係上ここに置く
-P : Nat -> Nat -> Type
-P n lv = any p.unLimited $ allDivSeq (n+n+n) lv = True
-
 -- 無限降下法（の変形） Isabelleで証明した
 postulate infiniteDescent :
   ((n:Nat) -> P (S n) 2 -> (m ** (LTE (S m) (S n), P m 2)))
-    -> any p.unLimited $ allDivSeq Z 2 = False
-      -> any p.unLimited $ allDivSeq (n+n+n) 2 = False
+    -> All Limited $ allDivSeq Z 2
+      -> All Limited $ allDivSeq (n+n+n) 2
 
 -- BaseLog0.txtより、保証される
-postulate base0 : any p.unLimited $ allDivSeq Z 2 = False
+postulate base0 : All Limited $ allDivSeq Z 2
 -- ########################################
 
 
@@ -37,59 +24,57 @@ postulate base0 : any p.unLimited $ allDivSeq Z 2 = False
 --            from ProofColDivSeqLvDown
 -- ########################################
 -- 前提 Isabelleで証明した
-postulate any1 : (pp:a->Bool) -> (xs, ys:List a)
-  -> myAny pp (xs ++ ys) = myAny pp xs || myAny pp ys
--- any1 pp [] ys = Refl
--- any1 pp (x :: xs) ys ?= cong {f=(\t => pp x || t)} (any1 pp xs ys)
+postulate any1 : (pp : a -> Type) -> (xs, ys : List a)
+  -> Any pp (xs ++ ys) = Either (Any pp xs) (Any pp ys)
 
 -- 前方を削っているのは、（有限or無限を判定する）末尾に影響を与えないから
-postulate changeA : (x, lv:Nat) -> (myAny p.unLimited (allDivSeqA n lv) = True)
-  -> (myAny p.unLimited (allDivSeq (divNatNZ ((x+7)*3) 4 SIsNotZ) lv) = True)
-postulate changeA0 : (x:Nat) -> (myAny p.unLimited (allDivSeqA n 0) = True)
-  -> (myAny p.unLimited [Just (divSeq (divNatNZ ((x+7)*3) 4 SIsNotZ))] = True)
-postulate changeB : (x, lv:Nat) -> (myAny p.unLimited (allDivSeqB n lv) = True)
-  -> (myAny p.unLimited (allDivSeq (x*6+3) lv) = True)
-postulate changeB0 : (x:Nat) -> (myAny p.unLimited (allDivSeqB n 0) = True)
-  -> (myAny p.unLimited [Just (divSeq (x*6+3))] = True)
-postulate changeC : (x, lv:Nat) -> (myAny p.unLimited (allDivSeqC n lv) = True)
-  -> (myAny p.unLimited (allDivSeq (x*3+6) lv) = True)
-postulate changeC0 : (x:Nat) -> (myAny p.unLimited (allDivSeqC n 0) = True)
-  -> (myAny p.unLimited [Just (divSeq (x*3+6))] = True)
-postulate changeD : (x, lv:Nat) -> (myAny p.unLimited (allDivSeqD n lv) = True)
-  -> (myAny p.unLimited (allDivSeq (divNatNZ ((x+1)*3) 2 SIsNotZ) lv) = True)
-postulate changeD0 : (x:Nat) -> (myAny p.unLimited (allDivSeqD n 0) = True)
-  -> (myAny p.unLimited [Just (divSeq (divNatNZ ((x+1)*3) 2 SIsNotZ))] = True)
-postulate changeE : (x, lv:Nat) -> (myAny p.unLimited (allDivSeqE n lv) = True)
-  -> (myAny p.unLimited (allDivSeq (x*12+9) lv) = True)
-postulate changeE0 : (x:Nat) -> (myAny p.unLimited (allDivSeqE n 0) = True)
-  -> (myAny p.unLimited [Just (divSeq (x*12+9))] = True)
-postulate changeF : (x, lv:Nat) -> (myAny p.unLimited (allDivSeqF n lv) = True)
-  -> (myAny p.unLimited (allDivSeq (divNatNZ ((x+3)*3) 8 SIsNotZ) lv) = True)
-postulate changeF0 : (x:Nat) -> (myAny p.unLimited (allDivSeqF n 0) = True)
-  -> (myAny p.unLimited [Just (divSeq (divNatNZ ((x+3)*3) 8 SIsNotZ))] = True)
-postulate changeG : (x, lv:Nat) -> (myAny p.unLimited (allDivSeqG n lv) = True)
-  -> (myAny p.unLimited (allDivSeq (divNatNZ (x `minus` 21) 64 SIsNotZ) lv) = True)
-postulate changeG0 : (x:Nat) -> (myAny p.unLimited (allDivSeqG n 0) = True)
-  -> (myAny p.unLimited [Just (divSeq (divNatNZ (x `minus` 21) 64 SIsNotZ))] = True)
+postulate changeA : (x, lv:Nat) -> (Any (Not . Limited) (allDivSeqA n lv))
+  -> (Any (Not . Limited) (allDivSeq (divNatNZ ((x+7)*3) 4 SIsNotZ) lv))
+postulate changeA0 : (x:Nat) -> (Any (Not . Limited) (allDivSeqA n 0))
+  -> (Any (Not . Limited) [Just (divSeq (divNatNZ ((x+7)*3) 4 SIsNotZ))])
+postulate changeB : (x, lv:Nat) -> (Any (Not . Limited) (allDivSeqB n lv))
+  -> (Any (Not . Limited) (allDivSeq (x*6+3) lv))
+postulate changeB0 : (x:Nat) -> (Any (Not . Limited) (allDivSeqB n 0))
+  -> (Any (Not . Limited) [Just (divSeq (x*6+3))])
+postulate changeC : (x, lv:Nat) -> (Any (Not . Limited) (allDivSeqC n lv))
+  -> (Any (Not . Limited) (allDivSeq (x*3+6) lv))
+postulate changeC0 : (x:Nat) -> (Any (Not . Limited) (allDivSeqC n 0))
+  -> (Any (Not . Limited) [Just (divSeq (x*3+6))])
+postulate changeD : (x, lv:Nat) -> (Any (Not . Limited) (allDivSeqD n lv))
+  -> (Any (Not . Limited) (allDivSeq (divNatNZ ((x+1)*3) 2 SIsNotZ) lv))
+postulate changeD0 : (x:Nat) -> (Any (Not . Limited) (allDivSeqD n 0))
+  -> (Any (Not . Limited) [Just (divSeq (divNatNZ ((x+1)*3) 2 SIsNotZ))])
+postulate changeE : (x, lv:Nat) -> (Any (Not . Limited) (allDivSeqE n lv))
+  -> (Any (Not . Limited) (allDivSeq (x*12+9) lv))
+postulate changeE0 : (x:Nat) -> (Any (Not . Limited) (allDivSeqE n 0))
+  -> (Any (Not . Limited) [Just (divSeq (x*12+9))])
+postulate changeF : (x, lv:Nat) -> (Any (Not . Limited) (allDivSeqF n lv))
+  -> (Any (Not . Limited) (allDivSeq (divNatNZ ((x+3)*3) 8 SIsNotZ) lv))
+postulate changeF0 : (x:Nat) -> (Any (Not . Limited) (allDivSeqF n 0))
+  -> (Any (Not . Limited) [Just (divSeq (divNatNZ ((x+3)*3) 8 SIsNotZ))])
+postulate changeG : (x, lv:Nat) -> (Any (Not . Limited) (allDivSeqG n lv))
+  -> (Any (Not . Limited) (allDivSeq (divNatNZ (x `minus` 21) 64 SIsNotZ) lv))
+postulate changeG0 : (x:Nat) -> (Any (Not . Limited) (allDivSeqG n 0))
+  -> (Any (Not . Limited) [Just (divSeq (divNatNZ (x `minus` 21) 64 SIsNotZ))])
 
-postulate unfold3 : (x, lv:Nat) -> (myAny p.unLimited $ allDivSeq x lv = True) =
-  Either (myAny p.unLimited $ allDivSeq x (pred lv) = True)
-    (Either (myAny p.unLimited $ allDivSeq (divNatNZ ((x+7)*3) 4 SIsNotZ) (pred lv) = True)
-      (Either (myAny p.unLimited $ allDivSeq (x*6+3) (pred lv) = True)
-        (Either (myAny p.unLimited $ allDivSeq (x*3+6) (pred lv) = True)
-          (Either (myAny p.unLimited $ allDivSeq (divNatNZ ((x+1)*3) 2 SIsNotZ) (pred lv) = True)
-            (Either (myAny p.unLimited $ allDivSeq (x*12+9) (pred lv) = True)
-              (Either (myAny p.unLimited $ allDivSeq (divNatNZ ((x+3)*3) 8 SIsNotZ) (pred lv) = True)
-                      (myAny p.unLimited $ allDivSeq (divNatNZ (x `minus` 21) 64 SIsNotZ) (pred lv) = True)))))))
-postulate unfold0 : (x:Nat) -> (myAny p.unLimited $ allDivSeq x 0 = True) =
-  Either (myAny p.unLimited $ [Just (divSeq x)] = True)
-    (Either (myAny p.unLimited $ [Just (divSeq (divNatNZ ((x+7)*3) 4 SIsNotZ))] = True)
-      (Either (myAny p.unLimited $ [Just (divSeq (x*6+3))] = True)
-        (Either (myAny p.unLimited $ [Just (divSeq (x*3+6))] = True)
-          (Either (myAny p.unLimited $ [Just (divSeq (divNatNZ ((x+1)*3) 2 SIsNotZ))] = True)
-            (Either (myAny p.unLimited $ [Just (divSeq (x*12+9))] = True)
-              (Either (myAny p.unLimited $ [Just (divSeq (divNatNZ ((x+3)*3) 8 SIsNotZ))] = True)
-                      (myAny p.unLimited $ [Just (divSeq (divNatNZ (x `minus` 21) 64 SIsNotZ))] = True)))))))
+postulate unfold3 : (x, lv:Nat) -> (Any (Not . Limited) $ allDivSeq x lv) =
+  Either (Any (Not . Limited) $ allDivSeq x (pred lv))
+    (Either (Any (Not . Limited) $ allDivSeq (divNatNZ ((x+7)*3) 4 SIsNotZ) (pred lv))
+      (Either (Any (Not . Limited) $ allDivSeq (x*6+3) (pred lv))
+        (Either (Any (Not . Limited) $ allDivSeq (x*3+6) (pred lv))
+          (Either (Any (Not . Limited) $ allDivSeq (divNatNZ ((x+1)*3) 2 SIsNotZ) (pred lv))
+            (Either (Any (Not . Limited) $ allDivSeq (x*12+9) (pred lv))
+              (Either (Any (Not . Limited) $ allDivSeq (divNatNZ ((x+3)*3) 8 SIsNotZ) (pred lv))
+                      (Any (Not . Limited) $ allDivSeq (divNatNZ (x `minus` 21) 64 SIsNotZ) (pred lv))))))))
+postulate unfold0 : (x:Nat) -> (Any (Not . Limited) $ allDivSeq x 0) =
+  Either (Any (Not . Limited) $ [Just (divSeq x)])
+    (Either (Any (Not . Limited) $ [Just (divSeq (divNatNZ ((x+7)*3) 4 SIsNotZ))])
+      (Either (Any (Not . Limited) $ [Just (divSeq (x*6+3))])
+        (Either (Any (Not . Limited) $ [Just (divSeq (x*3+6))])
+          (Either (Any (Not . Limited) $ [Just (divSeq (divNatNZ ((x+1)*3) 2 SIsNotZ))])
+            (Either (Any (Not . Limited) $ [Just (divSeq (x*12+9))])
+              (Either (Any (Not . Limited) $ [Just (divSeq (divNatNZ ((x+3)*3) 8 SIsNotZ))])
+                      (Any (Not . Limited) $ [Just (divSeq (divNatNZ (x `minus` 21) 64 SIsNotZ))])))))))
 
 -- ProofColDivSeqLvDown.idrでlvDown'を証明したからOK
 postulate lvDown : (n, lv:Nat) -> P n lv -> P n (pred lv)
@@ -215,15 +200,15 @@ postulate fc108x108To96x93' :
 -- ########################################
 -- anyがFalseなら、全ての要素がFalseなので
 postulate aDSFalse : (x, lv:Nat)
-  -> any p.unLimited (allDivSeq x lv
-                ++ allDivSeqA x lv
-                ++ allDivSeqB x lv
-                ++ allDivSeqC x lv
-                ++ allDivSeqD x lv
-                ++ allDivSeqE x lv
-                ++ allDivSeqF x lv
-                ++ allDivSeqG x lv) = False
-    -> any p.unLimited (allDivSeq x lv) = False
+  -> All Limited (allDivSeq x lv
+              ++ allDivSeqA x lv
+              ++ allDivSeqB x lv
+              ++ allDivSeqC x lv
+              ++ allDivSeqD x lv
+              ++ allDivSeqE x lv
+              ++ allDivSeqF x lv
+              ++ allDivSeqG x lv)
+    -> All Limited (allDivSeq x lv)
 -- ########################################
 
 

@@ -50,20 +50,21 @@ unifi n prf with (mod3 n)
         unifi (S (S (S (S (S (o+o+o)+S (o+o+o))+ S (S (o+o+o)+S (o+o+o))) + S (S (S (o+o+o)+S (o+o+o))+S (S (o+o+o)+S (o+o+o))) + S (S (S (o+o+o)+S (o+o+o))+S (S (o+o+o)+S (o+o+o)))))) prf | ThreeTwo | Odd | Odd | ThreeOne = apply108x72 prf
         unifi (S (S (S (S (S (S (o+o+o))+S (S (o+o+o)))+ S (S (S (o+o+o))+S (S (o+o+o)))) + S (S (S (S (o+o+o))+S (S (o+o+o)))+S (S (S (o+o+o))+S (S (o+o+o)))) + S (S (S (S (o+o+o))+S (S (o+o+o)))+S (S (S (o+o+o))+S (S (o+o+o))))))) prf | ThreeTwo | Odd | Odd | ThreeTwo = apply108x108 prf
 
-allDivSeqInfFalse' : any p.unLimited (allDivSeq (n+n+n) 2) = False
+allDivSeqInfFalse' : All Limited (allDivSeq (n+n+n) 2)
 allDivSeqInfFalse' = infiniteDescent unifi base0
 
 -- レベルを下げる関数2
 lvDown2 : (n, lv:Nat)
-  -> any p.unLimited (allDivSeq (n+n+n) lv) = False
-    -> any p.unLimited (allDivSeq (n+n+n) (pred lv)) = False
+  -> All Limited (allDivSeq (n+n+n) lv)
+    -> All Limited (allDivSeq (n+n+n) (pred lv))
 lvDown2 n Z = \y => y
 lvDown2 n (S lv) = rewrite unfold (n+n+n) lv in \y => aDSFalse (n+n+n) lv y
 
 
 -- 最終的な定理
 allDivSeqInfFalse : (n:Nat)
-  -> any p.unLimited (allDivSeq (n+n+n) 0) = False
+  -> All Limited (allDivSeq (n+n+n) 0)
 allDivSeqInfFalse n = lvDown2 n 1 $ lvDown2 n 2 allDivSeqInfFalse'
+
 
 
