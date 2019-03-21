@@ -2,6 +2,7 @@
 割数列を用いたコラッツ予想の証明
 
 # 変更履歴
+19/03/22　program：postulate命題2個を証明  
 19/03/18　program：ver1.2をリリース　Limitedを(全域)型として定義  
 19/03/17　<a href="http://vixra.org/abs/1903.0296" target="_blank">English version Wiki is here.</a>  
 19/01/25　program：ver1.1をリリース　divSeqの実装をunfoldrに変更  
