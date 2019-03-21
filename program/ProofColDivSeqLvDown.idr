@@ -18,41 +18,14 @@ mutual
                   (Either (Any (Not . Limited) (allDivSeqF n lv))
                           (Any (Not . Limited) (allDivSeqG n lv)) ))))))
   lvDown''' n lv = rewrite unfold n lv in
-                    rewrite any1 (Not . Limited) (allDivSeq n lv)
-                      (  allDivSeqA n lv
-                      ++ allDivSeqB n lv
-                      ++ allDivSeqC n lv
-                      ++ allDivSeqD n lv
-                      ++ allDivSeqE n lv
-                      ++ allDivSeqF n lv
-                      ++ allDivSeqG n lv) in
-                    rewrite any1 (Not . Limited) (allDivSeqA n lv)
-                      (  allDivSeqB n lv
-                      ++ allDivSeqC n lv
-                      ++ allDivSeqD n lv
-                      ++ allDivSeqE n lv
-                      ++ allDivSeqF n lv
-                      ++ allDivSeqG n lv) in
-                    rewrite any1 (Not . Limited) (allDivSeqB n lv)
-                      (  allDivSeqC n lv
-                      ++ allDivSeqD n lv
-                      ++ allDivSeqE n lv
-                      ++ allDivSeqF n lv
-                      ++ allDivSeqG n lv) in
-                    rewrite any1 (Not . Limited) (allDivSeqC n lv)
-                      (  allDivSeqD n lv
-                      ++ allDivSeqE n lv
-                      ++ allDivSeqF n lv
-                      ++ allDivSeqG n lv) in
-                    rewrite any1 (Not . Limited) (allDivSeqD n lv)
-                      (  allDivSeqE n lv
-                      ++ allDivSeqF n lv
-                      ++ allDivSeqG n lv) in
-                    rewrite any1 (Not . Limited) (allDivSeqE n lv)
-                      (  allDivSeqF n lv
-                      ++ allDivSeqG n lv) in
-                    rewrite any1 (Not . Limited) (allDivSeqF n lv)
-                      (allDivSeqG n lv) in id
+    \prf => anyFinal (allDivSeq n lv)
+                     (allDivSeqA n lv)
+                     (allDivSeqB n lv)
+                     (allDivSeqC n lv)
+                     (allDivSeqD n lv)
+                     (allDivSeqE n lv)
+                     (allDivSeqF n lv)
+                     (allDivSeqG n lv) prf
 
   lvDown'' : (n,lv:Nat)
     -> Either (Any (Not . Limited) (allDivSeq n lv))

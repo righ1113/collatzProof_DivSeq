@@ -23,9 +23,82 @@ postulate base0 : All Limited $ allDivSeq Z 2
 
 --            from ProofColDivSeqLvDown
 -- ########################################
--- 前提 Isabelleで証明した
-postulate any1 : (pp : a -> Type) -> (xs, ys : List a)
-  -> Any pp (xs ++ ys) = Either (Any pp xs) (Any pp ys)
+any2Sub : {pp : a -> Type} -> (x : a) -> (xs, ys : List a)
+  -> Either (Any pp xs) (Any pp ys) -> Either (Any pp (x :: xs)) (Any pp ys)
+any2Sub x []       ys (Left anL)  = absurd anL
+any2Sub x (x2::xs) ys (Left anL)  = Left (There anL)
+any2Sub x xs       ys (Right anR) = Right anR
+
+-- これが肝
+any2 : {pp : a -> Type} -> (xs, ys : List a)
+  -> Any pp (xs ++ ys) -> Either (Any pp xs) (Any pp ys)
+any2 []      ys an         = Right an
+any2 (x::xs) ys (Here he)  = Left (Here he)
+any2 (x::xs) ys (There th) =
+  let foo = any2 xs ys th in any2Sub x xs ys foo
+
+any3 : {pp : a -> Type} -> (xs1, xs2, xs3 : List a)
+  -> Either (Any pp xs1) (Any pp (xs2++xs3))
+    -> Either (Any pp xs1) (Either (Any pp xs2) (Any pp xs3))
+any3 xs1 xs2 xs3 (Left prfL)  = Left prfL
+any3 xs1 xs2 xs3 (Right prfR) = Right (any2 xs2 xs3 prfR)
+
+any4 : {pp : a -> Type} -> (xs1, xs2, xs3, xs4 : List a)
+  -> Either (Any pp xs1) (Either (Any pp xs2) (Any pp (xs3++xs4)))
+    -> Either (Any pp xs1) (Either (Any pp xs2) (Either (Any pp xs3) (Any pp xs4)))
+any4 xs1 xs2 xs3 xs4 (Left prfL)           = Left prfL
+any4 xs1 xs2 xs3 xs4 (Right (Left prfRL))  = Right (Left prfRL)
+any4 xs1 xs2 xs3 xs4 (Right (Right prfRR)) = Right (Right (any2 xs3 xs4 prfRR))
+
+any5 : {pp : a -> Type} -> (xs1, xs2, xs3, xs4, xs5 : List a)
+  -> Either (Any pp xs1) (Either (Any pp xs2) (Either (Any pp xs3) (Any pp (xs4++xs5))))
+    -> Either (Any pp xs1) (Either (Any pp xs2) (Either (Any pp xs3) (Either (Any pp xs4) (Any pp xs5))))
+any5 xs1 xs2 xs3 xs4 xs5 (Left prfL)                    = Left prfL
+any5 xs1 xs2 xs3 xs4 xs5 (Right (Left prfRL))           = Right (Left prfRL)
+any5 xs1 xs2 xs3 xs4 xs5 (Right (Right (Left prfRRL)))  = Right (Right (Left prfRRL))
+any5 xs1 xs2 xs3 xs4 xs5 (Right (Right (Right prfRRR))) = Right (Right (Right (any2 xs4 xs5 prfRRR)))
+
+any6 : {pp : a -> Type} -> (xs1, xs2, xs3, xs4, xs5, xs6 : List a)
+  -> Either (Any pp xs1) (Either (Any pp xs2) (Either (Any pp xs3) (Either (Any pp xs4) (Any pp (xs5++xs6)))))
+    -> Either (Any pp xs1) (Either (Any pp xs2) (Either (Any pp xs3) (Either (Any pp xs4) (Either (Any pp xs5) (Any pp xs6)))))
+any6 xs1 xs2 xs3 xs4 xs5 xs6 (Left prfL)                             = Left prfL
+any6 xs1 xs2 xs3 xs4 xs5 xs6 (Right (Left prfRL))                    = Right (Left prfRL)
+any6 xs1 xs2 xs3 xs4 xs5 xs6 (Right (Right (Left prfRRL)))           = Right (Right (Left prfRRL))
+any6 xs1 xs2 xs3 xs4 xs5 xs6 (Right (Right (Right (Left prfRRRL))))  = Right (Right (Right (Left prfRRRL)))
+any6 xs1 xs2 xs3 xs4 xs5 xs6 (Right (Right (Right (Right prfRRRR)))) = Right (Right (Right (Right (any2 xs5 xs6 prfRRRR))))
+
+any7 : {pp : a -> Type} -> (xs1, xs2, xs3, xs4, xs5, xs6, xs7 : List a)
+  -> Either (Any pp xs1) (Either (Any pp xs2) (Either (Any pp xs3) (Either (Any pp xs4) (Either (Any pp xs5) (Any pp (xs6++xs7))))))
+    -> Either (Any pp xs1) (Either (Any pp xs2) (Either (Any pp xs3) (Either (Any pp xs4) (Either (Any pp xs5) (Either (Any pp xs6) (Any pp xs7))))))
+any7 xs1 xs2 xs3 xs4 xs5 xs6 xs7 (Left prfL)                                      = Left prfL
+any7 xs1 xs2 xs3 xs4 xs5 xs6 xs7 (Right (Left prfRL))                             = Right (Left prfRL)
+any7 xs1 xs2 xs3 xs4 xs5 xs6 xs7 (Right (Right (Left prfRRL)))                    = Right (Right (Left prfRRL))
+any7 xs1 xs2 xs3 xs4 xs5 xs6 xs7 (Right (Right (Right (Left prfRRRL))))           = Right (Right (Right (Left prfRRRL)))
+any7 xs1 xs2 xs3 xs4 xs5 xs6 xs7 (Right (Right (Right (Right (Left prfRRRRL)))))  = Right (Right (Right (Right (Left prfRRRRL))))
+any7 xs1 xs2 xs3 xs4 xs5 xs6 xs7 (Right (Right (Right (Right (Right prfRRRRR))))) = Right (Right (Right (Right (Right (any2 xs6 xs7 prfRRRRR)))))
+
+any8 : {pp : a -> Type} -> (xs1, xs2, xs3, xs4, xs5, xs6, xs7, xs8 : List a)
+  -> Either (Any pp xs1) (Either (Any pp xs2) (Either (Any pp xs3) (Either (Any pp xs4) (Either (Any pp xs5) (Either (Any pp xs6) (Any pp (xs7++xs8)))))))
+    -> Either (Any pp xs1) (Either (Any pp xs2) (Either (Any pp xs3) (Either (Any pp xs4) (Either (Any pp xs5) (Either (Any pp xs6) (Either (Any pp xs7) (Any pp xs8)))))))
+any8 xs1 xs2 xs3 xs4 xs5 xs6 xs7 xs8 (Left prfL)                                               = Left prfL
+any8 xs1 xs2 xs3 xs4 xs5 xs6 xs7 xs8 (Right (Left prfRL))                                      = Right (Left prfRL)
+any8 xs1 xs2 xs3 xs4 xs5 xs6 xs7 xs8 (Right (Right (Left prfRRL)))                             = Right (Right (Left prfRRL))
+any8 xs1 xs2 xs3 xs4 xs5 xs6 xs7 xs8 (Right (Right (Right (Left prfRRRL))))                    = Right (Right (Right (Left prfRRRL)))
+any8 xs1 xs2 xs3 xs4 xs5 xs6 xs7 xs8 (Right (Right (Right (Right (Left prfRRRRL)))))           = Right (Right (Right (Right (Left prfRRRRL))))
+any8 xs1 xs2 xs3 xs4 xs5 xs6 xs7 xs8 (Right (Right (Right (Right (Right (Left prfRRRRRL))))))  = Right (Right (Right (Right (Right (Left prfRRRRRL)))))
+any8 xs1 xs2 xs3 xs4 xs5 xs6 xs7 xs8 (Right (Right (Right (Right (Right (Right prfRRRRRR)))))) = Right (Right (Right (Right (Right (Right (any2 xs7 xs8 prfRRRRRR))))))
+
+anyFinal : {pp : a -> Type} -> (xs1, xs2, xs3, xs4, xs5, xs6, xs7, xs8 : List a)
+  -> Any pp (xs1 ++ xs2 ++ xs3 ++ xs4 ++ xs5 ++ xs6 ++ xs7 ++ xs8)
+    -> Either (Any pp xs1) (Either (Any pp xs2) (Either (Any pp xs3) (Either (Any pp xs4) (Either (Any pp xs5) (Either (Any pp xs6) (Either (Any pp xs7) (Any pp xs8)))))))
+anyFinal xs1 xs2 xs3 xs4 xs5 xs6 xs7 xs8 prf =
+  let prf2 = any2 xs1 (xs2 ++ xs3 ++ xs4 ++ xs5 ++ xs6 ++ xs7 ++ xs8) prf in
+  let prf3 = any3 xs1 xs2 (xs3 ++ xs4 ++ xs5 ++ xs6 ++ xs7 ++ xs8) prf2 in
+  let prf4 = any4 xs1 xs2 xs3 (xs4 ++ xs5 ++ xs6 ++ xs7 ++ xs8) prf3 in
+  let prf5 = any5 xs1 xs2 xs3 xs4 (xs5 ++ xs6 ++ xs7 ++ xs8) prf4 in
+  let prf6 = any6 xs1 xs2 xs3 xs4 xs5 (xs6 ++ xs7 ++ xs8) prf5 in
+  let prf7 = any7 xs1 xs2 xs3 xs4 xs5 xs6 (xs7 ++ xs8) prf6 in
+  let prf8 = any8 xs1 xs2 xs3 xs4 xs5 xs6 xs7 xs8 prf7 in prf8
 
 -- 前方を削っているのは、（有限or無限を判定する）末尾に影響を与えないから
 postulate changeA : (x, lv:Nat) -> (Any (Not . Limited) (allDivSeqA n lv))
@@ -198,17 +271,20 @@ postulate fc108x108To96x93' :
 
 --            from ProofColDivSeqMain
 -- ########################################
--- anyがFalseなら、全ての要素がFalseなので
-postulate aDSFalse : (x, lv:Nat)
-  -> All Limited (allDivSeq x lv
-              ++ allDivSeqA x lv
-              ++ allDivSeqB x lv
-              ++ allDivSeqC x lv
-              ++ allDivSeqD x lv
-              ++ allDivSeqE x lv
-              ++ allDivSeqF x lv
-              ++ allDivSeqG x lv)
-    -> All Limited (allDivSeq x lv)
+listLemma : (xs : List a) -> xs ++ [] = xs
+listLemma [] = Refl
+listLemma (x::xs) = cong {f=(x::)} (listLemma xs)
+
+all2Sub : {pp : a -> Type} -> (xs, ys : List a)
+  -> All pp ((x::xs) ++ ys) -> (pp x, All pp (xs ++ ys))
+all2Sub xs ys (Cons p ps) = (p, ps)
+
+-- これが肝
+all2 : {pp : a -> Type} -> (xs, ys : List a)
+  -> All pp (xs ++ ys) -> All pp xs
+all2 []      ys _   = NilA
+all2 (x::xs) ys prf = let (prf2, prf3) = all2Sub xs ys prf in
+  Cons prf2 (all2 xs ys prf3)
 -- ########################################
 
 

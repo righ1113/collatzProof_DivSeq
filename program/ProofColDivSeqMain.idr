@@ -57,8 +57,17 @@ allDivSeqInfFalse' = infiniteDescent unifi base0
 lvDown2 : (n, lv:Nat)
   -> All Limited (allDivSeq (n+n+n) lv)
     -> All Limited (allDivSeq (n+n+n) (pred lv))
-lvDown2 n Z = \y => y
-lvDown2 n (S lv) = rewrite unfold (n+n+n) lv in \y => aDSFalse (n+n+n) lv y
+lvDown2 n Z = id
+lvDown2 n (S lv) = rewrite unfold (n+n+n) lv in \y =>
+  all2 (allDivSeq  (n+n+n) lv)
+       (allDivSeqA (n+n+n) lv ++
+        allDivSeqB (n+n+n) lv ++
+        allDivSeqC (n+n+n) lv ++
+        allDivSeqD (n+n+n) lv ++
+        allDivSeqE (n+n+n) lv ++
+        allDivSeqF (n+n+n) lv ++
+        allDivSeqG (n+n+n) lv)
+        y
 
 
 -- 最終的な定理

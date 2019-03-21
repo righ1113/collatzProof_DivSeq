@@ -81,6 +81,13 @@ data Any : (P : a -> Type) -> List a -> Type where
   Here  : {P : a -> Type} -> {xs : List a} -> P x -> Any P (x :: xs)
   There : {P : a -> Type} -> {xs : List a} -> Any P xs -> Any P (x :: xs)
 
+anyNilAbsurd : {P : a -> Type} -> Any P Nil -> Void
+anyNilAbsurd (Here _)  impossible
+anyNilAbsurd (There _) impossible
+
+implementation Uninhabited (Any p Nil) where
+  uninhabited = anyNilAbsurd
+
 public export
 data All : (P : a -> Type) -> List a -> Type where
   NilA : {P : a -> Type} -> All P Nil
