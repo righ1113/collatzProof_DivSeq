@@ -53,20 +53,20 @@ mutual
   lvDown'' n Z (Right (Right (Right (Right (Right (Right (Right r))))))) = let prf = changeG0 n r in
     rewrite unfold0 n in (Right (Right (Right (Right (Right (Right (Right prf)))))))
   lvDown'' n (S lv) (Left l) = l
-  lvDown'' n (S lv) (Right (Left l)) = let prf = changeA n (S lv) l in
-    rewrite unfold3 n (S lv) in Right (Left (lvDown' (divNatNZ ((n+7)*3) 4 SIsNotZ) (S lv) prf))
-  lvDown'' n (S lv) (Right (Right (Left l))) = let prf = changeB n (S lv) l in
-    rewrite unfold3 n (S lv) in (Right (Right (Left (lvDown' (n*6+3) (S lv) prf))))
-  lvDown'' n (S lv) (Right (Right (Right (Left l)))) = let prf = changeC n (S lv) l in
-    rewrite unfold3 n (S lv) in (Right (Right (Right (Left (lvDown' (n*3+6) (S lv) prf)))))
-  lvDown'' n (S lv) (Right (Right (Right (Right (Left l))))) = let prf = changeD n (S lv) l in
-    rewrite unfold3 n (S lv) in (Right (Right (Right (Right (Left (lvDown' (divNatNZ ((n+1)*3) 2 SIsNotZ) (S lv) prf))))))
-  lvDown'' n (S lv) (Right (Right (Right (Right (Right (Left l)))))) = let prf = changeE n (S lv) l in
-    rewrite unfold3 n (S lv) in (Right (Right (Right (Right (Right (Left (lvDown' (n*12+9) (S lv) prf)))))))
-  lvDown'' n (S lv) (Right (Right (Right (Right (Right (Right (Left l))))))) = let prf = changeF n (S lv) l in
-    rewrite unfold3 n (S lv) in (Right (Right (Right (Right (Right (Right (Left (lvDown' (divNatNZ ((n+3)*3) 8 SIsNotZ) (S lv) prf))))))))
-  lvDown'' n (S lv) (Right (Right (Right (Right (Right (Right (Right r))))))) = let prf = changeG n (S lv) r in
-    rewrite unfold3 n (S lv) in (Right (Right (Right (Right (Right (Right (Right (lvDown' (divNatNZ (n `minus` 21) 64 SIsNotZ) (S lv) prf))))))))
+  lvDown'' n (S lv) (Right (Left l)) = let prf = changeA n lv l in
+    rewrite unfold3 n lv in Right (Left (lvDown' (divNatNZ ((n+7)*3) 4 SIsNotZ) (S lv) prf))
+  lvDown'' n (S lv) (Right (Right (Left l))) = let prf = changeB n lv l in
+    rewrite unfold3 n lv in (Right (Right (Left (lvDown' (n*6+3) (S lv) prf))))
+  lvDown'' n (S lv) (Right (Right (Right (Left l)))) = let prf = changeC n lv l in
+    rewrite unfold3 n lv in (Right (Right (Right (Left (lvDown' (n*3+6) (S lv) prf)))))
+  lvDown'' n (S lv) (Right (Right (Right (Right (Left l))))) = let prf = changeD n lv l in
+    rewrite unfold3 n lv in (Right (Right (Right (Right (Left (lvDown' (divNatNZ ((n+1)*3) 2 SIsNotZ) (S lv) prf))))))
+  lvDown'' n (S lv) (Right (Right (Right (Right (Right (Left l)))))) = let prf = changeE n lv l in
+    rewrite unfold3 n lv in (Right (Right (Right (Right (Right (Left (lvDown' (n*12+9) (S lv) prf)))))))
+  lvDown'' n (S lv) (Right (Right (Right (Right (Right (Right (Left l))))))) = let prf = changeF n lv l in
+    rewrite unfold3 n lv in (Right (Right (Right (Right (Right (Right (Left (lvDown' (divNatNZ ((n+3)*3) 8 SIsNotZ) (S lv) prf))))))))
+  lvDown'' n (S lv) (Right (Right (Right (Right (Right (Right (Right r))))))) = let prf = changeG n lv r in
+    rewrite unfold3 n lv in (Right (Right (Right (Right (Right (Right (Right (lvDown' (divNatNZ (n `minus` 21) 64 SIsNotZ) (S lv) prf))))))))
 
   -- レベルを下げる事ができる
   lvDown' : (n, lv:Nat) -> Any (Not . Limited) $ allDivSeq n lv

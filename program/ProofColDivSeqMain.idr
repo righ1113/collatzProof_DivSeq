@@ -67,7 +67,7 @@ lvDown2 n (S lv) = rewrite unfold (n+n+n) lv in \y =>
         allDivSeqE (n+n+n) lv ++
         allDivSeqF (n+n+n) lv ++
         allDivSeqG (n+n+n) lv)
-        y
+       y
 
 
 -- 最終的な定理
