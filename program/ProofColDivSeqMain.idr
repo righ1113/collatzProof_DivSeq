@@ -58,7 +58,7 @@ lvDown2 : (n, lv:Nat)
   -> All Limited (allDivSeq (n+n+n) lv)
     -> All Limited (allDivSeq (n+n+n) (pred lv))
 lvDown2 n Z = id
-lvDown2 n (S lv) = rewrite unfold (n+n+n) lv in \y =>
+lvDown2 n (S lv) = rewrite defini (n+n+n) lv in \y =>
   all2 (allDivSeq  (n+n+n) lv)
        (allDivSeqA (n+n+n) lv ++
         allDivSeqB (n+n+n) lv ++

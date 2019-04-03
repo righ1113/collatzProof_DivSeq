@@ -101,36 +101,164 @@ anyFinal xs1 xs2 xs3 xs4 xs5 xs6 xs7 xs8 prf =
   let prf8 = any8 xs1 xs2 xs3 xs4 xs5 xs6 xs7 xs8 prf7 in prf8
 
 -- 前方を削っているのは、（有限or無限を判定する）末尾に影響を与えないから
-postulate changeA : (x, lv:Nat) -> (Any (Not . Limited) (allDivSeqA n (S lv)))
-  -> (Any (Not . Limited) (allDivSeq (divNatNZ ((x+7)*3) 4 SIsNotZ) (S lv)))
-postulate changeA0 : (x:Nat) -> (Any (Not . Limited) (allDivSeqA n 0))
-  -> (Any (Not . Limited) [Just (divSeq (divNatNZ ((x+7)*3) 4 SIsNotZ))])
-postulate changeB : (x, lv:Nat) -> (Any (Not . Limited) (allDivSeqB n (S lv)))
-  -> (Any (Not . Limited) (allDivSeq (x*6+3) (S lv)))
-postulate changeB0 : (x:Nat) -> (Any (Not . Limited) (allDivSeqB n 0))
-  -> (Any (Not . Limited) [Just (divSeq (x*6+3))])
-postulate changeC : (x, lv:Nat) -> (Any (Not . Limited) (allDivSeqC n (S lv)))
-  -> (Any (Not . Limited) (allDivSeq (x*3+6) (S lv)))
-postulate changeC0 : (x:Nat) -> (Any (Not . Limited) (allDivSeqC n 0))
-  -> (Any (Not . Limited) [Just (divSeq (x*3+6))])
-postulate changeD : (x, lv:Nat) -> (Any (Not . Limited) (allDivSeqD n (S lv)))
-  -> (Any (Not . Limited) (allDivSeq (divNatNZ ((x+1)*3) 2 SIsNotZ) (S lv)))
-postulate changeD0 : (x:Nat) -> (Any (Not . Limited) (allDivSeqD n 0))
-  -> (Any (Not . Limited) [Just (divSeq (divNatNZ ((x+1)*3) 2 SIsNotZ))])
-postulate changeE : (x, lv:Nat) -> (Any (Not . Limited) (allDivSeqE n (S lv)))
-  -> (Any (Not . Limited) (allDivSeq (x*12+9) (S lv)))
-postulate changeE0 : (x:Nat) -> (Any (Not . Limited) (allDivSeqE n 0))
-  -> (Any (Not . Limited) [Just (divSeq (x*12+9))])
-postulate changeF : (x, lv:Nat) -> (Any (Not . Limited) (allDivSeqF n (S lv)))
-  -> (Any (Not . Limited) (allDivSeq (divNatNZ ((x+3)*3) 8 SIsNotZ) (S lv)))
-postulate changeF0 : (x:Nat) -> (Any (Not . Limited) (allDivSeqF n 0))
-  -> (Any (Not . Limited) [Just (divSeq (divNatNZ ((x+3)*3) 8 SIsNotZ))])
-postulate changeG : (x, lv:Nat) -> (Any (Not . Limited) (allDivSeqG n (S lv)))
-  -> (Any (Not . Limited) (allDivSeq (divNatNZ (x `minus` 21) 64 SIsNotZ) (S lv)))
-postulate changeG0 : (x:Nat) -> (Any (Not . Limited) (allDivSeqG n 0))
-  -> (Any (Not . Limited) [Just (divSeq (divNatNZ (x `minus` 21) 64 SIsNotZ))])
+postulate dspCut : Any (Not . Limited) (map ([a,b] `dsp`) xs)
+  -> Any (Not . Limited) xs
+postulate dsp2Cut : Any (Not . Limited) (map ([a] `dsp2`) xs)
+  -> Any (Not . Limited) xs
 
-postulate unfold3 : (x, lv:Nat) -> (Any (Not . Limited) $ allDivSeq x (S lv)) =
+
+changeA' : (x, lv:Nat) -> Any (Not . Limited) (
+      if (modNatNZ (x+7) 4 SIsNotZ) == 0
+      then map ([6,-4] `dsp`) $ allDivSeq (divNatNZ ((x+7)*3) 4 SIsNotZ) (S lv)
+      else [])
+  -> Any (Not . Limited) (allDivSeq (divNatNZ ((x+7)*3) 4 SIsNotZ) (S lv))
+changeA' x lv prf with ((modNatNZ (x+7) 4 SIsNotZ) == 0) proof p
+  changeA' x lv prf | False = absurd prf
+  changeA' x lv prf | True  = dspCut prf
+changeA : (x, lv:Nat) -> Any (Not . Limited) (allDivSeqA x (S lv))
+  -> Any (Not . Limited) (allDivSeq (divNatNZ ((x+7)*3) 4 SIsNotZ) (S lv))
+changeA x lv prf = changeA' x lv $ replace (definiA x lv) prf
+
+changeA0' : (x : Nat) -> Any (Not . Limited) (
+      if (modNatNZ (x+7) 4 SIsNotZ) == 0 && (modNatNZ (modNatNZ (x+7) 4 SIsNotZ) 2 SIsNotZ) == 1
+      then [[6,-4] `dsp` (Just (divSeq (divNatNZ ((x+7)*3) 4 SIsNotZ)))]
+      else [])
+  -> Any (Not . Limited) [Just (divSeq (divNatNZ ((x+7)*3) 4 SIsNotZ))]
+changeA0' x prf with ((modNatNZ (x+7) 4 SIsNotZ) == 0 && (modNatNZ (modNatNZ (x+7) 4 SIsNotZ) 2 SIsNotZ) == 1) proof p
+  changeA0' x prf | False = absurd prf
+  changeA0' x prf | True  = dspCut prf
+changeA0 : (x:Nat) -> Any (Not . Limited) (allDivSeqA x 0)
+  -> Any (Not . Limited) [Just (divSeq (divNatNZ ((x+7)*3) 4 SIsNotZ))]
+changeA0 x prf = changeA0' x $ replace (definiA0 x) prf
+
+
+changeB : (x, lv:Nat) -> Any (Not . Limited) (allDivSeqB x (S lv))
+  -> Any (Not . Limited) (allDivSeq (x*6+3) (S lv))
+changeB x lv prf = dspCut $ replace (definiB x lv) prf
+
+changeB0' : (x : Nat) -> Any (Not . Limited) (
+      if (modNatNZ (x*6+3) 2 SIsNotZ) == 1
+      then [[1,-2] `dsp` (Just (divSeq (x*6+3)))]
+      else [])
+  -> Any (Not . Limited) [Just (divSeq (x*6+3))]
+changeB0' x prf with ((modNatNZ (x*6+3) 2 SIsNotZ) == 1) proof p
+  changeB0' x prf | False = absurd prf
+  changeB0' x prf | True  = dspCut prf
+changeB0 : (x:Nat) -> Any (Not . Limited) (allDivSeqB x 0)
+  -> Any (Not . Limited) [Just (divSeq (x*6+3))]
+changeB0 x prf = changeB0' x $ replace (definiB0 x) prf
+
+
+changeC : (x, lv:Nat) -> Any (Not . Limited) (allDivSeqC x (S lv))
+  -> Any (Not . Limited) (allDivSeq (x*3+6) (S lv))
+changeC x lv prf = dspCut $ replace (definiC x lv) prf
+
+changeC0' : (x : Nat) -> Any (Not . Limited) (
+      if (modNatNZ (x*3+6) 2 SIsNotZ) == 1
+      then [[4,-4] `dsp` (Just (divSeq (x*3+6)))]
+      else [])
+  -> Any (Not . Limited) [Just (divSeq (x*3+6))]
+changeC0' x prf with ((modNatNZ (x*3+6) 2 SIsNotZ) == 1) proof p
+  changeC0' x prf | False = absurd prf
+  changeC0' x prf | True  = dspCut prf
+changeC0 : (x:Nat) -> Any (Not . Limited) (allDivSeqC x 0)
+  -> Any (Not . Limited) [Just (divSeq (x*3+6))]
+changeC0 x prf = changeC0' x $ replace (definiC0 x) prf
+
+
+changeD' : (x, lv:Nat) -> Any (Not . Limited) (
+      if (modNatNZ (x+1) 2 SIsNotZ) == 0
+      then map ([3,-2] `dsp`) $ allDivSeq (divNatNZ ((x+1)*3) 2 SIsNotZ) (S lv)
+      else [])
+  -> Any (Not . Limited) (allDivSeq (divNatNZ ((x+1)*3) 2 SIsNotZ) (S lv))
+changeD' x lv prf with ((modNatNZ (x+1) 2 SIsNotZ) == 0) proof p
+  changeD' x lv prf | False = absurd prf
+  changeD' x lv prf | True  = dspCut prf
+changeD : (x, lv:Nat) -> Any (Not . Limited) (allDivSeqD x (S lv))
+  -> Any (Not . Limited) (allDivSeq (divNatNZ ((x+1)*3) 2 SIsNotZ) (S lv))
+changeD x lv prf = changeD' x lv $ replace (definiD x lv) prf
+
+changeD0' : (x : Nat) -> Any (Not . Limited) (
+      if (modNatNZ (x+1) 2 SIsNotZ) == 0 && (modNatNZ (modNatNZ (x+1) 2 SIsNotZ) 2 SIsNotZ) == 1
+      then [[3,-2] `dsp` (Just (divSeq (divNatNZ ((x+1)*3) 2 SIsNotZ)))]
+      else [])
+  -> Any (Not . Limited) [Just (divSeq (divNatNZ ((x+1)*3) 2 SIsNotZ))]
+changeD0' x prf with ((modNatNZ (x+1) 2 SIsNotZ) == 0 && (modNatNZ (modNatNZ (x+1) 2 SIsNotZ) 2 SIsNotZ) == 1) proof p
+  changeD0' x prf | False = absurd prf
+  changeD0' x prf | True  = dspCut prf
+changeD0 : (x:Nat) -> Any (Not . Limited) (allDivSeqD x 0)
+  -> Any (Not . Limited) [Just (divSeq (divNatNZ ((x+1)*3) 2 SIsNotZ))]
+changeD0 x prf = changeD0' x $ replace (definiD0 x) prf
+
+
+changeE : (x, lv:Nat) -> Any (Not . Limited) (allDivSeqE x (S lv))
+  -> Any (Not . Limited) (allDivSeq (x*12+9) (S lv))
+changeE x lv prf = dspCut $ replace (definiE x lv) prf
+
+changeE0' : (x : Nat) -> Any (Not . Limited) (
+      if (modNatNZ (x*12+9) 2 SIsNotZ) == 1
+      then [[2,-4] `dsp` (Just (divSeq (x*12+9)))]
+      else [])
+  -> Any (Not . Limited) [Just (divSeq (x*12+9))]
+changeE0' x prf with ((modNatNZ (x*12+9) 2 SIsNotZ) == 1) proof p
+  changeE0' x prf | False = absurd prf
+  changeE0' x prf | True  = dspCut prf
+changeE0 : (x:Nat) -> Any (Not . Limited) (allDivSeqE x 0)
+  -> Any (Not . Limited) [Just (divSeq (x*12+9))]
+changeE0 x prf = changeE0' x $ replace (definiE0 x) prf
+
+
+changeF' : (x, lv:Nat) -> Any (Not . Limited) (
+      if (modNatNZ (x+3) 8 SIsNotZ) == 0
+      then map ([5,-2] `dsp`) $ allDivSeq (divNatNZ ((x+3)*3) 8 SIsNotZ) (S lv)
+      else [])
+  -> Any (Not . Limited) (allDivSeq (divNatNZ ((x+3)*3) 8 SIsNotZ) (S lv))
+changeF' x lv prf with ((modNatNZ (x+3) 8 SIsNotZ) == 0) proof p
+  changeF' x lv prf | False = absurd prf
+  changeF' x lv prf | True  = dspCut prf
+changeF : (x, lv:Nat) -> Any (Not . Limited) (allDivSeqF x (S lv))
+  -> Any (Not . Limited) (allDivSeq (divNatNZ ((x+3)*3) 8 SIsNotZ) (S lv))
+changeF x lv prf = changeF' x lv $ replace (definiF x lv) prf
+
+changeF0' : (x : Nat) -> Any (Not . Limited) (
+      if (modNatNZ (x+3) 8 SIsNotZ) == 0 && (modNatNZ (modNatNZ (x+3) 8 SIsNotZ) 2 SIsNotZ) == 1
+      then [[5,-2] `dsp` (Just (divSeq (divNatNZ ((x+3)*3) 8 SIsNotZ)))]
+      else [])
+  -> Any (Not . Limited) [Just (divSeq (divNatNZ ((x+3)*3) 8 SIsNotZ))]
+changeF0' x prf with ((modNatNZ (x+3) 8 SIsNotZ) == 0 && (modNatNZ (modNatNZ (x+3) 8 SIsNotZ) 2 SIsNotZ) == 1) proof p
+  changeF0' x prf | False = absurd prf
+  changeF0' x prf | True  = dspCut prf
+changeF0 : (x:Nat) -> Any (Not . Limited) (allDivSeqF x 0)
+  -> Any (Not . Limited) [Just (divSeq (divNatNZ ((x+3)*3) 8 SIsNotZ))]
+changeF0 x prf = changeF0' x $ replace (definiF0 x) prf
+
+
+changeG' : (x, lv:Nat) -> Any (Not . Limited) (
+      if (modNatNZ (x `minus` 21) 64 SIsNotZ) == 0 && x > 21
+      then map ([6] `dsp2`) $ allDivSeq (divNatNZ (x `minus` 21) 64 SIsNotZ) (S lv)
+      else [])
+  -> Any (Not . Limited) (allDivSeq (divNatNZ (x `minus` 21) 64 SIsNotZ) (S lv))
+changeG' x lv prf with ((modNatNZ (x `minus` 21) 64 SIsNotZ) == 0 && x > 21) proof p
+  changeG' x lv prf | False = absurd prf
+  changeG' x lv prf | True  = dsp2Cut prf
+changeG : (x, lv:Nat) -> Any (Not . Limited) (allDivSeqG x (S lv))
+  -> Any (Not . Limited) (allDivSeq (divNatNZ (x `minus` 21) 64 SIsNotZ) (S lv))
+changeG x lv prf = changeG' x lv $ replace (definiG x lv) prf
+
+changeG0' : (x : Nat) -> Any (Not . Limited) (
+      if (modNatNZ (x `minus` 21) 64 SIsNotZ) == 0 && x > 21 && (modNatNZ (modNatNZ (x `minus` 21) 64 SIsNotZ) 2 SIsNotZ) == 1
+      then [[6] `dsp2` (Just (divSeq (divNatNZ (x `minus` 21) 64 SIsNotZ)))]
+      else [])
+  -> Any (Not . Limited) [Just (divSeq (divNatNZ (x `minus` 21) 64 SIsNotZ))]
+changeG0' x prf with ((modNatNZ (x `minus` 21) 64 SIsNotZ) == 0 && x > 21 && (modNatNZ (modNatNZ (x `minus` 21) 64 SIsNotZ) 2 SIsNotZ) == 1) proof p
+  changeG0' x prf | False = absurd prf
+  changeG0' x prf | True  = dsp2Cut prf
+changeG0 : (x:Nat) -> Any (Not . Limited) (allDivSeqG x 0)
+  -> Any (Not . Limited) [Just (divSeq (divNatNZ (x `minus` 21) 64 SIsNotZ))]
+changeG0 x prf = changeG0' x $ replace (definiG0 x) prf
+
+
+postulate defini3 : (x, lv:Nat) -> (Any (Not . Limited) $ allDivSeq x (S lv)) =
   Either (Any (Not . Limited) $ allDivSeq x lv)
     (Either (Any (Not . Limited) $ allDivSeq (divNatNZ ((x+7)*3) 4 SIsNotZ) lv)
       (Either (Any (Not . Limited) $ allDivSeq (x*6+3) lv)
@@ -139,7 +267,7 @@ postulate unfold3 : (x, lv:Nat) -> (Any (Not . Limited) $ allDivSeq x (S lv)) =
             (Either (Any (Not . Limited) $ allDivSeq (x*12+9) lv)
               (Either (Any (Not . Limited) $ allDivSeq (divNatNZ ((x+3)*3) 8 SIsNotZ) lv)
                       (Any (Not . Limited) $ allDivSeq (divNatNZ (x `minus` 21) 64 SIsNotZ) lv)))))))
-postulate unfold0 : (x:Nat) -> (Any (Not . Limited) $ allDivSeq x 0) =
+postulate defini0 : (x:Nat) -> (Any (Not . Limited) $ allDivSeq x 0) =
   Either (Any (Not . Limited) $ [Just (divSeq x)])
     (Either (Any (Not . Limited) $ [Just (divSeq (divNatNZ ((x+7)*3) 4 SIsNotZ))])
       (Either (Any (Not . Limited) $ [Just (divSeq (x*6+3))])

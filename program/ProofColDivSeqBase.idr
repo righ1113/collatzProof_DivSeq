@@ -211,7 +211,7 @@ mutual
 
 
 -- その他関数
-unfold : (x, lv:Nat) -> allDivSeq x (S lv) = allDivSeq x lv
+defini : (x, lv:Nat) -> allDivSeq x (S lv) = allDivSeq x lv
                                           ++ allDivSeqA x lv
                                           ++ allDivSeqB x lv
                                           ++ allDivSeqC x lv
@@ -219,7 +219,78 @@ unfold : (x, lv:Nat) -> allDivSeq x (S lv) = allDivSeq x lv
                                           ++ allDivSeqE x lv
                                           ++ allDivSeqF x lv
                                           ++ allDivSeqG x lv
-unfold x lv = Refl
+defini x lv = Refl
+
+definiA0 : (x : Nat) -> (allDivSeqA x Z) =
+  (if (modNatNZ (x+7) 4 SIsNotZ) == 0 && (modNatNZ (modNatNZ (x+7) 4 SIsNotZ) 2 SIsNotZ) == 1
+  then [[6,-4] `dsp` (Just (divSeq (divNatNZ ((x+7)*3) 4 SIsNotZ)))]
+  else [])
+definiA0 x = Refl
+definiA : (x, lv:Nat) -> (allDivSeqA x (S lv)) =
+  (if (modNatNZ (x+7) 4 SIsNotZ) == 0
+  then map ([6,-4] `dsp`) $ allDivSeq (divNatNZ ((x+7)*3) 4 SIsNotZ) (S lv)
+  else [])
+definiA x lv = Refl
+
+definiB0 : (x : Nat) -> (allDivSeqB x Z) =
+  (if (modNatNZ (x*6+3) 2 SIsNotZ) == 1
+  then [[1,-2] `dsp` (Just (divSeq (x*6+3)))]
+  else [])
+definiB0 x = Refl
+definiB : (x, lv:Nat) -> (allDivSeqB x (S lv)) =
+  map ([1,-2] `dsp`) $ allDivSeq (x*6+3) (S lv)
+definiB x lv = Refl
+
+definiC0 : (x : Nat) -> (allDivSeqC x Z) =
+  (if (modNatNZ (x*3+6) 2 SIsNotZ) == 1
+  then [[4,-4] `dsp` (Just (divSeq (x*3+6)))]
+  else [])
+definiC0 x = Refl
+definiC : (x, lv:Nat) -> (allDivSeqC x (S lv)) =
+  map ([4,-4] `dsp`) $ allDivSeq (x*3+6) (S lv)
+definiC x lv = Refl
+
+definiD0 : (x : Nat) -> (allDivSeqD x Z) =
+  (if (modNatNZ (x+1) 2 SIsNotZ) == 0 && (modNatNZ (modNatNZ (x+1) 2 SIsNotZ) 2 SIsNotZ) == 1
+  then [[3,-2] `dsp` (Just (divSeq (divNatNZ ((x+1)*3) 2 SIsNotZ)))]
+  else [])
+definiD0 x = Refl
+definiD : (x, lv:Nat) -> (allDivSeqD x (S lv)) =
+  (if (modNatNZ (x+1) 2 SIsNotZ) == 0
+  then map ([3,-2] `dsp`) $ allDivSeq (divNatNZ ((x+1)*3) 2 SIsNotZ) (S lv)
+  else [])
+definiD x lv = Refl
+
+definiE0 : (x : Nat) -> (allDivSeqE x Z) =
+  (if (modNatNZ (x*12+9) 2 SIsNotZ) == 1
+  then [[2,-4] `dsp` (Just (divSeq (x*12+9)))]
+  else [])
+definiE0 x = Refl
+definiE : (x, lv:Nat) -> (allDivSeqE x (S lv)) =
+  map ([2,-4] `dsp`) $ allDivSeq (x*12+9) (S lv)
+definiE x lv = Refl
+
+definiF0 : (x : Nat) -> (allDivSeqF x Z) =
+  (if (modNatNZ (x+3) 8 SIsNotZ) == 0 && (modNatNZ (modNatNZ (x+3) 8 SIsNotZ) 2 SIsNotZ) == 1
+  then [[5,-2] `dsp` (Just (divSeq (divNatNZ ((x+3)*3) 8 SIsNotZ)))]
+  else [])
+definiF0 x = Refl
+definiF : (x, lv:Nat) -> (allDivSeqF x (S lv)) =
+  (if (modNatNZ (x+3) 8 SIsNotZ) == 0
+  then map ([5,-2] `dsp`) $ allDivSeq (divNatNZ ((x+3)*3) 8 SIsNotZ) (S lv)
+  else [])
+definiF x lv = Refl
+
+definiG0 : (x : Nat) -> (allDivSeqG x Z) =
+  (if (modNatNZ (x `minus` 21) 64 SIsNotZ) == 0 && x > 21 && (modNatNZ (modNatNZ (x `minus` 21) 64 SIsNotZ) 2 SIsNotZ) == 1
+  then [[6] `dsp2` (Just (divSeq (divNatNZ (x `minus` 21) 64 SIsNotZ)))]
+  else [])
+definiG0 x = Refl
+definiG : (x, lv:Nat) -> (allDivSeqG x (S lv)) =
+  (if (modNatNZ (x `minus` 21) 64 SIsNotZ) == 0 && x > 21
+  then map ([6] `dsp2`) $ allDivSeq (divNatNZ (x `minus` 21) 64 SIsNotZ) (S lv)
+  else [])
+definiG x lv = Refl
 
 -- myAny : (a->Bool) -> List a -> Bool
 -- myAny pp [] = False
