@@ -4,9 +4,9 @@
 # 変更履歴
 19/04/04　program：postulate命題12個を証明  
 19/03/22　program：postulate命題2個を証明  
-19/03/18　program：ver1.2をリリース　Limitedを(全域)型として定義  
+19/03/18　program：ver1.2をリリース　`Limited`を(全域)型として定義  
 19/03/17　<a href="http://vixra.org/abs/1903.0296" target="_blank">English version Wiki is here.</a>  
-19/01/25　program：ver1.1をリリース　divSeqの実装をunfoldrに変更  
+19/01/25　program：ver1.1をリリース　`divSeq`の実装を`unfoldr`に変更  
 18/11/18　program：ver1.0をリリース　program、Wiki共にひとまず完成  
 18/11/03　Wiki：第1部を作成完了  
 18/10/01　Wiki：第2部を作成完了  
