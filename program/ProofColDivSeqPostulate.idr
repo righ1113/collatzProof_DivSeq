@@ -258,8 +258,8 @@ changeG0 : (x:Nat) -> Any (Not . Limited) (allDivSeqG x 0)
 changeG0 x prf = changeG0' x $ replace (definiG0 x) prf
 
 
-postulate defini3 : (x, lv:Nat) -> (Any (Not . Limited) $ allDivSeq x (S lv)) =
-  Either (Any (Not . Limited) $ allDivSeq x lv)
+postulate defini3 : (x, lv:Nat)
+  -> Either (Any (Not . Limited) $ allDivSeq x lv)
     (Either (Any (Not . Limited) $ allDivSeq (divNatNZ ((x+7)*3) 4 SIsNotZ) lv)
       (Either (Any (Not . Limited) $ allDivSeq (x*6+3) lv)
         (Either (Any (Not . Limited) $ allDivSeq (x*3+6) lv)
@@ -267,8 +267,9 @@ postulate defini3 : (x, lv:Nat) -> (Any (Not . Limited) $ allDivSeq x (S lv)) =
             (Either (Any (Not . Limited) $ allDivSeq (x*12+9) lv)
               (Either (Any (Not . Limited) $ allDivSeq (divNatNZ ((x+3)*3) 8 SIsNotZ) lv)
                       (Any (Not . Limited) $ allDivSeq (divNatNZ (x `minus` 21) 64 SIsNotZ) lv)))))))
-postulate defini0 : (x:Nat) -> (Any (Not . Limited) $ allDivSeq x 0) =
-  Either (Any (Not . Limited) $ [Just (divSeq x)])
+    -> (Any (Not . Limited) $ allDivSeq x (S lv))
+postulate defini0 : (x:Nat)
+  -> Either (Any (Not . Limited) $ [Just (divSeq x)])
     (Either (Any (Not . Limited) $ [Just (divSeq (divNatNZ ((x+7)*3) 4 SIsNotZ))])
       (Either (Any (Not . Limited) $ [Just (divSeq (x*6+3))])
         (Either (Any (Not . Limited) $ [Just (divSeq (x*3+6))])
@@ -276,6 +277,7 @@ postulate defini0 : (x:Nat) -> (Any (Not . Limited) $ allDivSeq x 0) =
             (Either (Any (Not . Limited) $ [Just (divSeq (x*12+9))])
               (Either (Any (Not . Limited) $ [Just (divSeq (divNatNZ ((x+3)*3) 8 SIsNotZ))])
                       (Any (Not . Limited) $ [Just (divSeq (divNatNZ (x `minus` 21) 64 SIsNotZ))])))))))
+    -> (Any (Not . Limited) $ allDivSeq x 0)
 
 -- ProofColDivSeqLvDown.idrでlvDown'を証明したからOK
 postulate lvDown : (n, lv:Nat) -> P n lv -> P n (pred lv)
