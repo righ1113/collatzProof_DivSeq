@@ -2,6 +2,7 @@
 割数列を用いたコラッツ予想の証明
 
 # 変更履歴
+19/04/29　Wiki：最新の状態に更新  
 19/04/04　program：postulate命題12個を証明  
 19/03/22　program：postulate命題2個を証明  
 19/03/18　program：ver1.2をリリース　`Limited`を(全域)型として定義  
