@@ -106,6 +106,10 @@ postulate dspCut : Any (Not . Limited) (map ([a,b] `dsp`) xs)
   -> Any (Not . Limited) xs
 postulate dsp2Cut : Any (Not . Limited) (map ([a] `dsp2`) xs)
   -> Any (Not . Limited) xs
+postulate dspCutAll : All Limited (map ([a,b] `dsp`) xs)
+  -> All Limited xs
+postulate dsp2CutAll : All Limited (map ([a] `dsp2`) xs)
+  -> All Limited xs
 
 
 changeA' : (x, lv:Nat)
@@ -297,8 +301,33 @@ postulate lvDown : (n, lv:Nat) -> P n lv -> P n (pred lv)
 
 
 
+--            from ProofColDivSeqMain
+-- ########################################
+all2Sub : {pp : a -> Type} -> (xs, ys : List a)
+  -> All pp ((x::xs) ++ ys) -> (pp x, All pp (xs ++ ys))
+all2Sub xs ys (Cons p ps) = (p, ps)
+
+-- これが肝
+all2 : {pp : a -> Type} -> (xs, ys : List a)
+  -> All pp (xs ++ ys) -> All pp xs
+all2 []      ys _   = NilA
+all2 (x::xs) ys prf =
+  let (prf2, prf3) = all2Sub xs ys prf
+  in Cons prf2 (all2 xs ys prf3)
+postulate all3 : {pp : a -> Type} -> (xs, ys : List a)
+  -> All pp (xs ++ ys) -> All pp ys
+-- ########################################
+
+
+
 --            from sub0xxxxx
 -- ########################################
+-- 二重否定除去
+postulate dne : ((a -> Void) -> Void) -> a
+-- 対偶
+postulate contraposition2 :
+  {A, B : Nat -> Type} -> (x : Nat) -> (Not $ B x -> Not $ A x) -> (A x -> B x)
+
 -- 01 3(6x+1) --B[1,-2]--> 3x
 postulate b18x3To3x' :
   (k:Nat) -> P (S (plus (plus (plus k k) (plus k k)) (plus k k))) 1 -> P k 2
@@ -323,26 +352,45 @@ postulate ab54x30To12x9' :
                             (S (S (S (plus (plus (plus l l) l) (S (S (plus (plus l l) l)))))))))))) 1
     -> P (S (S (S (plus (plus l l) (plus l l))))) 3
 
-
--- 二重否定除去
-postulate dne : ((a -> Void) -> Void) = a
--- 対偶
-postulate contraposition2 :
-  {A, B : Nat -> Type} -> (x : Nat) -> (Not $ B x -> Not $ A x) -> (A x -> B x)
 -- 05 3(3x+2) --C[4,-4]--> 3x
-postulate contraC9x6To3x' :
+contraC9x6To3x' :
   (j:Nat) -> Not $ P j 2 -> Not $ P (S (S (plus (plus j j) j))) 1
-{-
 contraC9x6To3x' j =
   rewrite definiP j                           2 in
   rewrite definiP (S (S (plus (plus j j) j))) 1 in
-  rewrite dne {a = All Limited (allDivSeq (plus (plus j j) j) 2)} in
-  rewrite dne {a = All Limited (allDivSeq (S (S (plus (plus (plus (plus j j) j) (S (S (plus (plus j j) j)))) (S (S (plus (plus j j) j)))))) 1)} in ?rhs
--}
+  rewrite defini (plus (plus j j) j) 1 in
+  rewrite definiC2 (plus (plus j j) j) 0 in
+    \prf1, prf2Void => let prf1b = dne prf1
+                           prf1c = all3 (allDivSeq (plus (plus j j) j) 1)
+                                                (allDivSeqA (plus (plus j j) j) 1 ++
+                                                allDivSeqB (plus (plus j j) j) 1 ++
+                                                map (dsp [4, -4]) (allDivSeq (S (S (plus (plus (plus (plus j j) j) (S (S (plus (plus j j) j)))) (S (S (plus (plus j j) j)))))) 1) ++
+                                                allDivSeqD (plus (plus j j) j) 1 ++
+                                                allDivSeqE (plus (plus j j) j) 1 ++
+                                                allDivSeqF (plus (plus j j) j) 1 ++
+                                                allDivSeqG (plus (plus j j) j) 1) prf1b
+                           prf1d = all3 (allDivSeqA (plus (plus j j) j) 1)
+                                                (allDivSeqB (plus (plus j j) j) 1 ++
+                                                map (dsp [4, -4]) (allDivSeq (S (S (plus (plus (plus (plus j j) j) (S (S (plus (plus j j) j)))) (S (S (plus (plus j j) j)))))) 1) ++
+                                                allDivSeqD (plus (plus j j) j) 1 ++
+                                                allDivSeqE (plus (plus j j) j) 1 ++
+                                                allDivSeqF (plus (plus j j) j) 1 ++
+                                                allDivSeqG (plus (plus j j) j) 1) prf1c
+                           prf1e = all3 (allDivSeqB (plus (plus j j) j) 1)
+                                                (map (dsp [4, -4]) (allDivSeq (S (S (plus (plus (plus (plus j j) j) (S (S (plus (plus j j) j)))) (S (S (plus (plus j j) j)))))) 1) ++
+                                                allDivSeqD (plus (plus j j) j) 1 ++
+                                                allDivSeqE (plus (plus j j) j) 1 ++
+                                                allDivSeqF (plus (plus j j) j) 1 ++
+                                                allDivSeqG (plus (plus j j) j) 1) prf1d
+                           prf1f = all2 (map (dsp [4, -4]) (allDivSeq (S (S (plus (plus (plus (plus j j) j) (S (S (plus (plus j j) j)))) (S (S (plus (plus j j) j)))))) 1))
+                                                (allDivSeqD (plus (plus j j) j) 1 ++
+                                                allDivSeqE (plus (plus j j) j) 1 ++
+                                                allDivSeqF (plus (plus j j) j) 1 ++
+                                                allDivSeqG (plus (plus j j) j) 1) prf1e in
+      prf2Void $ dspCutAll {a = 4}{b = -4} prf1f
 c9x6To3x' :
   (j:Nat) -> P (S (S (plus (plus j j) j))) 1 -> P j 2
 c9x6To3x' j = contraposition2 j $ contraC9x6To3x' j
-
 
 -- 06 3(12x+3) --E[2,-4]--> 3x
 postulate e36x9To3x' :
@@ -424,23 +472,6 @@ postulate fc108x108To96x93' :
     -> P (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (plus (plus (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))) (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))))
                                                             (plus (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))) (plus (plus (plus o o) (plus o o)) (plus (plus o o)
             (plus o o)))))))))))))))))))))))))))))))))))) 3
--- ########################################
-
-
-
---            from ProofColDivSeqMain
--- ########################################
-all2Sub : {pp : a -> Type} -> (xs, ys : List a)
-  -> All pp ((x::xs) ++ ys) -> (pp x, All pp (xs ++ ys))
-all2Sub xs ys (Cons p ps) = (p, ps)
-
--- これが肝
-all2 : {pp : a -> Type} -> (xs, ys : List a)
-  -> All pp (xs ++ ys) -> All pp xs
-all2 []      ys _   = NilA
-all2 (x::xs) ys prf =
-  let (prf2, prf3) = all2Sub xs ys prf
-  in Cons prf2 (all2 xs ys prf3)
 -- ########################################
 
 
