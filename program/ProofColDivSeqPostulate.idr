@@ -158,7 +158,7 @@ changeB0 x prf = changeB0' x $ replace (definiB0 x) prf
 
 
 changeC : (x, lv:Nat) -> Any (Not . Limited) (allDivSeqC x (S lv))
-  -> Any (Not . Limited) (allDivSeq (x*3+6) (S lv))
+  -> Any (Not . Limited) (allDivSeq (S (S ((x + (S (S x))) + (S (S x))))) (S lv))
 changeC x lv prf = dspCut $ replace (definiC x lv) prf
 
 changeC0' : (x : Nat)
@@ -278,7 +278,7 @@ postulate defini3 : (x, lv:Nat)
   -> Either (Any (Not . Limited) $ allDivSeq x lv)
     (Either (Any (Not . Limited) $ allDivSeq (divNatNZ ((x+7)*3) 4 SIsNotZ) lv)
       (Either (Any (Not . Limited) $ allDivSeq (x*6+3) lv)
-        (Either (Any (Not . Limited) $ allDivSeq (x*3+6) lv)
+        (Either (Any (Not . Limited) $ allDivSeq (S (S ((x + (S (S x))) + (S (S x))))) lv)
           (Either (Any (Not . Limited) $ allDivSeq (divNatNZ ((x+1)*3) 2 SIsNotZ) lv)
             (Either (Any (Not . Limited) $ allDivSeq (x*12+9) lv)
               (Either (Any (Not . Limited) $ allDivSeq (divNatNZ ((x+3)*3) 8 SIsNotZ) lv)
@@ -359,7 +359,7 @@ contraC9x6To3x' j =
   rewrite definiP j                           2 in
   rewrite definiP (S (S (plus (plus j j) j))) 1 in
   rewrite defini (plus (plus j j) j) 1 in
-  rewrite definiC2 (plus (plus j j) j) 0 in
+  rewrite definiC (plus (plus j j) j) 0 in
     \prf1, prf2Void => let prf1b = dne prf1
                            prf1c = all3 (allDivSeq (plus (plus j j) j) 1)
                                                 (allDivSeqA (plus (plus j j) j) 1 ++

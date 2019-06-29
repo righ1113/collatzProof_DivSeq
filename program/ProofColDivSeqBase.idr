@@ -168,7 +168,7 @@ mutual
       then [[4,-4] `dsp` (Just (divSeq (x*3+6)))]
       else []
   allDivSeqC x (S lv) =
-      map ([4,-4] `dsp`) $ allDivSeq (x*3+6) (S lv)
+      map ([4,-4] `dsp`) $ allDivSeq (S (S ((x + (S (S x))) + (S (S x))))) (S lv)
 
   allDivSeqD : Nat -> Nat -> List (Maybe (CoList Integer))
   allDivSeqD x Z =
@@ -247,10 +247,8 @@ definiC0 : (x : Nat) -> (allDivSeqC x Z) =
   else [])
 definiC0 x = Refl
 definiC : (x, lv:Nat) -> (allDivSeqC x (S lv)) =
-  map ([4,-4] `dsp`) $ allDivSeq (x*3+6) (S lv)
-definiC x lv = Refl
-postulate definiC2 : (x, lv:Nat) -> (allDivSeqC x (S lv)) =
   map ([4,-4] `dsp`) $ allDivSeq (S (S ((x + (S (S x))) + (S (S x))))) (S lv)
+definiC x lv = Refl
 
 definiD0 : (x : Nat) -> (allDivSeqD x Z) =
   (if (modNatNZ (x+1) 2 SIsNotZ) == 0 && (modNatNZ (modNatNZ (x+1) 2 SIsNotZ) 2 SIsNotZ) == 1

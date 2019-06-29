@@ -48,7 +48,7 @@ mutual
   lvDown'' n (S lv) (Left l)                                                  = l
   lvDown'' n (S lv) (Right (Left l))                                          = defini3 n lv $ Right (Left (lvDown' (divNatNZ ((n+7)*3) 4 SIsNotZ) (S lv) (changeA n lv l)))
   lvDown'' n (S lv) (Right (Right (Left l)))                                  = defini3 n lv $ (Right (Right (Left (lvDown' (n*6+3) (S lv) (changeB n lv l)))))
-  lvDown'' n (S lv) (Right (Right (Right (Left l))))                          = defini3 n lv $ (Right (Right (Right (Left (lvDown' (n*3+6) (S lv) (changeC n lv l))))))
+  lvDown'' n (S lv) (Right (Right (Right (Left l))))                          = defini3 n lv $ (Right (Right (Right (Left (lvDown' (S (S ((n + (S (S n))) + (S (S n))))) (S lv) (changeC n lv l))))))
   lvDown'' n (S lv) (Right (Right (Right (Right (Left l)))))                  = defini3 n lv $ (Right (Right (Right (Right (Left (lvDown' (divNatNZ ((n+1)*3) 2 SIsNotZ) (S lv) (changeD n lv l)))))))
   lvDown'' n (S lv) (Right (Right (Right (Right (Right (Left l))))))          = defini3 n lv $ (Right (Right (Right (Right (Right (Left (lvDown' (n*12+9) (S lv) (changeE n lv l))))))))
   lvDown'' n (S lv) (Right (Right (Right (Right (Right (Right (Left l)))))))  = defini3 n lv $ (Right (Right (Right (Right (Right (Right (Left (lvDown' (divNatNZ ((n+3)*3) 8 SIsNotZ) (S lv) (changeF n lv l)))))))))
