@@ -332,12 +332,59 @@ postulate contraposition2 :
 postulate b18x3To3x' :
   (k:Nat) -> P (S (plus (plus (plus k k) (plus k k)) (plus k k))) 1 -> P k 2
 
--- 02 3(18x+4) --A[6,-4]->E[2,-4]--> 3(2x)
-postulate ae54x12To6x' :
+
+-- 02 3(18x+4) --A[6,-4]--> 3(24x+3) -->E[2,-4]--> 3(2x)
+contraAe54x12To6x'_1 :
+  (l:Nat) -> Not $ P (plus l l) 3
+    -> All Limited (if (modNatNZ ((plus (plus (plus l l) (plus l l)) (plus l l))+7) 4 SIsNotZ) == 0
+          then map ([6,-4] `dsp`) $ allDivSeq (divNatNZ (((plus (plus (plus l l) (plus l l)) (plus l l))+7)*3) 4 SIsNotZ) 2
+          else [])
+contraAe54x12To6x'_1 l =
+  rewrite definiP (plus l l) 3 in
+  rewrite defini (plus (plus (plus l l) (plus l l)) (plus l l)) 2 in
+  rewrite definiA (plus (plus (plus l l) (plus l l)) (plus l l)) 1 in
+    \prf1 => let prf1b = dne prf1
+                 prf1c = all3 (allDivSeq (plus (plus (plus l l) (plus l l)) (plus l l)) 2)
+                              ((if (modNatNZ ((plus (plus (plus l l) (plus l l)) (plus l l))+7) 4 SIsNotZ) == 0
+                                  then map ([6,-4] `dsp`) $ allDivSeq (divNatNZ (((plus (plus (plus l l) (plus l l)) (plus l l))+7)*3) 4 SIsNotZ) 2
+                                  else []) ++
+                              allDivSeqB (plus (plus (plus l l) (plus l l)) (plus l l)) 2 ++
+                              allDivSeqC (plus (plus (plus l l) (plus l l)) (plus l l)) 2 ++
+                              allDivSeqD (plus (plus (plus l l) (plus l l)) (plus l l)) 2 ++
+                              allDivSeqE (plus (plus (plus l l) (plus l l)) (plus l l)) 2 ++
+                              allDivSeqF (plus (plus (plus l l) (plus l l)) (plus l l)) 2 ++
+                              allDivSeqG (plus (plus (plus l l) (plus l l)) (plus l l)) 2) prf1b
+                 prf1d = all2 (if (modNatNZ ((plus (plus (plus l l) (plus l l)) (plus l l))+7) 4 SIsNotZ) == 0
+                                  then map ([6,-4] `dsp`) $ allDivSeq (divNatNZ (((plus (plus (plus l l) (plus l l)) (plus l l))+7)*3) 4 SIsNotZ) 2
+                                  else [])
+                              (allDivSeqB (plus (plus (plus l l) (plus l l)) (plus l l)) 2 ++
+                              allDivSeqC (plus (plus (plus l l) (plus l l)) (plus l l)) 2 ++
+                              allDivSeqD (plus (plus (plus l l) (plus l l)) (plus l l)) 2 ++
+                              allDivSeqE (plus (plus (plus l l) (plus l l)) (plus l l)) 2 ++
+                              allDivSeqF (plus (plus (plus l l) (plus l l)) (plus l l)) 2 ++
+                              allDivSeqG (plus (plus (plus l l) (plus l l)) (plus l l)) 2) prf1c
+             in prf1d
+contraAe54x12To6x'_2 :
+  (l:Nat) -> All Limited (if (modNatNZ ((plus (plus (plus l l) (plus l l)) (plus l l))+7) 4 SIsNotZ) == 0
+                then map ([6,-4] `dsp`) $ allDivSeq (divNatNZ (((plus (plus (plus l l) (plus l l)) (plus l l))+7)*3) 4 SIsNotZ) 2
+                else [])
+    -> Not $ P (S (S (S (24*l)))) 2
+contraAe54x12To6x'_2 l prf1 prf2 with ((modNatNZ ((plus (plus (plus l l) (plus l l)) (plus l l))+7) 4 SIsNotZ) == 0) proof p
+  contraAe54x12To6x'_2 l prf1 prf2 | False = ?rhs1 -- All p [] -> Void をpostulateにしないといけない
+  contraAe54x12To6x'_2 l prf1 prf2 | True  = ?rhs2
+
+postulate contraAe54x12To6x'_3 :
+  (l:Nat) -> Not $ P (S (S (S (24*l)))) 2
+    -> Not $ P (S (S (plus (plus (plus (plus (plus l l) l) (plus (plus l l) l))
+                              (S (plus (plus (plus l l) l) (plus (plus l l) l))))
+                        (S (plus (plus (plus l l) l) (plus (plus l l) l)))))) 1
+ae54x12To6x' :
   (l:Nat) -> P (S (S (plus (plus (plus (plus (plus l l) l) (plus (plus l l) l))
                               (S (plus (plus (plus l l) l) (plus (plus l l) l))))
                         (S (plus (plus (plus l l) l) (plus (plus l l) l)))))) 1
     -> P (plus l l) 3
+ae54x12To6x' l = contraposition2 l $ contraAe54x12To6x'_3 l . contraAe54x12To6x'_2 l . contraAe54x12To6x'_1 l
+
 
 -- 03 3(18x+10) --A[6,-4]->C[4,-4]--> 3(8x+3)
 postulate ac54x30To24x9' :
@@ -351,6 +398,7 @@ postulate ab54x30To12x9' :
                                   (S (S (S (plus (plus (plus l l) l) (S (S (plus (plus l l) l))))))))
                             (S (S (S (plus (plus (plus l l) l) (S (S (plus (plus l l) l)))))))))))) 1
     -> P (S (S (S (plus (plus l l) (plus l l))))) 3
+
 
 -- 05 3(3x+2) --C[4,-4]--> 3x
 contraC9x6To3x' :
@@ -386,11 +434,12 @@ contraC9x6To3x' j =
                                                 (allDivSeqD (plus (plus j j) j) 1 ++
                                                 allDivSeqE (plus (plus j j) j) 1 ++
                                                 allDivSeqF (plus (plus j j) j) 1 ++
-                                                allDivSeqG (plus (plus j j) j) 1) prf1e in
-      prf2Void $ dspCutAll {a = 4}{b = -4} prf1f
+                                                allDivSeqG (plus (plus j j) j) 1) prf1e
+                       in prf2Void $ dspCutAll {a = 4}{b = -4} prf1f
 c9x6To3x' :
   (j:Nat) -> P (S (S (plus (plus j j) j))) 1 -> P j 2
 c9x6To3x' j = contraposition2 j $ contraC9x6To3x' j
+
 
 -- 06 3(12x+3) --E[2,-4]--> 3x
 postulate e36x9To3x' :

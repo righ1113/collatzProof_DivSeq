@@ -297,7 +297,7 @@ definiG x lv = Refl
 -- myAny pp (x :: xs) = (pp x) || myAny pp xs
 
 limitedNStep : Maybe (CoList Integer) -> Nat -> Bool
-limitedNStep Nothing          _     = True
+limitedNStep Nothing          _     = False
 limitedNStep (Just [])        _     = True
 limitedNStep (Just (_ :: _))  Z     = False
 limitedNStep (Just (_ :: xs)) (S n) = limitedNStep (Just xs) n
