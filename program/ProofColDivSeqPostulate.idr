@@ -323,9 +323,23 @@ postulate all3 : {pp : a -> Type} -> (xs, ys : List a)
 namespace s
   BoxFC : List Nat
   BoxFC = [7, 15, 0, 31]
+  BoxFB : List Nat
+  BoxFB = [5, 9, 13]
+  BoxFE : List Nat
+  BoxFE = [1, 5, 7]
 postulate mapFC : (t, y, x : Nat) ->
   P (y + (S (S (S (S x))))) 1 = P ((fromMaybe 0 (index' y s.BoxFC)) + (plus (plus (plus (plus (plus t t) (plus t t)) (plus (plus t t) (plus t t))) (plus (plus (plus t t) (plus t t)) (plus (plus t t) (plus t t))))
                                                                             (plus (plus (plus (plus t t) (plus t t)) (plus (plus t t) (plus t t))) (plus (plus (plus t t) (plus t t)) (plus (plus t t) (plus t t)))))) 3
+postulate mapFB : (t, x, y, z, w, u : Nat) ->
+  P (x + (S (S (S (S (S (plus (plus (plus (plus (plus (plus t t) t) (y + (plus (plus t t) t)))
+                                          z)
+                                    w)
+                              u))))))) 1 = P ((fromMaybe 0 (index' y s.BoxFB)) + (plus (plus (plus (plus t t) (plus t t)) (plus (plus t t) (plus t t))) (plus (plus (plus t t) (plus t t)) (plus (plus t t) (plus t t))))) 3
+postulate mapFE : (t, x, y, z, w, u : Nat) ->
+  P (x + (S (S (S (S (plus (plus (plus (plus (plus (plus t t) t) (y + (plus (plus t t) t)))
+                                          z)
+                                    w)
+                              u)))))) 1 = P ((fromMaybe 0 (index' y s.BoxFE)) + (plus (plus (plus t t) (plus t t)) (plus (plus t t) (plus t t)))) 3
 
 
 -- 01 3(6x+1) --B[1,-2]--> 3x
@@ -407,29 +421,40 @@ fc108x27To96x21' o =
                           (S (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (S (plus (plus (plus o o) o) (plus (plus o o) o)))))) in id
 
 -- 08 3(36x+21) --F[5,-2]->B[1,-2]--> 3(16x+9)
-postulate fb108x63To48x27' :
+fb108x63To48x27' :
   (o:Nat) -> P (S (S (S (S (S (plus (plus (plus (plus (plus (plus o o) o) (S (plus (plus o o) o)))
-                                           (S (S (plus (plus (plus o o) o) (S (plus (plus o o) o))))))
-                                     (S (S (plus (plus (plus (plus o o) o) (S (plus (plus o o) o))) (S (S (plus (plus (plus o o) o) (S (plus (plus o o) o)))))))))
-                               (S (S (plus (plus (plus (plus o o) o) (S (plus (plus o o) o))) (S (S (plus (plus (plus o o) o) (S (plus (plus o o) o)))))))))))))) 1
+                                                (S (S (plus (plus (plus o o) o) (S (plus (plus o o) o))))))
+                                          (S (S (plus (plus (plus (plus o o) o) (S (plus (plus o o) o))) (S (S (plus (plus (plus o o) o) (S (plus (plus o o) o)))))))))
+                                    (S (S (plus (plus (plus (plus o o) o) (S (plus (plus o o) o))) (S (S (plus (plus (plus o o) o) (S (plus (plus o o) o)))))))))))))) 1
     -> P (S (S (S (S (S (S (S (S (S (plus (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))) (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))))))))))))) 3
+fb108x63To48x27' o =
+  rewrite mapFB o 0 1 (S (S (plus (plus (plus o o) o) (S (plus (plus o o) o)))))
+                      (S (S (plus (plus (plus (plus o o) o) (S (plus (plus o o) o))) (S (S (plus (plus (plus o o) o) (S (plus (plus o o) o))))))))
+                      (S (S (plus (plus (plus (plus o o) o) (S (plus (plus o o) o))) (S (S (plus (plus (plus o o) o) (S (plus (plus o o) o)))))))) in id
 
 -- 09 3(36x+33) --F[5,-2]->E[2,-4]--> 3(8x+7)
-postulate fe108x99To24x21' :
+fe108x99To24x21' :
   (o:Nat) -> P (S (S (S (S (S (S (plus (plus (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))
-                                              (S (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))))))
-                                        (S (S (S (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))
-                                                       (S (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))))))))))
-                                  (S (S (S (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))
-                                                 (S (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))))))))))))))))) 1
+                                                   (S (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))))))
+                                             (S (S (S (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))) (S (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))))))))))
+                                       (S (S (S (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))) (S (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))))))))))))))))) 1
     -> P (S (S (S (S (S (S (S (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o)))))))))) 3
+fe108x99To24x21' o =
+  rewrite mapFE o 2 2 (S (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))))))
+                      (S (S (S (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))) (S (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))))))))))
+                      (S (S (S (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))) (S (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))))))))) in id
 
 -- 10 3(36x+6) --F[5,-2]->E[2,-4]--> 3(8x+1)
-postulate fe108x18To24x3' :
-  (o:Nat) ->  P (S (S (S (S (plus (plus (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (plus (plus (plus o o) o) (plus (plus o o) o)))
+fe108x18To24x3' :
+  (o:Nat) ->  P (S (S (S (S (plus (plus (plus (plus (plus (plus o o) o) (plus (plus o o) o))
+                                        (plus (plus (plus o o) o) (plus (plus o o) o)))
                                   (S (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (plus (plus (plus o o) o) (plus (plus o o) o)))))
                             (S (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (plus (plus (plus o o) o) (plus (plus o o) o))))))))) 1
     -> P (S (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o)))) 3
+fe108x18To24x3' o =
+  rewrite mapFE o 0 0 (plus (plus (plus o o) o) (plus (plus o o) o))
+                      (S (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (plus (plus (plus o o) o) (plus (plus o o) o))))
+                      (S (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (plus (plus (plus o o) o) (plus (plus o o) o)))) in id
 
 -- 11 3(36x+18) --F[5,-2]->C[4,-4]--> 3(32x+15)
 fc108x54To96x45' :
@@ -446,27 +471,40 @@ fc108x54To96x45' o =
                           (S (S (plus (plus (plus (plus o o) o) (S (plus (plus o o) o))) (S (plus (plus (plus o o) o) (S (plus (plus o o) o)))))))) in id
 
 -- 12 3(36x+30) --F[5,-2]->B[1,-2]--> 3(16x+13)
-postulate fb108x90To48x39' :
+fb108x90To48x39' :
   (o:Nat) -> P (S (S (S (S (S (S (plus (plus (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))
-                                              (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))))))
-                                        (S (S (S (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))) (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))))))))))  (S (S (S (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))
-                                                 (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))))))))))))))) 1
+                                                   (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))))))
+                                             (S (S (S (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))) (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))))))))))
+                                       (S (S (S (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))) (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))))))))))))))) 1
     -> P (S (S (S (S (S (S (S (S (S (S (S (S (S (plus (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))) (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))))))))))))))))) 3
+fb108x90To48x39' o =
+  rewrite mapFB o 1 2 (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))))
+                      (S (S (S (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))) (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))))))))
+                      (S (S (S (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))) (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))))))))) in id
 
 -- 13 3(36x+12) --F[5,-2]->B[1,-2]--> 3(16x+5)
-postulate fb108x36To48x15' :
-  (o:Nat) -> P (S (S (S (S (S (plus (plus (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (S (plus (plus (plus o o) o) (plus (plus o o) o))))
-                                     (S (S (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (S (plus (plus (plus o o) o) (plus (plus o o) o)))))))
-                               (S (S (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (S (plus (plus (plus o o) o) (plus (plus o o) o)))))))))))) 1
+fb108x36To48x15' :
+  (o:Nat) -> P (S (S (S (S (S (plus (plus (plus (plus (plus (plus o o) o) (plus (plus o o) o))
+                                                (S (plus (plus (plus o o) o) (plus (plus o o) o))))
+                                          (S (S (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (S (plus (plus (plus o o) o) (plus (plus o o) o)))))))
+                                    (S (S (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (S (plus (plus (plus o o) o) (plus (plus o o) o)))))))))))) 1
     -> P (S (S (S (S (S (plus (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))) (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))))))))) 3
+fb108x36To48x15' o =
+  rewrite mapFB o 0 0 (S (plus (plus (plus o o) o) (plus (plus o o) o)))
+                      (S (S (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (S (plus (plus (plus o o) o) (plus (plus o o) o))))))
+                      (S (S (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (S (plus (plus (plus o o) o) (plus (plus o o) o)))))) in id
 
 -- 14 3(36x+24) --F[5,-2]->E[2,-4]--> 3(8x+5)
-postulate fe108x72To24x15' :
+fe108x72To24x15' :
   (o:Nat) ->  P (S (S (S (S (S (S (plus (plus (plus (plus (plus (plus o o) o) (S (plus (plus o o) o)))
                                               (S (S (plus (plus (plus o o) o) (S (plus (plus o o) o))))))
                                         (S (S (S (plus (plus (plus (plus o o) o) (S (plus (plus o o) o))) (S (S (plus (plus (plus o o) o) (S (plus (plus o o) o))))))))))
                                   (S (S (S (plus (plus (plus (plus o o) o) (S (plus (plus o o) o))) (S (S (plus (plus (plus o o) o) (S (plus (plus o o) o)))))))))))))))) 1
     -> P (S (S (S (S (S (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o)))))))) 3
+fe108x72To24x15' o =
+  rewrite mapFE o 2 1 (S (S (plus (plus (plus o o) o) (S (plus (plus o o) o)))))
+                      (S (S (S (plus (plus (plus (plus o o) o) (S (plus (plus o o) o))) (S (S (plus (plus (plus o o) o) (S (plus (plus o o) o)))))))))
+                      (S (S (S (plus (plus (plus (plus o o) o) (S (plus (plus o o) o))) (S (S (plus (plus (plus o o) o) (S (plus (plus o o) o))))))))) in id
 
 -- 15 3(36x+36) --F[5,-2]->C[4,-4]--> 3(32x+31)
 fc108x108To96x93' :
