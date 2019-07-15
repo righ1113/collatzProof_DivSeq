@@ -108,8 +108,6 @@ postulate dsp2Cut : Any (Not . Limited) (map ([a] `dsp2`) xs)
   -> Any (Not . Limited) xs
 postulate dspCutAll : All Limited (map ([a,b] `dsp`) xs)
   -> All Limited xs
-postulate dsp2CutAll : All Limited (map ([a] `dsp2`) xs)
-  -> All Limited xs
 
 
 changeA' : (x, lv:Nat)
@@ -322,69 +320,24 @@ postulate all3 : {pp : a -> Type} -> (xs, ys : List a)
 
 --            from sub0xxxxx
 -- ########################################
--- 二重否定除去
-postulate dne : ((a -> Void) -> Void) -> a
--- 対偶
-postulate contraposition2 :
-  {A, B : Nat -> Type} -> (x : Nat) -> (Not $ B x -> Not $ A x) -> (A x -> B x)
+namespace s
+  BoxFC : List Nat
+  BoxFC = [7, 15, 0, 31]
+postulate mapFC : (t, y, x : Nat) ->
+  P (y + (S (S (S (S x))))) 1 = P ((fromMaybe 0 (index' y s.BoxFC)) + (plus (plus (plus (plus (plus t t) (plus t t)) (plus (plus t t) (plus t t))) (plus (plus (plus t t) (plus t t)) (plus (plus t t) (plus t t))))
+                                                                            (plus (plus (plus (plus t t) (plus t t)) (plus (plus t t) (plus t t))) (plus (plus (plus t t) (plus t t)) (plus (plus t t) (plus t t)))))) 3
+
 
 -- 01 3(6x+1) --B[1,-2]--> 3x
 postulate b18x3To3x' :
   (k:Nat) -> P (S (plus (plus (plus k k) (plus k k)) (plus k k))) 1 -> P k 2
 
-
 -- 02 3(18x+4) --A[6,-4]--> 3(24x+3) -->E[2,-4]--> 3(2x)
-contraAe54x12To6x'_1 :
-  (l:Nat) -> Not $ P (plus l l) 3
-    -> All Limited (if (modNatNZ ((plus (plus (plus l l) (plus l l)) (plus l l))+7) 4 SIsNotZ) == 0
-          then map ([6,-4] `dsp`) $ allDivSeq (divNatNZ (((plus (plus (plus l l) (plus l l)) (plus l l))+7)*3) 4 SIsNotZ) 2
-          else [])
-contraAe54x12To6x'_1 l =
-  rewrite definiP (plus l l) 3 in
-  rewrite defini (plus (plus (plus l l) (plus l l)) (plus l l)) 2 in
-  rewrite definiA (plus (plus (plus l l) (plus l l)) (plus l l)) 1 in
-    \prf1 => let prf1b = dne prf1
-                 prf1c = all3 (allDivSeq (plus (plus (plus l l) (plus l l)) (plus l l)) 2)
-                              ((if (modNatNZ ((plus (plus (plus l l) (plus l l)) (plus l l))+7) 4 SIsNotZ) == 0
-                                  then map ([6,-4] `dsp`) $ allDivSeq (divNatNZ (((plus (plus (plus l l) (plus l l)) (plus l l))+7)*3) 4 SIsNotZ) 2
-                                  else []) ++
-                              allDivSeqB (plus (plus (plus l l) (plus l l)) (plus l l)) 2 ++
-                              allDivSeqC (plus (plus (plus l l) (plus l l)) (plus l l)) 2 ++
-                              allDivSeqD (plus (plus (plus l l) (plus l l)) (plus l l)) 2 ++
-                              allDivSeqE (plus (plus (plus l l) (plus l l)) (plus l l)) 2 ++
-                              allDivSeqF (plus (plus (plus l l) (plus l l)) (plus l l)) 2 ++
-                              allDivSeqG (plus (plus (plus l l) (plus l l)) (plus l l)) 2) prf1b
-                 prf1d = all2 (if (modNatNZ ((plus (plus (plus l l) (plus l l)) (plus l l))+7) 4 SIsNotZ) == 0
-                                  then map ([6,-4] `dsp`) $ allDivSeq (divNatNZ (((plus (plus (plus l l) (plus l l)) (plus l l))+7)*3) 4 SIsNotZ) 2
-                                  else [])
-                              (allDivSeqB (plus (plus (plus l l) (plus l l)) (plus l l)) 2 ++
-                              allDivSeqC (plus (plus (plus l l) (plus l l)) (plus l l)) 2 ++
-                              allDivSeqD (plus (plus (plus l l) (plus l l)) (plus l l)) 2 ++
-                              allDivSeqE (plus (plus (plus l l) (plus l l)) (plus l l)) 2 ++
-                              allDivSeqF (plus (plus (plus l l) (plus l l)) (plus l l)) 2 ++
-                              allDivSeqG (plus (plus (plus l l) (plus l l)) (plus l l)) 2) prf1c
-             in prf1d
-contraAe54x12To6x'_2 :
-  (l:Nat) -> All Limited (if (modNatNZ ((plus (plus (plus l l) (plus l l)) (plus l l))+7) 4 SIsNotZ) == 0
-                then map ([6,-4] `dsp`) $ allDivSeq (divNatNZ (((plus (plus (plus l l) (plus l l)) (plus l l))+7)*3) 4 SIsNotZ) 2
-                else [])
-    -> Not $ P (S (S (S (24*l)))) 2
-contraAe54x12To6x'_2 l prf1 prf2 with ((modNatNZ ((plus (plus (plus l l) (plus l l)) (plus l l))+7) 4 SIsNotZ) == 0) proof p
-  contraAe54x12To6x'_2 l prf1 prf2 | False = ?rhs1 -- All p [] -> Void をpostulateにしないといけない
-  contraAe54x12To6x'_2 l prf1 prf2 | True  = ?rhs2
-
-postulate contraAe54x12To6x'_3 :
-  (l:Nat) -> Not $ P (S (S (S (24*l)))) 2
-    -> Not $ P (S (S (plus (plus (plus (plus (plus l l) l) (plus (plus l l) l))
-                              (S (plus (plus (plus l l) l) (plus (plus l l) l))))
-                        (S (plus (plus (plus l l) l) (plus (plus l l) l)))))) 1
-ae54x12To6x' :
+postulate ae54x12To6x' :
   (l:Nat) -> P (S (S (plus (plus (plus (plus (plus l l) l) (plus (plus l l) l))
                               (S (plus (plus (plus l l) l) (plus (plus l l) l))))
                         (S (plus (plus (plus l l) l) (plus (plus l l) l)))))) 1
     -> P (plus l l) 3
-ae54x12To6x' l = contraposition2 l $ contraAe54x12To6x'_3 l . contraAe54x12To6x'_2 l . contraAe54x12To6x'_1 l
-
 
 -- 03 3(18x+10) --A[6,-4]->C[4,-4]--> 3(8x+3)
 postulate ac54x30To24x9' :
@@ -399,59 +352,59 @@ postulate ab54x30To12x9' :
                             (S (S (S (plus (plus (plus l l) l) (S (S (plus (plus l l) l)))))))))))) 1
     -> P (S (S (S (plus (plus l l) (plus l l))))) 3
 
-
 -- 05 3(3x+2) --C[4,-4]--> 3x
-contraC9x6To3x' :
-  (j:Nat) -> Not $ P j 2 -> Not $ P (S (S (plus (plus j j) j))) 1
-contraC9x6To3x' j =
+c9x6To3x' :
+  (j:Nat) -> P (S (S (plus (plus j j) j))) 1 -> P j 2
+c9x6To3x' j =
   rewrite definiP j                           2 in
   rewrite definiP (S (S (plus (plus j j) j))) 1 in
   rewrite defini (plus (plus j j) j) 1 in
   rewrite definiC (plus (plus j j) j) 0 in
-    \prf1, prf2Void => let prf1b = dne prf1
-                           prf1c = all3 (allDivSeq (plus (plus j j) j) 1)
+    \prf1Void, prf2 => let prf2b = all3 (allDivSeq (plus (plus j j) j) 1)
                                                 (allDivSeqA (plus (plus j j) j) 1 ++
                                                 allDivSeqB (plus (plus j j) j) 1 ++
                                                 map (dsp [4, -4]) (allDivSeq (S (S (plus (plus (plus (plus j j) j) (S (S (plus (plus j j) j)))) (S (S (plus (plus j j) j)))))) 1) ++
                                                 allDivSeqD (plus (plus j j) j) 1 ++
                                                 allDivSeqE (plus (plus j j) j) 1 ++
                                                 allDivSeqF (plus (plus j j) j) 1 ++
-                                                allDivSeqG (plus (plus j j) j) 1) prf1b
-                           prf1d = all3 (allDivSeqA (plus (plus j j) j) 1)
+                                                allDivSeqG (plus (plus j j) j) 1) prf2
+                           prf2c = all3 (allDivSeqA (plus (plus j j) j) 1)
                                                 (allDivSeqB (plus (plus j j) j) 1 ++
                                                 map (dsp [4, -4]) (allDivSeq (S (S (plus (plus (plus (plus j j) j) (S (S (plus (plus j j) j)))) (S (S (plus (plus j j) j)))))) 1) ++
                                                 allDivSeqD (plus (plus j j) j) 1 ++
                                                 allDivSeqE (plus (plus j j) j) 1 ++
                                                 allDivSeqF (plus (plus j j) j) 1 ++
-                                                allDivSeqG (plus (plus j j) j) 1) prf1c
-                           prf1e = all3 (allDivSeqB (plus (plus j j) j) 1)
+                                                allDivSeqG (plus (plus j j) j) 1) prf2b
+                           prf2d = all3 (allDivSeqB (plus (plus j j) j) 1)
                                                 (map (dsp [4, -4]) (allDivSeq (S (S (plus (plus (plus (plus j j) j) (S (S (plus (plus j j) j)))) (S (S (plus (plus j j) j)))))) 1) ++
                                                 allDivSeqD (plus (plus j j) j) 1 ++
                                                 allDivSeqE (plus (plus j j) j) 1 ++
                                                 allDivSeqF (plus (plus j j) j) 1 ++
-                                                allDivSeqG (plus (plus j j) j) 1) prf1d
-                           prf1f = all2 (map (dsp [4, -4]) (allDivSeq (S (S (plus (plus (plus (plus j j) j) (S (S (plus (plus j j) j)))) (S (S (plus (plus j j) j)))))) 1))
+                                                allDivSeqG (plus (plus j j) j) 1) prf2c
+                           prf2e = all2 (map (dsp [4, -4]) (allDivSeq (S (S (plus (plus (plus (plus j j) j) (S (S (plus (plus j j) j)))) (S (S (plus (plus j j) j)))))) 1))
                                                 (allDivSeqD (plus (plus j j) j) 1 ++
                                                 allDivSeqE (plus (plus j j) j) 1 ++
                                                 allDivSeqF (plus (plus j j) j) 1 ++
-                                                allDivSeqG (plus (plus j j) j) 1) prf1e
-                       in prf2Void $ dspCutAll {a = 4}{b = -4} prf1f
-c9x6To3x' :
-  (j:Nat) -> P (S (S (plus (plus j j) j))) 1 -> P j 2
-c9x6To3x' j = contraposition2 j $ contraC9x6To3x' j
-
+                                                allDivSeqG (plus (plus j j) j) 1) prf2d
+                       in prf1Void $ dspCutAll {a = 4}{b = -4} prf2e
 
 -- 06 3(12x+3) --E[2,-4]--> 3x
 postulate e36x9To3x' :
   (l:Nat) -> P (S (S (S (plus (plus (plus (plus l l) (plus l l)) (plus (plus l l) (plus l l))) (plus (plus l l) (plus l l)))))) 1 -> P l 2
 
 -- 07 3(36x+9) --F[5,-2]->C[4,-4]--> 3(32x+7)
-postulate fc108x27To96x21' :
-  (o:Nat) -> P (S (S (S (S (plus (plus (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (S (plus (plus (plus o o) o) (plus (plus o o) o))))
-                                  (S (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (S (plus (plus (plus o o) o) (plus (plus o o) o))))))
-                            (S (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (S (plus (plus (plus o o) o) (plus (plus o o) o)))))))))) 1
+fc108x27To96x21' :
+  (o:Nat) -> P (S (S (S (S (plus (plus (plus (plus (plus (plus o o) o) (plus (plus o o) o))
+                                             (S (plus (plus (plus o o) o) (plus (plus o o) o))))
+                                       (S (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (S (plus (plus (plus o o) o) (plus (plus o o) o))))))
+                                 (S (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (S (plus (plus (plus o o) o) (plus (plus o o) o)))))))))) 1
     -> P (S (S (S (S (S (S (S (plus (plus (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))) (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))))
-                                                            (plus (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))) (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o)))))))))))) 3
+                                    (plus (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))) (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o)))))))))))) 3
+fc108x27To96x21' o =
+  rewrite mapFC o 0 (plus (plus (plus (plus (plus (plus o o) o) (plus (plus o o) o))
+                                      (S (plus (plus (plus o o) o) (plus (plus o o) o))))
+                                (S (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (S (plus (plus (plus o o) o) (plus (plus o o) o))))))
+                          (S (plus (plus (plus (plus o o) o) (plus (plus o o) o)) (S (plus (plus (plus o o) o) (plus (plus o o) o)))))) in id
 
 -- 08 3(36x+21) --F[5,-2]->B[1,-2]--> 3(16x+9)
 postulate fb108x63To48x27' :
@@ -479,13 +432,18 @@ postulate fe108x18To24x3' :
     -> P (S (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o)))) 3
 
 -- 11 3(36x+18) --F[5,-2]->C[4,-4]--> 3(32x+15)
-postulate fc108x54To96x45' :
+fc108x54To96x45' :
   (o:Nat) -> P (S (S (S (S (S (plus (plus (plus (plus (plus (plus o o) o) (S (plus (plus o o) o)))
-                                           (S (plus (plus (plus o o) o) (S (plus (plus o o) o)))))
-                                     (S (S (plus (plus (plus (plus o o) o) (S (plus (plus o o) o))) (S (plus (plus (plus o o) o) (S (plus (plus o o) o))))))))
-                               (S (S (plus (plus (plus (plus o o) o) (S (plus (plus o o) o))) (S (plus (plus (plus o o) o) (S (plus (plus o o) o))))))))))))) 1
+                                                (S (plus (plus (plus o o) o) (S (plus (plus o o) o)))))
+                                          (S (S (plus (plus (plus (plus o o) o) (S (plus (plus o o) o))) (S (plus (plus (plus o o) o) (S (plus (plus o o) o))))))))
+                                    (S (S (plus (plus (plus (plus o o) o) (S (plus (plus o o) o))) (S (plus (plus (plus o o) o) (S (plus (plus o o) o))))))))))))) 1
     -> P (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (plus (plus (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))) (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))))
                                                             (plus (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))) (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o)))))))))))))))))))) 3
+fc108x54To96x45' o =
+  rewrite mapFC o 1 (plus (plus (plus (plus (plus (plus o o) o) (S (plus (plus o o) o)))
+                                      (S (plus (plus (plus o o) o) (S (plus (plus o o) o)))))
+                                (S (S (plus (plus (plus (plus o o) o) (S (plus (plus o o) o))) (S (plus (plus (plus o o) o) (S (plus (plus o o) o))))))))
+                          (S (S (plus (plus (plus (plus o o) o) (S (plus (plus o o) o))) (S (plus (plus (plus o o) o) (S (plus (plus o o) o)))))))) in id
 
 -- 12 3(36x+30) --F[5,-2]->B[1,-2]--> 3(16x+13)
 postulate fb108x90To48x39' :
@@ -511,16 +469,18 @@ postulate fe108x72To24x15' :
     -> P (S (S (S (S (S (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o)))))))) 3
 
 -- 15 3(36x+36) --F[5,-2]->C[4,-4]--> 3(32x+31)
-postulate fc108x108To96x93' :
+fc108x108To96x93' :
   (o:Nat) -> P (S (S (S (S (S (S (S (plus (plus (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))
-                                                 (S (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))))))
-                                           (S (S (S (S (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))
-                                                             (S (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))))))))))))
-                                     (S (S (S (S (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))
-                                                       (S (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))))))))))))))))))) 1
+                                                      (S (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))))))
+                                                (S (S (S (S (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))) (S (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))))))))))))
+                                          (S (S (S (S (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))) (S (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))))))))))))))))))) 1
     -> P (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (plus (plus (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))) (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))))
-                                                            (plus (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))) (plus (plus (plus o o) (plus o o)) (plus (plus o o)
-            (plus o o)))))))))))))))))))))))))))))))))))) 3
+                                                                                                            (plus (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o))) (plus (plus (plus o o) (plus o o)) (plus (plus o o) (plus o o)))))))))))))))))))))))))))))))))))) 3
+fc108x108To96x93' o =
+  rewrite mapFC o 3 (plus (plus (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))
+                                      (S (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))))))
+                                (S (S (S (S (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))) (S (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))))))))))))
+                          (S (S (S (S (plus (plus (plus (plus o o) o) (S (S (plus (plus o o) o)))) (S (S (S (plus (plus (plus o o) o) (S (S (plus (plus o o) o))))))))))))) in id
 -- ########################################
 
 

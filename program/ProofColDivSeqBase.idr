@@ -309,6 +309,7 @@ data Limited : Maybe (CoList Integer) -> Type where
 P : Nat -> Nat -> Type
 P n lv = Not $ All Limited $ allDivSeq (n+n+n) lv
 
+
 definiP : (n, lv : Nat)
   -> P n lv = Not $ All Limited $ allDivSeq (n+n+n) lv
 definiP n lv = Refl
