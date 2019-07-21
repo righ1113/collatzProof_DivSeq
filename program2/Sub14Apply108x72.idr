@@ -2,6 +2,7 @@ module Sub14Apply108x72
 
 import ProofColDivSeqBase
 import ProofColDivSeqPostulate
+import ProofColDivSeqPostuProof
 
 %default total
 -- %language ElabReflection

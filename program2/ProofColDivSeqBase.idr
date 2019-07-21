@@ -1,5 +1,4 @@
 module ProofColDivSeqBase
--- module Main -- ビルドするときはこっち > idris ProofColDivSeqBase.idr -o run
 
 %default total
 -- %language ElabReflection
@@ -75,32 +74,6 @@ unfoldr f x =
     _               => []
 -- ----- from libs/contrib/Data/CoList.idr -----
 
--- ----- from libs/base/Data/List/Quantifiers.idr -----
-public export
-data Any : (P : a -> Type) -> List a -> Type where
-  Here  : {P : a -> Type} -> {xs : List a} -> P x -> Any P (x :: xs)
-  There : {P : a -> Type} -> {xs : List a} -> Any P xs -> Any P (x :: xs)
-
-anyNilAbsurd : {P : a -> Type} -> Any P Nil -> Void
-anyNilAbsurd (Here _)  impossible
-anyNilAbsurd (There _) impossible
-
-implementation Uninhabited (Any p Nil) where
-  uninhabited = anyNilAbsurd
-
-public export
-data All : (P : a -> Type) -> List a -> Type where
-  NilA : {P : a -> Type} -> All P Nil
-  Cons : {P : a -> Type} -> {xs : List a} -> P x -> All P xs -> All P (x :: xs)
--- ----- from libs/base/Data/List/Quantifiers.idr -----
-
-dsp : List Integer -> Maybe (CoList Integer) -> Maybe (CoList Integer)
-dsp xs                 Nothing          = Nothing
-dsp xs                 (Just [])        = Nothing
-dsp []                 (Just (y :: ys)) = Nothing
-dsp (x :: [])          (Just (y :: ys)) = Nothing
-dsp (x1 :: (x2 :: xs)) (Just (y :: ys)) = Just (x1 :: (x2+y) :: ys)
-
 countEven : Nat -> Nat -> Nat -> (Nat, Nat)
 countEven n Z      acc = (acc, n)
 countEven n (S nn) acc =
@@ -109,11 +82,18 @@ countEven n (S nn) acc =
     else countEven (divNatNZ n 2 SIsNotZ) nn (acc+1)
 
 -- divSeqの実装
--- 0 and odd only!
 divSeq : Nat -> CoList Integer
-divSeq = (map toIntegerNat) .
-  unfoldr (\b => if b<=1 then Nothing
-                         else Just (countEven (b*3+1) (b*3+1) 0) )
+divSeq n = divSeq' n n
+  where
+    divSeq' : Nat -> Nat -> CoList Integer
+    divSeq' n     Z     = []
+    divSeq' Z     (S k) = []
+    divSeq' (S n) (S k) with (parity n)
+      divSeq' (S (S (j + j))) (S k) | Odd  = divSeq' (S j) k
+      divSeq' (S (j + j)    ) (S k) | Even =
+        map toIntegerNat
+          (unfoldr (\b => if b <= 1 then Nothing
+                                    else Just (countEven (b*3+1) (b*3+1) 0) ) (S (j + j)))
 definiDivSeq0 : divSeq Z = []
 definiDivSeq0 = Refl
 -- ---------------------------------
@@ -133,7 +113,6 @@ data Limited : CoList Integer -> Type where
 
 P : Nat -> Type
 P n = Limited $ divSeq (n+n+n)
-
 definiP : (n : Nat) -> P n = Limited $ divSeq (n+n+n)
 definiP n = Refl
 -- ---------------------------------

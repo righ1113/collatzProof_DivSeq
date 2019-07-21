@@ -2,6 +2,7 @@ module ProofColDivSeqMain
 
 import ProofColDivSeqBase
 import ProofColDivSeqPostulate
+import ProofColDivSeqPostuProof
 import Sub01Apply18x3
 import Sub02Apply54x12
 import Sub03Apply54x30
