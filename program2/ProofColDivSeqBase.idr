@@ -1,3 +1,8 @@
+{-
+cd collatzProof_DivSeq/program2
+chcp 65001
+idris
+-}
 module ProofColDivSeqBase
 
 %default total
@@ -49,7 +54,7 @@ mod3 (S (S (S k))) with (mod3 k)
 
 
 -- divSeqの実装に必要な関数
--- ----- from libs/contrib/Data/CoList.idr -----
+    -- ----- from libs/contrib/Data/CoList.idr -----
 public export
 codata CoList : Type -> Type where
   Nil : CoList a
@@ -72,7 +77,7 @@ unfoldr f x =
   case f x of
     Just (y, new_x) => y :: (unfoldr f new_x)
     _               => []
--- ----- from libs/contrib/Data/CoList.idr -----
+    -- ----- from libs/contrib/Data/CoList.idr -----
 
 countEven : Nat -> Nat -> Nat -> (Nat, Nat)
 countEven n Z      acc = (acc, n)
@@ -106,15 +111,6 @@ limitedNStep (_ :: _)  Z     = False
 limitedNStep (_ :: xs) (S n) = limitedNStep xs n
 definiLimited0 : limitedNStep [] Z = True
 definiLimited0 = Refl
-
-public export
-data Limited : CoList Integer -> Type where
-  IsLimited : (n : Nat ** limitedNStep xs n = True) -> Limited xs
-
-P : Nat -> Type
-P n = Limited $ divSeq (n+n+n)
-definiP : (n : Nat) -> P n = Limited $ divSeq (n+n+n)
-definiP n = Refl
 -- ---------------------------------
 
 
