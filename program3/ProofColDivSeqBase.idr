@@ -32,7 +32,7 @@ unfoldr f x =
 
 -- ----- from libs/contrib/Data/Nat/DivMod/IteratedSubtraction.idr -----
 public export
-data LT' : (n,m : Nat) -> Type where
+data LT' : (n, m : Nat) -> Type where
   ||| n < 1 + n
   LTSucc : LT' n (S n)
   ||| n < m implies that n < m + 1
@@ -81,7 +81,7 @@ helpEven : (j : Nat) -> Parity (S j + S j) -> Parity (S (S (plus j j)))
 helpEven j p = rewrite plusSuccRightSucc j j in p
 helpOdd : (j : Nat) -> Parity (S (S (j + S j))) -> Parity (S (S (S (j + j))))
 helpOdd j p = rewrite plusSuccRightSucc j j in p
-parity : (n:Nat) -> Parity n
+parity : (n : Nat) -> Parity n
 parity Z     = Even {n=Z}
 parity (S Z) = Odd {n=Z}
 parity (S (S k)) with (parity k)
@@ -94,14 +94,14 @@ data Mod3 : Nat -> Type where
   ThreeZero : Mod3 (n + n + n)
   ThreeOne  : Mod3 (S (n + n + n))
   ThreeTwo  : Mod3 (S (S (n + n + n)))
-helpThreeZero : (j:Nat) -> (plus (plus (S j) (S j)) (S j)) = S (S (S (plus (plus j j) j)))
+helpThreeZero : (j : Nat) -> (plus (plus (S j) (S j)) (S j)) = S (S (S (plus (plus j j) j)))
 helpThreeZero j = rewrite sym $ plusSuccRightSucc j j in
                   rewrite sym $ plusSuccRightSucc (plus j j) j in Refl
-helpThreeOne : (j:Nat) -> S (plus (plus (S j) (S j)) (S j)) = S (S (S (S (plus (plus j j) j))))
+helpThreeOne : (j : Nat) -> S (plus (plus (S j) (S j)) (S j)) = S (S (S (S (plus (plus j j) j))))
 helpThreeOne j = cong {f=S} $ helpThreeZero j
-helpThreeTwo : (j:Nat) -> S (S (plus (plus (S j) (S j)) (S j))) = S (S (S (S (S (plus (plus j j) j)))))
+helpThreeTwo : (j : Nat) -> S (S (plus (plus (S j) (S j)) (S j))) = S (S (S (S (S (plus (plus j j) j)))))
 helpThreeTwo j = cong {f=S} $ helpThreeOne j
-mod3 : (n:Nat) -> Mod3 n
+mod3 : (n : Nat) -> Mod3 n
 mod3 Z         = ThreeZero {n=Z}
 mod3 (S Z)     = ThreeOne {n=Z}
 mod3 (S (S Z)) = ThreeTwo {n=Z}

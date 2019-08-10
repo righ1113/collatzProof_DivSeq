@@ -46,8 +46,17 @@ unifiPeirce n firstToAll = wfInd {rel=LT'} (step firstToAll) n where
     -- 3 mod 9
     step firstToAll (S (S (S (j + j + j)))) rs | ThreeTwo  = ?rhs3
 
+lemPeirce : (n : Nat)
+  -> Either ((z : Nat) -> (FirstLimited (allDivSeq z) -> AllLimited (allDivSeq z)))
+            (Not ((z : Nat) -> (FirstLimited (allDivSeq z) -> AllLimited (allDivSeq z))))
+    -> FirstLimited (allDivSeq n)
+lemPeirce n (Left  fToA)    = unifiPeirce n fToA
+lemPeirce n (Right fToAnot) = peirce n fToAnot unifiPeirce
+
 
 -- 最終的な定理
+limitedDivSeq : (n : Nat) -> FirstLimited (allDivSeq n)
+limitedDivSeq n = lemPeirce n lem2
 
 
 

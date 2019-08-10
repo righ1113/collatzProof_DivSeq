@@ -14,7 +14,16 @@ import ProofColDivSeqBase
 
 --            from ProofColDivSeqMain
 -- ########################################
--- パースの法則を書く予定
+-- 排中律
+--postulate lem : {P : Nat -> Type} -> (x : Nat) -> Either (P x) (Not (P x))
+postulate lem2 : Either ((z : Nat) -> (FirstLimited (allDivSeq z) -> AllLimited (allDivSeq z)))
+                        (Not ((z : Nat) -> (FirstLimited (allDivSeq z) -> AllLimited (allDivSeq z))))
+
+-- パースの法則の変形
+postulate peirce : {P, Q : Nat -> Type} -> (x : Nat)
+  -> Not ((z : Nat) -> (P z -> Q z))
+    -> ((n : Nat) -> ((z : Nat) -> (P z -> Q z)) -> P n)
+      -> P x
 -- ########################################
 
 
