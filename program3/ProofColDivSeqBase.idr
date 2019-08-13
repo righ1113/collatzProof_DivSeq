@@ -7,17 +7,17 @@ module ProofColDivSeqBase
 -- ----- from libs/contrib/Data/CoList.idr -----
 public export
 codata CoList : Type -> Type where
-  Nil : CoList a
+  Nil  : CoList a
   (::) : a -> CoList a -> CoList a
 
 implementation Functor CoList where
-  map f []      = []
-  map f (x::xs) = f x :: map f xs
+  map f []        = []
+  map f (x :: xs) = f x :: map f xs
 
 implementation Show a => Show (CoList a) where
   show xs = "[" ++ show' "" 20 xs ++ "]" where
     show' : String -> (n : Nat) -> (xs : CoList a) -> String
-    show' acc Z _             = acc ++ "..."
+    show' acc Z     _         = acc ++ "..."
     show' acc (S n) []        = acc
     show' acc (S n) [x]       = acc ++ show x
     show' acc (S n) (x :: xs) = show' (acc ++ (show x) ++ ", ") n xs
@@ -116,6 +116,13 @@ mod3 (S (S (S k))) with (mod3 k)
 
 
 -- ---------------------------------
+dsp : List Integer -> CoList Integer -> CoList Integer
+dsp _                      []        = []
+dsp []                     (y :: ys) = y  :: ys
+dsp (x :: [])              (y :: ys) = y  :: ys
+dsp (x1 :: x2 :: [])       (y :: ys) = x1 :: (x2 + y) :: ys
+dsp (x1 :: x2 :: x3 :: xs) (y :: ys) = x1 :: x2       :: (x3 + y) :: ys
+
 countEven : Nat -> Nat -> Nat -> (Nat, Nat)
 countEven n Z      acc = (acc, n)
 countEven n (S nn) acc =
@@ -125,20 +132,55 @@ countEven n (S nn) acc =
 
 -- divSeqの実装
 divSeq : Nat -> CoList Integer
-divSeq n = divSeq' (S (S (S (n+n+n+n+n+n)))) (S (S (S (n+n+n+n+n+n))))
-  where
-    divSeq' : Nat -> Nat -> CoList Integer
-    divSeq' n     Z     = []
-    divSeq' Z     (S k) = []
-    divSeq' (S n) (S k) with (parity n)
-      divSeq' (S (S (j + j))) (S k) | Odd  = divSeq' (S j) k --実際はここへは来ない
-      divSeq' (S (j + j)    ) (S k) | Even =
-        map toIntegerNat
-          (unfoldr (\b => if b <= 1 then Nothing
-                                    else Just (countEven (b*3+1) (b*3+1) 0) ) (S (j + j)))
+divSeq n = divSeq' (S (S (S (n+n+n+n+n+n)))) (S (S (S (n+n+n+n+n+n)))) where
+  divSeq' : Nat -> Nat -> CoList Integer
+  divSeq' n     Z     = []
+  divSeq' Z     (S k) = []
+  divSeq' (S n) (S k) with (parity n)
+    divSeq' (S (S (j + j))) (S k) | Odd  = divSeq' (S j) k --実際はここへは来ない
+    divSeq' (S (j + j))     (S k) | Even =
+      map toIntegerNat
+        (unfoldr (\b => if b <= 1 then Nothing
+                                  else Just (countEven (b*3+1) (b*3+1) 0) ) (S (j + j)))
 
-allDivSeq : Nat -> List (CoList Integer)
-allDivSeq n = [divSeq n]
+{-
+0                       1.(9) 10.(3)
+1+w
+  1+2v
+    1+2(2u)             2. 9. 11.  4. 13.
+    1+2(1+2u)
+      3+4(2t)
+        3+8(2s)         2. 9. 11.  8.  6.
+        3+8(1+2s)       2. 9. 11.  8.
+      3+4(1+2t)         2. 9. 11.  5. 14.
+  1+1+2v
+    1+1+2(2u)           2. 9. 11.  3. 12.
+    1+1+2(1+2u)
+      4+4(2t)           2. 9. 11.  3. 12.  7.
+      4+4(1+2t)         2. 9. 11.  3. 12.
+-}
+allDivSeq : Nat -> CoList Integer -> List (CoList Integer)
+allDivSeq Z     _  = [[], [2, -2, 1, 1, 2, 3, 4], [1, -1, 4]]
+allDivSeq (S w) xs with (parity w)
+  allDivSeq (S (v + v))     xs | Even with (parity v)
+    allDivSeq (S ((u + u) + (u + u)))         xs | Even | Even
+      = [divSeq (S ((u + u) + (u + u))), [2, -4] `dsp` xs, [4, -4] `dsp` xs, [1, -2] `dsp` xs, [6, -2, -4] `dsp` xs, [6, -3, -2] `dsp` xs]
+    allDivSeq (S ((S (u + u)) + (S (u + u)))) xs | Even | Odd  with (parity u)
+      allDivSeq (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t)))))                 xs | Even | Odd  | Even with (parity t)
+        allDivSeq (S ((S (((s + s) + (s + s)) + ((s + s) + (s + s)))) + (S (((s + s) + (s + s)) + ((s + s) + (s + s))))))                                 xs | Even | Odd  | Even | Even
+          = [divSeq (S ((S (((s + s) + (s + s)) + ((s + s) + (s + s)))) + (S (((s + s) + (s + s)) + ((s + s) + (s + s)))))), [2, -4] `dsp` xs, [4, -4] `dsp` xs, [1, -2] `dsp` xs, [2, 1, -2] `dsp` xs, [4, 1, -2] `dsp` xs]
+        allDivSeq (S ((S (((S (s + s)) + (S (s + s))) + ((S (s + s)) + (S (s + s))))) + (S (((S (s + s)) + (S (s + s))) + ((S (s + s)) + (S (s + s))))))) xs | Even | Odd  | Even | Odd
+          = [divSeq (S ((S (((S (s + s)) + (S (s + s))) + ((S (s + s)) + (S (s + s))))) + (S (((S (s + s)) + (S (s + s))) + ((S (s + s)) + (S (s + s))))))), [2, -4] `dsp` xs, [4, -4] `dsp` xs, [1, -2] `dsp` xs, [2, 1, -2] `dsp` xs]
+      allDivSeq (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t)))))) xs | Even | Odd  | Odd
+        = [divSeq (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t)))))), [2, -4] `dsp` xs, [4, -4] `dsp` xs, [1, -2] `dsp` xs, [5, 0, -4] `dsp` xs, [5, -1, -2] `dsp` xs]
+  allDivSeq (S (S (v + v))) xs | Odd  with (parity v)
+    allDivSeq (S (S ((u + u) + (u + u))))         xs | Odd  | Even
+      = [divSeq (S (S ((u + u) + (u + u)))), [2, -4] `dsp` xs, [4, -4] `dsp` xs, [1, -2] `dsp` xs, [3, 0, -4] `dsp` xs, [3, -1, -2] `dsp` xs]
+    allDivSeq (S (S ((S (u + u)) + (S (u + u))))) xs | Odd  | Odd with (parity u)
+      allDivSeq (S (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t))))))                 xs | Odd  | Odd | Even
+        = [divSeq (S (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t)))))), [2, -4] `dsp` xs, [4, -4] `dsp` xs, [1, -2] `dsp` xs, [3, 0, -4] `dsp` xs, [3, -1, -2] `dsp` xs, [1, 3, -2] `dsp` xs]
+      allDivSeq (S (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t))))))) xs | Odd  | Odd | Odd
+        = [divSeq (S (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t))))))), [2, -4] `dsp` xs, [4, -4] `dsp` xs, [1, -2] `dsp` xs, [3, 0, -4] `dsp` xs, [3, -1, -2] `dsp` xs]
 -- ---------------------------------
 
 
@@ -148,10 +190,10 @@ data AllLimited : List (CoList Integer) -> Type where
 
 public export
 data FirstLimited : List (CoList Integer) -> Type where
-  IsFirstLimited00 : FirstLimited $ allDivSeq Z
+  IsFirstLimited00 : FirstLimited $ allDivSeq Z xs
   IsFirstLimited09 : (j : Nat)
-    -> AllLimited $ allDivSeq j
-      -> FirstLimited $ allDivSeq (S (S (plus (plus j j) j)))
+    -> AllLimited $ allDivSeq j xs
+      -> FirstLimited $ allDivSeq (S (S (plus (plus j j) j))) xs
 -- ---------------------------------
 
 
