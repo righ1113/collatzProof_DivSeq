@@ -30,14 +30,14 @@ import Sub09LTE18t15
 
 
 -- パースの法則の十分条件
--- を示すのに、整礎帰納法を使っている
-unifiPeirce : (n : Nat) -> (xs : CoList Integer)
-  -> ((z : Nat) -> (FirstLimited (allDivSeq z xs) -> AllLimited (allDivSeq z xs)))
-    -> FirstLimited (allDivSeq n xs)
-unifiPeirce n xs firstToAll = wfInd {P=(\z=>FirstLimited (allDivSeq z xs))} {rel=LT'} (step firstToAll) n where
-  step : ((z : Nat) -> (FirstLimited (allDivSeq z xs) -> AllLimited (allDivSeq z xs)))
-    -> (x : Nat) -> ((y : Nat) -> LT' y x -> FirstLimited (allDivSeq y xs))
-      -> FirstLimited (allDivSeq x xs)
+-- 示すのに、整礎帰納法を使っている
+unifiPeirce :
+  ((z : Nat) -> (FirstLimited (allDivSeq z) -> AllLimited (allDivSeq z)))
+    -> ((n : Nat) -> FirstLimited (allDivSeq n))
+unifiPeirce firstToAll n = wfInd {P=(\z=>FirstLimited (allDivSeq z))} {rel=LT'} (step firstToAll) n where
+  step : ((z : Nat) -> (FirstLimited (allDivSeq z) -> AllLimited (allDivSeq z)))
+    -> (x : Nat) -> ((y : Nat) -> LT' y x -> FirstLimited (allDivSeq y))
+      -> FirstLimited (allDivSeq x)
   step _          Z     _  = IsFirstLimited00
   step firstToAll (S x) rs with (mod3 x)
     -- 0 mod 9
@@ -47,17 +47,17 @@ unifiPeirce n xs firstToAll = wfInd {P=(\z=>FirstLimited (allDivSeq z xs))} {rel
     -- 3 mod 9
     step firstToAll (S (S (S (j + j + j)))) rs | ThreeTwo  = ?rhs3
 
-lemPeirce : (n : Nat) -> (xs : CoList Integer)
-  -> Either ((z : Nat) -> (FirstLimited (allDivSeq z xs) -> AllLimited (allDivSeq z xs)))
-            (Not ((z : Nat) -> (FirstLimited (allDivSeq z xs) -> AllLimited (allDivSeq z xs))))
-    -> FirstLimited (allDivSeq n xs)
-lemPeirce n xs (Left  fToA)    = unifiPeirce n xs fToA
-lemPeirce n xs (Right notFtoA) = peirce2 n xs notFtoA unifiPeirce
+lemPeirce : (n : Nat)
+  -> Either ((z : Nat) -> (FirstLimited (allDivSeq z) -> AllLimited (allDivSeq z)))
+            (Not ((z : Nat) -> (FirstLimited (allDivSeq z) -> AllLimited (allDivSeq z))))
+    -> FirstLimited (allDivSeq n)
+lemPeirce n (Left  fToA)    = unifiPeirce fToA n
+lemPeirce n (Right notFtoA) = peirce n notFtoA unifiPeirce
 
 
 -- 最終的な定理
-limitedDivSeq : (n : Nat) -> (xs : CoList Integer) -> FirstLimited (allDivSeq n xs)
-limitedDivSeq n xs = lemPeirce n xs lem2
+limitedDivSeq : (n : Nat) -> FirstLimited (allDivSeq n)
+limitedDivSeq n = lemPeirce n $ lem2
 
 
 
