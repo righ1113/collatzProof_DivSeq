@@ -29,7 +29,35 @@ import Sub09LTE18t15
 %default total
 
 
--- パースの法則の十分条件
+record Cont (r : Type) (a : Type) where
+  constructor CT
+  runCont : (a -> r) -> r
+
+implementation Functor (Cont r) where
+implementation Applicative (Cont r) where
+implementation Monad (Cont r) where
+
+callCC : {a, b, r : Nat -> Type}
+  -> (n : Nat) -> (((z1, z2 : Nat) -> a n -> Cont (r n) (b n)) -> ((k : Nat) -> Cont (r k) (a k))) -> Cont (r n) (a n)
+callCC n f = CT $ \outerCont =>
+  runCont ((f $ \z1, z2, aa => CT $ \_innerCont => outerCont aa) n) outerCont
+
+unifiCallCC :
+  ((z1, z2 : Nat) -> (FirstLimited (allDivSeq z1) -> Cont (FirstLimited (allDivSeq z2)) (AllLimited (allDivSeq z1))))
+    -> ((n : Nat) -> Cont (FirstLimited (allDivSeq n)) (FirstLimited (allDivSeq n)))
+unifiCallCC firstToAll n = wfInd {rel=LT'} (step firstToAll) n where
+  step : ((z1, z2 : Nat) -> (FirstLimited (allDivSeq z1) -> Cont (FirstLimited (allDivSeq z2)) (AllLimited (allDivSeq z1))))
+    -> (x : Nat) -> ((y : Nat) -> LT' y x -> Cont (FirstLimited (allDivSeq y)) (FirstLimited (allDivSeq y)))
+      -> Cont (FirstLimited (allDivSeq x)) (FirstLimited (allDivSeq x))
+
+--lastFunc :
+--  (\z1 => (\z2 => FirstLimited (allDivSeq z1)) z2) z1 -> FirstLimited (allDivSeq z1)
+
+-- 最終的な定理
+--limitedDivSeq : (n : Nat) -> FirstLimited (allDivSeq n)
+--limitedDivSeq n = runCont (callCC n unifiCallCC) $ ?rhs10
+
+
 -- 示すのに、整礎帰納法を使っている
 unifiPeirce :
   ((z : Nat) -> (FirstLimited (allDivSeq z) -> AllLimited (allDivSeq z)))
@@ -47,17 +75,8 @@ unifiPeirce firstToAll n = wfInd {P=(\z=>FirstLimited (allDivSeq z))} {rel=LT'} 
     -- 3 mod 9
     step firstToAll (S (S (S (j + j + j)))) rs | ThreeTwo  = ?rhs3
 
-lemPeirce : (n : Nat)
-  -> Either ((z : Nat) -> (FirstLimited (allDivSeq z) -> AllLimited (allDivSeq z)))
-            (Not ((z : Nat) -> (FirstLimited (allDivSeq z) -> AllLimited (allDivSeq z))))
-    -> FirstLimited (allDivSeq n)
-lemPeirce n (Left  fToA)    = unifiPeirce fToA n
-lemPeirce n (Right notFtoA) = peirce n notFtoA unifiPeirce
-
-
--- 最終的な定理
-limitedDivSeq : (n : Nat) -> FirstLimited (allDivSeq n)
-limitedDivSeq n = lemPeirce n $ lem2
+allToVoid : (x : Nat) -> Not $ AllLimited (allDivSeq (S x))
+allToVoid x prf impossible
 
 
 
