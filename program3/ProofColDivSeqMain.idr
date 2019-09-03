@@ -30,10 +30,10 @@ import Sub09LTE18t15
 
 
 -- 示すのに、整礎帰納法を使っている
-unifiPeirce : (n : Nat)
+unifi : (n : Nat)
   -> ((z : Nat) -> (FirstLimited (allDivSeq z) -> AllLimited (allDivSeq z)))
     -> FirstLimited (allDivSeq n)
-unifiPeirce n firstToAll = wfInd {P=(\z=>FirstLimited (allDivSeq z))} {rel=LT'} (step firstToAll) n where
+unifi n firstToAll = wfInd {P=(\z=>FirstLimited (allDivSeq z))} {rel=LT'} (step firstToAll) n where
   step : ((z : Nat) -> (FirstLimited (allDivSeq z) -> AllLimited (allDivSeq z)))
     -> (x : Nat) -> ((y : Nat) -> LT' y x -> FirstLimited (allDivSeq y))
       -> FirstLimited (allDivSeq x)
@@ -50,7 +50,7 @@ unifiPeirce n firstToAll = wfInd {P=(\z=>FirstLimited (allDivSeq z))} {rel=LT'} 
 -- 最終的な定理
 limitedDivSeq : (n : Nat) -> FirstLimited (allDivSeq n)
 limitedDivSeq Z     = IsFirstLimited00
-limitedDivSeq (S n) = unifiPeirce (S n) $ fTOA $ limitedDivSeq n
+limitedDivSeq (S n) = unifi (S n) $ FtoA $ limitedDivSeq n
 
 
 

@@ -186,21 +186,25 @@ allDivSeq (S w) with (parity w)
 
 
 -- ---------------------------------
-public export
-data AllLimited : List (CoList Integer) -> Type where
+mutual
+  public export
+  data AllLimited : List (CoList Integer) -> Type where
+    --コラッツが真ならば、First z -> All z も真
+    FtoA : FirstLimited (allDivSeq n)
+      -> ((z : Nat) -> FirstLimited (allDivSeq z) -> AllLimited (allDivSeq z))
 
---Uninhabited (AllLimited xs) where --使わなかった
---  uninhabited a impossible
---allToVoid : (x : Nat) -> Not $ AllLimited (allDivSeq (S x))
---allToVoid x prf impossible
+  --Uninhabited (AllLimited xs) where --使わなかった
+  --  uninhabited a impossible
+  --allToVoid : (x : Nat) -> Not $ AllLimited (allDivSeq (S x))
+  --allToVoid x prf impossible
 
-public export
-data FirstLimited : List (CoList Integer) -> Type where
-  IsFirstLimited00 : FirstLimited $ allDivSeq Z
-  IsFirstLimited01 : FirstLimited $ allDivSeq 1 -- 6*<1>+3
-  IsFirstLimited09 : (j : Nat)
-    -> AllLimited $ allDivSeq j
-      -> FirstLimited $ allDivSeq (S (S (plus (plus j j) j)))
+  public export
+  data FirstLimited : List (CoList Integer) -> Type where
+    IsFirstLimited00 : FirstLimited $ allDivSeq Z
+    IsFirstLimited01 : FirstLimited $ allDivSeq 1 -- 6*<1>+3
+    IsFirstLimited09 : (j : Nat)
+      -> AllLimited $ allDivSeq j
+        -> FirstLimited $ allDivSeq (S (S (plus (plus j j) j)))
 -- ---------------------------------
 
 
