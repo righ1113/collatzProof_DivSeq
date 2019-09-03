@@ -189,9 +189,15 @@ allDivSeq (S w) with (parity w)
 public export
 data AllLimited : List (CoList Integer) -> Type where
 
+--Uninhabited (AllLimited xs) where --使わなかった
+--  uninhabited a impossible
+--allToVoid : (x : Nat) -> Not $ AllLimited (allDivSeq (S x))
+--allToVoid x prf impossible
+
 public export
 data FirstLimited : List (CoList Integer) -> Type where
   IsFirstLimited00 : FirstLimited $ allDivSeq Z
+  IsFirstLimited01 : FirstLimited $ allDivSeq 1 -- 6*<1>+3
   IsFirstLimited09 : (j : Nat)
     -> AllLimited $ allDivSeq j
       -> FirstLimited $ allDivSeq (S (S (plus (plus j j) j)))

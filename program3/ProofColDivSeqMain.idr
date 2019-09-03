@@ -29,54 +29,28 @@ import Sub09LTE18t15
 %default total
 
 
-record Cont (r : Type) (a : Type) where
-  constructor CT
-  runCont : (a -> r) -> r
-
-implementation Functor (Cont r) where
-implementation Applicative (Cont r) where
-implementation Monad (Cont r) where
-
-callCC : {a, b, r : Nat -> Type}
-  -> (n : Nat) -> (((z1, z2 : Nat) -> a n -> Cont (r n) (b n)) -> ((k : Nat) -> Cont (r k) (a k))) -> Cont (r n) (a n)
-callCC n f = CT $ \outerCont =>
-  runCont ((f $ \z1, z2, aa => CT $ \_innerCont => outerCont aa) n) outerCont
-
-unifiCallCC :
-  ((z1, z2 : Nat) -> (FirstLimited (allDivSeq z1) -> Cont (FirstLimited (allDivSeq z2)) (AllLimited (allDivSeq z1))))
-    -> ((n : Nat) -> Cont (FirstLimited (allDivSeq n)) (FirstLimited (allDivSeq n)))
-unifiCallCC firstToAll n = wfInd {rel=LT'} (step firstToAll) n where
-  step : ((z1, z2 : Nat) -> (FirstLimited (allDivSeq z1) -> Cont (FirstLimited (allDivSeq z2)) (AllLimited (allDivSeq z1))))
-    -> (x : Nat) -> ((y : Nat) -> LT' y x -> Cont (FirstLimited (allDivSeq y)) (FirstLimited (allDivSeq y)))
-      -> Cont (FirstLimited (allDivSeq x)) (FirstLimited (allDivSeq x))
-
---lastFunc :
---  (\z1 => (\z2 => FirstLimited (allDivSeq z1)) z2) z1 -> FirstLimited (allDivSeq z1)
-
--- 最終的な定理
---limitedDivSeq : (n : Nat) -> FirstLimited (allDivSeq n)
---limitedDivSeq n = runCont (callCC n unifiCallCC) $ ?rhs10
-
-
 -- 示すのに、整礎帰納法を使っている
-unifiPeirce :
-  ((z : Nat) -> (FirstLimited (allDivSeq z) -> AllLimited (allDivSeq z)))
-    -> ((n : Nat) -> FirstLimited (allDivSeq n))
-unifiPeirce firstToAll n = wfInd {P=(\z=>FirstLimited (allDivSeq z))} {rel=LT'} (step firstToAll) n where
+unifiPeirce : (n : Nat)
+  -> ((z : Nat) -> (FirstLimited (allDivSeq z) -> AllLimited (allDivSeq z)))
+    -> FirstLimited (allDivSeq n)
+unifiPeirce n firstToAll = wfInd {P=(\z=>FirstLimited (allDivSeq z))} {rel=LT'} (step firstToAll) n where
   step : ((z : Nat) -> (FirstLimited (allDivSeq z) -> AllLimited (allDivSeq z)))
     -> (x : Nat) -> ((y : Nat) -> LT' y x -> FirstLimited (allDivSeq y))
       -> FirstLimited (allDivSeq x)
   step _          Z     _  = IsFirstLimited00
   step firstToAll (S x) rs with (mod3 x)
     -- 0 mod 9
-    step firstToAll (S (j + j + j))         rs | ThreeZero = ?rhs1
+    step firstToAll (S (Z     + Z     + Z))     rs | ThreeZero = IsFirstLimited01
+    step firstToAll (S ((S j) + (S j) + (S j))) rs | ThreeZero = ?rhs2
     -- 6 mod 9
     step firstToAll (S (S (j + j + j)))     rs | ThreeOne  = (IsFirstLimited09 j . firstToAll j) (rs j $ lteToLt' $ lte18t15 j)
     -- 3 mod 9
     step firstToAll (S (S (S (j + j + j)))) rs | ThreeTwo  = ?rhs3
 
-allToVoid : (x : Nat) -> Not $ AllLimited (allDivSeq (S x))
-allToVoid x prf impossible
+-- 最終的な定理
+limitedDivSeq : (n : Nat) -> FirstLimited (allDivSeq n)
+limitedDivSeq Z     = IsFirstLimited00
+limitedDivSeq (S n) = unifiPeirce (S n) $ fTOA $ limitedDivSeq n
 
 
 
