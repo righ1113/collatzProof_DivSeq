@@ -8,6 +8,8 @@ import ProofColDivSeqBase
 
 --            from ProofColDivSeqBase
 -- ########################################
+-- postulate dummy : CoList Integer
+-- を使っている
 -- ########################################
 
 

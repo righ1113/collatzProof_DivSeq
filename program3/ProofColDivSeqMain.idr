@@ -37,7 +37,7 @@ unifi n firstToAll = wfInd {P=(\z=>FirstLimited (allDivSeq z))} {rel=LT'} (step 
   step : ((z : Nat) -> (FirstLimited (allDivSeq z) -> AllLimited (allDivSeq z)))
     -> (x : Nat) -> ((y : Nat) -> LT' y x -> FirstLimited (allDivSeq y))
       -> FirstLimited (allDivSeq x)
-  step _          Z     _  = IsFirstLimited00
+  step _          Z     _  = IsFirstLimited10 -- 6*<0>+3 = 3
   step firstToAll (S x) rs with (mod3 x)
     -- 0 mod 9
     step firstToAll (S (Z     + Z     + Z))     rs | ThreeZero = IsFirstLimited01
@@ -45,11 +45,13 @@ unifi n firstToAll = wfInd {P=(\z=>FirstLimited (allDivSeq z))} {rel=LT'} (step 
     -- 6 mod 9
     step firstToAll (S (S (j + j + j)))     rs | ThreeOne  = (IsFirstLimited09 j . firstToAll j) (rs j $ lteToLt' $ lte18t15 j)
     -- 3 mod 9
-    step firstToAll (S (S (S (j + j + j)))) rs | ThreeTwo  = ?rhs3
+    step firstToAll (S (S (S (j + j + j)))) rs | ThreeTwo with (parity j)
+      step firstToAll (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))  rs | ThreeTwo | Even = ?rhs3
+      step firstToAll (S (S (S ((S (k+k)) + (S (k+k)) + (S (k+k)))))) rs | ThreeTwo | Odd  = ?rhs4
 
 -- 最終的な定理
 limitedDivSeq : (n : Nat) -> FirstLimited (allDivSeq n)
-limitedDivSeq Z     = IsFirstLimited00
+limitedDivSeq Z     = IsFirstLimited10
 limitedDivSeq (S n) = unifi (S n) $ FtoA $ limitedDivSeq n
 
 
