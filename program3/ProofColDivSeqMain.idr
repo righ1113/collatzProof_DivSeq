@@ -30,11 +30,16 @@ import Sub11LTE36t21
 %default total
 
 
+makeFtoA : (d, n : Nat)
+  -> ((z : Nat) -> FirstLimited d $ allDivSeq z)
+    -> (FirstLimited d $ allDivSeq n -> AllLimited d $ allDivSeq n)
+makeFtoA d n prf _ = FtoA prf $ n
+
 -- 示すのに、整礎帰納法を使っている
-unifi : (d, n : Nat)
+makeLimitedDivSeq : (d, n : Nat)
   -> ((z : Nat) -> (FirstLimited d $ allDivSeq z -> AllLimited d $ allDivSeq z))
     -> FirstLimited (S d) $ allDivSeq n
-unifi d n firstToAll = wfInd {P=(\z=>FirstLimited (S d) $ allDivSeq z)} {rel=LT'} (step firstToAll) n where
+makeLimitedDivSeq d n firstToAll = wfInd {P=(\z=>FirstLimited (S d) $ allDivSeq z)} {rel=LT'} (step firstToAll) n where
   step : ((z : Nat) -> (FirstLimited d $ allDivSeq z -> AllLimited d $ allDivSeq z))
     -> (x : Nat) -> ((y : Nat) -> LT' y x -> FirstLimited (S d) $ allDivSeq y)
       -> FirstLimited (S d) $ allDivSeq x
@@ -52,22 +57,17 @@ unifi d n firstToAll = wfInd {P=(\z=>FirstLimited (S d) $ allDivSeq z)} {rel=LT'
         = (IsFirstLimited11 k . firstToAll k . Ddown) (rs k $ lteToLt' $ lte36t21 k)
       step firstToAll (S (S (S ((S (k+k)) + (S (k+k)) + (S (k+k)))))) rs | ThreeTwo | Odd  = ?rhs4
 
-unifiFtoA : (d, n : Nat)
-  -> ((z : Nat) -> FirstLimited d $ allDivSeq z)
-    -> (FirstLimited d $ allDivSeq n -> AllLimited d $ allDivSeq n)
-unifiFtoA d n prf _ = FtoA prf $ n
-
 
 -- 相互再帰を使う
 mutual
   fToA : (d, n : Nat)
     -> (FirstLimited d $ allDivSeq n -> AllLimited d $ allDivSeq n)
-  fToA d n = unifiFtoA d n $ limitedDivSeq d
+  fToA d n = makeFtoA d n $ limitedDivSeq d
 
   -- 最終的な定理
   limitedDivSeq : (d, n : Nat) -> FirstLimited d $ allDivSeq n
   limitedDivSeq Z     _ = IsFirstLimitedD0
-  limitedDivSeq (S d) n = unifi d n $ fToA d
+  limitedDivSeq (S d) n = makeLimitedDivSeq d n $ fToA d
 
 
 
