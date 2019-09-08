@@ -3,7 +3,7 @@
 
 # 変更履歴
 19/08/10　program2：program3に移行する  
-19/07/18　program：ギャップが見つかったのでprogram2に移行する  
+19/07/18　program：program2に移行する  
 19/05/18　Wiki：最新の状態に更新  
 19/05/06　program：ver2.0をリリース  
 19/04/04　program：postulate命題12個を証明  
