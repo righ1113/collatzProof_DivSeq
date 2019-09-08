@@ -145,7 +145,7 @@ divSeq n = divSeq' (S (S (S (n+n+n+n+n+n)))) (S (S (S (n+n+n+n+n+n)))) where
 
 postulate dummy : CoList Integer
 {-
-0                       1.(9) 10.(3)
+0                       
 1+w
   1+2v
     1+2(2u)             2. 9. 11.  4. 13.
@@ -166,29 +166,29 @@ allDivSeq (S w) with (parity w)
   allDivSeq (S (v + v))     | Even with (parity v)
     allDivSeq (S ((u + u) + (u + u)))         | Even | Even
       = let x = (S ((u + u) + (u + u)))
-        in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` dummy, [1, -2] `dsp` dummy, [6, -2, -4] `dsp` dummy, [6, -3, -2] `dsp` dummy]
+        in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` dummy, [6, -2, -4] `dsp` dummy, [6, -3, -2] `dsp` dummy]
     allDivSeq (S ((S (u + u)) + (S (u + u)))) | Even | Odd  with (parity u)
       allDivSeq (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t)))))                 | Even | Odd  | Even with (parity t)
         allDivSeq (S ((S (((s + s) + (s + s)) + ((s + s) + (s + s)))) + (S (((s + s) + (s + s)) + ((s + s) + (s + s))))))                                 | Even | Odd  | Even | Even
           = let x = (S ((S (((s + s) + (s + s)) + ((s + s) + (s + s)))) + (S (((s + s) + (s + s)) + ((s + s) + (s + s))))))
-            in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` dummy, [1, -2] `dsp` dummy, [2, 1, -2] `dsp` dummy, [4, 1, -2] `dsp` dummy]
+            in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` dummy, [2, 1, -2] `dsp` dummy, [4, 1, -2] `dsp` dummy]
         allDivSeq (S ((S (((S (s + s)) + (S (s + s))) + ((S (s + s)) + (S (s + s))))) + (S (((S (s + s)) + (S (s + s))) + ((S (s + s)) + (S (s + s))))))) | Even | Odd  | Even | Odd
           = let x = (S ((S (((S (s + s)) + (S (s + s))) + ((S (s + s)) + (S (s + s))))) + (S (((S (s + s)) + (S (s + s))) + ((S (s + s)) + (S (s + s)))))))
-            in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` dummy, [1, -2] `dsp` dummy, [2, 1, -2] `dsp` dummy]
+            in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` dummy, [2, 1, -2] `dsp` dummy]
       allDivSeq (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t)))))) | Even | Odd  | Odd
         = let x = (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t))))))
-          in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` dummy, [1, -2] `dsp` dummy, [5, 0, -4] `dsp` dummy, [5, -1, -2] `dsp` dummy]
+          in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` dummy, [5, 0, -4] `dsp` dummy, [5, -1, -2] `dsp` dummy]
   allDivSeq (S (S (v + v))) | Odd  with (parity v)
     allDivSeq (S (S ((u + u) + (u + u))))         | Odd  | Even
       = let x = (S (S ((u + u) + (u + u))))
-        in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` dummy, [1, -2] `dsp` dummy, [3, 0, -4] `dsp` dummy, [3, -1, -2] `dsp` dummy]
+        in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` dummy, [3, 0, -4] `dsp` dummy, [3, -1, -2] `dsp` dummy]
     allDivSeq (S (S ((S (u + u)) + (S (u + u))))) | Odd  | Odd with (parity u)
       allDivSeq (S (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t))))))                 | Odd  | Odd | Even
         = let x = (S (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t))))))
-          in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` dummy, [1, -2] `dsp` dummy, [3, 0, -4] `dsp` dummy, [3, -1, -2] `dsp` dummy, [1, 3, -2] `dsp` dummy]
+          in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` dummy, [3, 0, -4] `dsp` dummy, [3, -1, -2] `dsp` dummy, [1, 3, -2] `dsp` dummy]
       allDivSeq (S (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t))))))) | Odd  | Odd | Odd
         = let x = (S (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t)))))))
-          in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` dummy, [1, -2] `dsp` dummy, [3, 0, -4] `dsp` dummy, [3, -1, -2] `dsp` dummy]
+          in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` dummy, [3, 0, -4] `dsp` dummy, [3, -1, -2] `dsp` dummy]
 -- ---------------------------------
 
 
@@ -203,6 +203,9 @@ mutual
       -> AllLimited d $ allDivSeq j
         -> FirstLimited (S d) $ allDivSeq (S (S (plus (plus j j) j)))
     IsFirstLimited10    : FirstLimited d $ allDivSeq 0 -- 6*<0>+3 = 3
+    IsFirstLimited11    : (k : Nat)
+      -> AllLimited d $ allDivSeq k
+        -> FirstLimited (S d) $ allDivSeq (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
 
   public export
   data AllLimited : Nat -> List (CoList Integer) -> Type where

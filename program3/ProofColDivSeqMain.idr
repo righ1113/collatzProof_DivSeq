@@ -25,6 +25,7 @@ import Sub14Apply108x72
 import Sub15Apply108x108
 -}
 import Sub09LTE18t15
+import Sub11LTE36t21
 
 %default total
 
@@ -47,7 +48,8 @@ unifi d n firstToAll = wfInd {P=(\z=>FirstLimited (S d) $ allDivSeq z)} {rel=LT'
       = (IsFirstLimited09 j . firstToAll j . Ddown) (rs j $ lteToLt' $ lte18t15 j)
     -- 3 mod 9
     step firstToAll (S (S (S (j + j + j)))) rs | ThreeTwo with (parity j)
-      step firstToAll (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))  rs | ThreeTwo | Even = ?rhs3
+      step firstToAll (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))  rs | ThreeTwo | Even
+        = (IsFirstLimited11 k . firstToAll k . Ddown) (rs k $ lteToLt' $ lte36t21 k)
       step firstToAll (S (S (S ((S (k+k)) + (S (k+k)) + (S (k+k)))))) rs | ThreeTwo | Odd  = ?rhs4
 
 unifiFtoA : (d, n : Nat)
