@@ -4,3 +4,4 @@ allDivSeqからdivSeqを呼んでいるが、
 
 
 
+
