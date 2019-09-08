@@ -161,7 +161,7 @@ postulate dummy : CoList Integer
       4+4(1+2t)         2. 9. 11.  3. 12.
 -}
 allDivSeq : Nat -> List (CoList Integer)
-allDivSeq Z     = [[], [2, -4] `dsp` [2, 1, 1, 2, 3, 4], [1, -2] `dsp` [1, 4]]
+allDivSeq Z     = [[1, 4], [2, -4] `dsp` [3,2,3,4], [3, 0, -4] `dsp` [2,3,1,1,5,4], [4, -4] `dsp` [1,1,1,5,4], [1, -2] `dsp` [6], [3, -1, -2] `dsp` [1,1,2,1,4,1,3,1,2,3,4]] -- 6*<0>+3 = 3
 allDivSeq (S w) with (parity w)
   allDivSeq (S (v + v))     | Even with (parity v)
     allDivSeq (S ((u + u) + (u + u)))         | Even | Even
@@ -195,19 +195,20 @@ allDivSeq (S w) with (parity w)
 -- ---------------------------------
 mutual
   public export
-  data FirstLimited : List (CoList Integer) -> Type where
-    -- IsFirstLimited00 : FirstLimited $ allDivSeq Z -- Zは無い
-    IsFirstLimited01 : FirstLimited $ allDivSeq 1 -- 6*<1>+3 = 9
-    IsFirstLimited09 : (j : Nat)
-      -> AllLimited $ allDivSeq j
-        -> FirstLimited $ allDivSeq (S (S (plus (plus j j) j)))
-    IsFirstLimited10 : FirstLimited $ allDivSeq 0 -- 6*<0>+3 = 3
+  data FirstLimited : Nat -> List (CoList Integer) -> Type where
+    IsFirstLimitedD0    : FirstLimited Z $ allDivSeq n
+    Ddown               : FirstLimited (S d) $ allDivSeq n -> FirstLimited d $ allDivSeq n
+    IsFirstLimited01    : FirstLimited d $ allDivSeq 1 -- 6*<1>+3 = 9
+    IsFirstLimited09    : (j : Nat)
+      -> AllLimited d $ allDivSeq j
+        -> FirstLimited (S d) $ allDivSeq (S (S (plus (plus j j) j)))
+    IsFirstLimited10    : FirstLimited d $ allDivSeq 0 -- 6*<0>+3 = 3
 
   public export
-  data AllLimited : List (CoList Integer) -> Type where
-    --コラッツが真ならば、First z -> All z も真
-    FtoA : FirstLimited (allDivSeq n)
-      -> ((z : Nat) -> FirstLimited (allDivSeq z) -> AllLimited (allDivSeq z))
+  data AllLimited : Nat -> List (CoList Integer) -> Type where
+    --全てのFirstが真ならば、全てのAllも真
+    FtoA : ((n : Nat) -> FirstLimited d $ allDivSeq n)
+      -> ((k : Nat) -> AllLimited d $ allDivSeq k)
 
   --Uninhabited (AllLimited xs) where --使わなかった
   --  uninhabited a impossible

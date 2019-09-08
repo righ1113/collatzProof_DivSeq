@@ -30,29 +30,42 @@ import Sub09LTE18t15
 
 
 -- 示すのに、整礎帰納法を使っている
-unifi : (n : Nat)
-  -> ((z : Nat) -> (FirstLimited (allDivSeq z) -> AllLimited (allDivSeq z)))
-    -> FirstLimited (allDivSeq n)
-unifi n firstToAll = wfInd {P=(\z=>FirstLimited (allDivSeq z))} {rel=LT'} (step firstToAll) n where
-  step : ((z : Nat) -> (FirstLimited (allDivSeq z) -> AllLimited (allDivSeq z)))
-    -> (x : Nat) -> ((y : Nat) -> LT' y x -> FirstLimited (allDivSeq y))
-      -> FirstLimited (allDivSeq x)
-  step _          Z     _  = IsFirstLimited10 -- 6*<0>+3 = 3
+unifi : (d, n : Nat)
+  -> ((z : Nat) -> (FirstLimited d $ allDivSeq z -> AllLimited d $ allDivSeq z))
+    -> FirstLimited (S d) $ allDivSeq n
+unifi d n firstToAll = wfInd {P=(\z=>FirstLimited (S d) $ allDivSeq z)} {rel=LT'} (step firstToAll) n where
+  step : ((z : Nat) -> (FirstLimited d $ allDivSeq z -> AllLimited d $ allDivSeq z))
+    -> (x : Nat) -> ((y : Nat) -> LT' y x -> FirstLimited (S d) $ allDivSeq y)
+      -> FirstLimited (S d) $ allDivSeq x
+  step _          Z     _  = IsFirstLimited10                                     -- 6*<0>+3 = 3
   step firstToAll (S x) rs with (mod3 x)
     -- 0 mod 9
-    step firstToAll (S (Z     + Z     + Z))     rs | ThreeZero = IsFirstLimited01
+    step firstToAll (S (Z     + Z     + Z))     rs | ThreeZero = IsFirstLimited01 -- 6*<1>+3 = 9
     step firstToAll (S ((S j) + (S j) + (S j))) rs | ThreeZero = ?rhs2
     -- 6 mod 9
-    step firstToAll (S (S (j + j + j)))     rs | ThreeOne  = (IsFirstLimited09 j . firstToAll j) (rs j $ lteToLt' $ lte18t15 j)
+    step firstToAll (S (S (j + j + j)))     rs | ThreeOne
+      = (IsFirstLimited09 j . firstToAll j . Ddown) (rs j $ lteToLt' $ lte18t15 j)
     -- 3 mod 9
     step firstToAll (S (S (S (j + j + j)))) rs | ThreeTwo with (parity j)
       step firstToAll (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))  rs | ThreeTwo | Even = ?rhs3
       step firstToAll (S (S (S ((S (k+k)) + (S (k+k)) + (S (k+k)))))) rs | ThreeTwo | Odd  = ?rhs4
 
--- 最終的な定理
-limitedDivSeq : (n : Nat) -> FirstLimited (allDivSeq n)
-limitedDivSeq Z     = IsFirstLimited10
-limitedDivSeq (S n) = unifi (S n) $ FtoA $ limitedDivSeq n
+unifiFtoA : (d, n : Nat)
+  -> ((z : Nat) -> FirstLimited d $ allDivSeq z)
+    -> (FirstLimited d $ allDivSeq n -> AllLimited d $ allDivSeq n)
+unifiFtoA d n prf _ = FtoA prf $ n
+
+
+-- 相互再帰を使う
+mutual
+  fToA : (d, n : Nat)
+    -> (FirstLimited d $ allDivSeq n -> AllLimited d $ allDivSeq n)
+  fToA d n = unifiFtoA d n $ limitedDivSeq d
+
+  -- 最終的な定理
+  limitedDivSeq : (d, n : Nat) -> FirstLimited d $ allDivSeq n
+  limitedDivSeq Z     _ = IsFirstLimitedD0
+  limitedDivSeq (S d) n = unifi d n $ fToA d
 
 
 
