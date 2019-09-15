@@ -33,7 +33,7 @@ import Sub11LTE36t21
 makeFtoA : (d, n : Nat)
   -> ((z : Nat) -> FirstLimited d $ allDivSeq z)
     -> (FirstLimited d $ allDivSeq n -> AllLimited d $ allDivSeq n)
-makeFtoA d n prf _ = FtoA prf $ n
+makeFtoA d n prf _ = ForallFtoForallA prf $ n
 
 -- 示すのに、整礎帰納法を使っている
 makeLimitedDivSeq : (d, n : Nat)
