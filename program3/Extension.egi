@@ -23,6 +23,58 @@
     [(- (/ (* 8 x) 3) 3) (cons 5 (cons (- (car sequ) 2) (cdr sequ)))] ))
 
 
+;; 拡張star変換
+
+;; No.1 none
+
+;; No.2 E
+
+;; No.3 DE
+(define $DE
+  (lambda [$x $sequ]
+    (D(E [x sequ])) ))
+;; No.4 AE
+(define $AE
+  (lambda [$x $sequ]
+    (A(E [x sequ])) ))
+;; No.5 FE
+(define $FE
+  (lambda [$x $sequ]
+    (F(E [x sequ])) ))
+
+;; No.6 CF
+(define $CF
+  (lambda [$x $sequ]
+    (C(F [x sequ])) ))
+;; No.7 BF
+(define $BF
+  (lambda [$x $sequ]
+    (B(F [x sequ])) ))
+;; No.8 EF
+(define $EF
+  (lambda [$x $sequ]
+    (E(F [x sequ])) ))
+
+;; No.9 C
+
+;; No.10 none
+
+;; No.11 B
+
+;; No.12 DB
+(define $DB
+  (lambda [$x $sequ]
+    (D(B [x sequ])) ))
+;; No.13 AB
+(define $AB
+  (lambda [$x $sequ]
+    (A(B [x sequ])) ))
+;; No.14 FB
+(define $FB
+  (lambda [$x $sequ]
+    (F(B [x sequ])) ))
+
+
 ;; 拡張コラッツ操作
 (define $extCollatz
   (lambda [$x $sequ]
@@ -30,17 +82,24 @@
 
 
 ;; > egison -t Extension.egi で実行
-;; star変換1回
-(test (io (print "(map (lambda [$f1] (map (lambda [$y] (eq? (extCollatz [x {y s}]) (extCollatz (extCollatz (f1 [x {y s}]))))) {4 3 2 1})) {A B C D E F})")))
-(test (map (lambda [$f1] (map (lambda [$y] (eq? (extCollatz [x {y s}]) (extCollatz (extCollatz (f1 [x {y s}]))))) {4 3 2 1})) {A B C D E F}))
-
-;; star変換2回
-(test (io (print "(map (lambda [$f2] (map (lambda [$f1] (map (lambda [$y] (eq? (extCollatz [x {y s}]) (extCollatz (extCollatz (extCollatz (f2 (f1 [x {y s}]))))))) {4 3 2 1})) {A B C D E F})) {A B C D E F})")))
-(test (map (lambda [$f2] (map (lambda [$f1] (map (lambda [$y] (eq? (extCollatz [x {y s}]) (extCollatz (extCollatz (extCollatz (f2 (f1 [x {y s}]))))))) {4 3 2 1})) {A B C D E F})) {A B C D E F}))
-
-;; star変換3回
-(test (io (print "(map (lambda [$f3] (map (lambda [$f2] (map (lambda [$f1] (map (lambda [$y] (eq? (extCollatz [x {y s}]) (extCollatz (extCollatz (extCollatz (extCollatz (f3 (f2 (f1 [x {y s}]))))))))) {4 3 2 1})) {A B C D E F})) {A B C D E F})) {A B C D E F})")))
-(test (map (lambda [$f3] (map (lambda [$f2] (map (lambda [$f1] (map (lambda [$y] (eq? (extCollatz [x {y s}]) (extCollatz (extCollatz (extCollatz (extCollatz (f3 (f2 (f1 [x {y s}]))))))))) {4 3 2 1})) {A B C D E F})) {A B C D E F})) {A B C D E F}))
+;; 拡張コラッツ操作2回
+(test (io (print "(map (lambda [$f1] (map (lambda [$y] (eq? (extCollatz [x {y s}]) (extCollatz (extCollatz (f1 [x {y s}])))) ) {1 2 3 4}) ) {E C B})")))
+(test
+  (map (lambda [$f1]
+    (map (lambda [$y]
+      (eq? (extCollatz [x {y s}]) (extCollatz (extCollatz (f1 [x {y s}]))))
+         ) {1 2 3 4})
+       ) {E C B})
+)
+;; 拡張コラッツ操作3回
+(test (io (print "(map (lambda [$f1] (map (lambda [$y] (eq? (extCollatz [x {y s}]) (extCollatz (extCollatz (extCollatz (f1 [x {y s}]))))) ) {1 2 3 4}) ) {DE AE FE CF BF EF DB AB FB})")))
+(test
+  (map (lambda [$f1]
+    (map (lambda [$y]
+      (eq? (extCollatz [x {y s}]) (extCollatz (extCollatz (extCollatz (f1 [x {y s}])))))
+         ) {1 2 3 4})
+       ) {DE AE FE CF BF EF DB AB FB})
+)
 
 
 
