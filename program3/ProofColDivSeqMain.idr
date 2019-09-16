@@ -30,13 +30,13 @@ import Sub11LTE36t21
 %default total
 
 
-makeFtoA : (d, n : Nat)
+makeFtoA : (d : CoNat) -> (n : Nat)
   -> ((z : Nat) -> FirstLimited d $ allDivSeq z)
     -> (FirstLimited d $ allDivSeq n -> AllLimited d $ allDivSeq n)
 makeFtoA d n prf _ = ForallFtoForallA prf $ n
 
 -- 示すのに、整礎帰納法を使っている
-makeLimitedDivSeq : (d, n : Nat)
+makeLimitedDivSeq : (d : CoNat) -> (n : Nat)
   -> ((z : Nat) -> (FirstLimited d $ allDivSeq z -> AllLimited d $ allDivSeq z))
     -> FirstLimited (S d) $ allDivSeq n
 makeLimitedDivSeq d n firstToAll = wfInd {P=(\z=>FirstLimited (S d) $ allDivSeq z)} {rel=LT'} (step firstToAll) n where
@@ -60,14 +60,14 @@ makeLimitedDivSeq d n firstToAll = wfInd {P=(\z=>FirstLimited (S d) $ allDivSeq 
 
 -- 相互再帰を使う
 mutual
-  fToA : (d, n : Nat)
+{-
+  fToA : (d : CoNat) -> (n : Nat)
     -> (FirstLimited d $ allDivSeq n -> AllLimited d $ allDivSeq n)
-  fToA d n = makeFtoA d n $ limitedDivSeq d
-
+  fToA (S d) n prf = Dhoge (fToA d n prf)
+-}
   -- 最終的な定理
-  limitedDivSeq : (d, n : Nat) -> FirstLimited d $ allDivSeq n
-  limitedDivSeq Z     _ = IsFirstLimitedD0
-  limitedDivSeq (S d) n = makeLimitedDivSeq d n $ fToA d
+  limitedDivSeq : (d : CoNat) -> (n : Nat) -> FirstLimited d $ allDivSeq n
+  limitedDivSeq (S d) = \n => Choge (limitedDivSeq d n)
 
 
 
