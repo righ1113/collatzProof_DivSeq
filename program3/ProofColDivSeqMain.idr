@@ -30,19 +30,15 @@ import Sub11LTE36t21
 %default total
 
 
-makeFtoA : (d : CoNat) -> (n : Nat)
-  -> ((z : Nat) -> FirstLimited d $ allDivSeq z)
-    -> (FirstLimited d $ allDivSeq n -> AllLimited d $ allDivSeq n)
-makeFtoA d n prf _ = ForallFtoForallA prf $ n
 
 -- 示すのに、整礎帰納法を使っている
 makeLimitedDivSeq : (d : CoNat) -> (n : Nat)
   -> ((z : Nat) -> (FirstLimited d $ allDivSeq z -> AllLimited d $ allDivSeq z))
-    -> FirstLimited (S d) $ allDivSeq n
-makeLimitedDivSeq d n firstToAll = wfInd {P=(\z=>FirstLimited (S d) $ allDivSeq z)} {rel=LT'} (step firstToAll) n where
+    -> FirstLimited d $ allDivSeq n
+makeLimitedDivSeq d n firstToAll = wfInd {P=(\z=>FirstLimited d $ allDivSeq z)} {rel=LT'} (step firstToAll) n where
   step : ((z : Nat) -> (FirstLimited d $ allDivSeq z -> AllLimited d $ allDivSeq z))
-    -> (x : Nat) -> ((y : Nat) -> LT' y x -> FirstLimited (S d) $ allDivSeq y)
-      -> FirstLimited (S d) $ allDivSeq x
+    -> (x : Nat) -> ((y : Nat) -> LT' y x -> FirstLimited d $ allDivSeq y)
+      -> FirstLimited d $ allDivSeq x
   step _          Z     _  = IsFirstLimited10                                     -- 6*<0>+3 = 3
   step firstToAll (S x) rs with (mod3 x)
     -- 0 mod 9
@@ -50,24 +46,21 @@ makeLimitedDivSeq d n firstToAll = wfInd {P=(\z=>FirstLimited (S d) $ allDivSeq 
     step firstToAll (S ((S j) + (S j) + (S j))) rs | ThreeZero = ?rhs2
     -- 6 mod 9
     step firstToAll (S (S (j + j + j)))     rs | ThreeOne
-      = (IsFirstLimited09 j . firstToAll j . Ddown) (rs j $ lteToLt' $ lte18t15 j)
+      = (IsFirstLimited09 j . firstToAll j) (rs j $ lteToLt' $ lte18t15 j)
     -- 3 mod 9
     step firstToAll (S (S (S (j + j + j)))) rs | ThreeTwo with (parity j)
       step firstToAll (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))  rs | ThreeTwo | Even
-        = (IsFirstLimited11 k . firstToAll k . Ddown) (rs k $ lteToLt' $ lte36t21 k)
+        = (IsFirstLimited11 k . firstToAll k) (rs k $ lteToLt' $ lte36t21 k)
       step firstToAll (S (S (S ((S (k+k)) + (S (k+k)) + (S (k+k)))))) rs | ThreeTwo | Odd  = ?rhs4
 
+-- 補題
+fToA : (d : CoNat) -> (n : Nat)
+  -> (FirstLimited d $ allDivSeq n -> AllLimited d $ allDivSeq n)
+fToA (S d) n prf = DupAll (fToA d n (DdownFirst prf))
 
--- 相互再帰を使う
-mutual
-{-
-  fToA : (d : CoNat) -> (n : Nat)
-    -> (FirstLimited d $ allDivSeq n -> AllLimited d $ allDivSeq n)
-  fToA (S d) n prf = Dhoge (fToA d n prf)
--}
-  -- 最終的な定理
-  limitedDivSeq : (d : CoNat) -> (n : Nat) -> FirstLimited d $ allDivSeq n
-  limitedDivSeq (S d) = \n => Choge (limitedDivSeq d n)
+-- 最終的な定理
+limitedDivSeq : (d : CoNat) -> (n : Nat) -> FirstLimited d $ allDivSeq n
+limitedDivSeq d n = makeLimitedDivSeq d n $ fToA d
 
 
 

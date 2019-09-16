@@ -196,43 +196,26 @@ allDivSeq (S w) with (parity w)
 public export
 codata CoNat = S CoNat
 
-mutual
-  public export
-  codata FirstLimited : CoNat -> List (CoList Integer) -> Type where
-    -- IsFirstLimitedD0    : FirstLimited Z $ allDivSeq n
-    Ddown               : FirstLimited (S d) $ allDivSeq n -> FirstLimited d $ allDivSeq n
-    IsFirstLimited01    : FirstLimited d $ allDivSeq 1 -- 6*<1>+3 = 9
-    IsFirstLimited09    : (j : Nat)
-      -> AllLimited d $ allDivSeq j
-        -> FirstLimited (S d) $ allDivSeq (S (S (plus (plus j j) j)))
-    IsFirstLimited10    : FirstLimited d $ allDivSeq 0 -- 6*<0>+3 = 3
-    IsFirstLimited11    : (k : Nat)
-      -> AllLimited d $ allDivSeq k
-        -> FirstLimited (S d) $ allDivSeq (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
-    -- -----
-    ConstructorMakeLimitedDivSeq : (d : CoNat) -> (n : Nat)
-      -> ((z : Nat) -> (FirstLimited d $ allDivSeq z -> AllLimited d $ allDivSeq z))
-        -> FirstLimited (S d) $ allDivSeq n
-    Choge : (FirstLimited (d) $ allDivSeq n) -> FirstLimited (S d) $ allDivSeq n
-    Choge2 : --(d : CoNat) -> (n : Nat)
-      a --((FirstLimited d $ allDivSeq z -> AllLimited d $ allDivSeq z))
-        -> FirstLimited (S d) $ allDivSeq n
+public export
+codata AllLimited : CoNat -> List (CoList Integer) -> Type where
+  DupAll : AllLimited d $ allDivSeq n -> AllLimited (S d) $ allDivSeq n
+--Uninhabited (AllLimited xs) where --使わなかった
+--  uninhabited a impossible
+--allToVoid : (x : Nat) -> Not $ AllLimited (allDivSeq (S x))
+--allToVoid x prf impossible
 
-  public export
-  codata AllLimited : CoNat -> List (CoList Integer) -> Type where
-    --全てのFirstが真ならば、全てのAllも真
-    ForallFtoForallA : ((n : Nat) -> FirstLimited d $ allDivSeq n)
-      -> ((k : Nat) -> AllLimited d $ allDivSeq k)
-    -- -----
-    ConstructorMakeFtoA : (d : CoNat) -> (n : Nat)
-      -> a --((z : Nat) -> FirstLimited d $ allDivSeq z)
-        -> (FirstLimited (S d) $ allDivSeq n -> AllLimited (S d) $ allDivSeq n)
-    Dhoge : (FirstLimited (S d) $ allDivSeq n -> AllLimited (S d) $ allDivSeq n)
-
-  --Uninhabited (AllLimited xs) where --使わなかった
-  --  uninhabited a impossible
-  --allToVoid : (x : Nat) -> Not $ AllLimited (allDivSeq (S x))
-  --allToVoid x prf impossible
+public export
+codata FirstLimited : CoNat -> List (CoList Integer) -> Type where
+  -- IsFirstLimitedD0    : FirstLimited Z $ allDivSeq n
+  DdownFirst          : FirstLimited (S d) $ allDivSeq n -> FirstLimited d $ allDivSeq n
+  IsFirstLimited01    : FirstLimited d $ allDivSeq 1 -- 6*<1>+3 = 9
+  IsFirstLimited09    : (j : Nat)
+    -> AllLimited d $ allDivSeq j
+      -> FirstLimited d $ allDivSeq (S (S (plus (plus j j) j)))
+  IsFirstLimited10    : FirstLimited d $ allDivSeq 0 -- 6*<0>+3 = 3
+  IsFirstLimited11    : (k : Nat)
+    -> AllLimited d $ allDivSeq k
+      -> FirstLimited d $ allDivSeq (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
 -- ---------------------------------
 
 
