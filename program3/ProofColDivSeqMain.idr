@@ -62,8 +62,8 @@ makeLimitedDivSeq d n firstToAll = wfInd {P=(\z=>FirstLimited (S d) $ allDivSeq 
 -- 最終的な定理
 limitedDivSeq : (d : CoNat) -> (n : Nat) -> FirstLimited d $ allDivSeq n
 -- limitedDivSeq (S d) = \n => makeLimitedDivSeq d n $ \k => makeFtoA d k $ \m => (limitedDivSeq d m)
---                       ↑上記をコンストラクタ化する
-limitedDivSeq (S d) = ConstructorLimitedDivSeq (limitedDivSeq d m)
+--                               ↑上記をコンストラクタ化する
+limitedDivSeq (S d) = ConstructorLimited2 $ \m => ConstructorLimited1 (limitedDivSeq d m)
 
 
 

@@ -16,8 +16,6 @@ import ProofColDivSeqBase
 
 --            from ProofColDivSeqMain
 -- ########################################
--- 最終的な定理に必要
-postulate m : Nat
 -- ########################################
 
 
