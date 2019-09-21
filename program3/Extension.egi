@@ -24,7 +24,6 @@
 
 
 ;; 拡張star変換
-
 ;; No.1 none
 
 ;; No.2 E
@@ -80,25 +79,35 @@
   (lambda [$x $sequ]
     [(/ (+ (* 3 x) 1) (** 2 (car sequ))) (cdr sequ)] ))
 
+(define $rewrite-rule-for-collatz
+  (lambda [$term]
+    (match term math-expr
+      {[(/ $a (* ,16 (,** ,2 (+ $y ,-4))))
+          (/' a  (**' 2 y))]
+       [(/ $a (* ,4  (,** ,2 (+ $y ,-2))))
+          (/' a  (**' 2 y))]
+       [_ term]})))
+
+(define $exponent-rewrite
+  (lambda [$x $sequ]
+    [(rewrite-rule-for-collatz x) sequ] ))
+
+
 
 ;; > egison -t Extension.egi で実行
 ;; 拡張コラッツ操作2回
-(test (io (print "(map (lambda [$f1] (map (lambda [$y] (eq? (extCollatz [x {y s}]) (extCollatz (extCollatz (f1 [x {y s}])))) ) {1 2 3 4}) ) {E C B})")))
+(test (io (print "(map (lambda [$f1] (eq? (extCollatz [x {y s}]) (exponent-rewrite (extCollatz (extCollatz (f1 [x {y s}]))))) ) {E C B})")))
 (test
   (map (lambda [$f1]
-    (map (lambda [$y]
-      (eq? (extCollatz [x {y s}]) (extCollatz (extCollatz (f1 [x {y s}]))))
-         ) {1 2 3 4})
-       ) {E C B})
+    (eq? (extCollatz [x {y s}]) (exponent-rewrite (extCollatz (extCollatz (f1 [x {y s}])))))
+  ) {E C B})
 )
 ;; 拡張コラッツ操作3回
-(test (io (print "(map (lambda [$f1] (map (lambda [$y] (eq? (extCollatz [x {y s}]) (extCollatz (extCollatz (extCollatz (f1 [x {y s}]))))) ) {1 2 3 4}) ) {DE AE FE CF BF EF DB AB FB})")))
+(test (io (print "(map (lambda [$f1] (eq? (extCollatz [x {y s}]) (exponent-rewrite (extCollatz (extCollatz (extCollatz (f1 [x {y s}])))))) ) {DE AE FE CF BF EF DB AB FB})")))
 (test
   (map (lambda [$f1]
-    (map (lambda [$y]
-      (eq? (extCollatz [x {y s}]) (extCollatz (extCollatz (extCollatz (f1 [x {y s}])))))
-         ) {1 2 3 4})
-       ) {DE AE FE CF BF EF DB AB FB})
+    (eq? (extCollatz [x {y s}]) (exponent-rewrite (extCollatz (extCollatz (extCollatz (f1 [x {y s}]))))))
+  ) {DE AE FE CF BF EF DB AB FB})
 )
 
 
