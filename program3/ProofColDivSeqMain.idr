@@ -57,13 +57,19 @@ makeLimitedDivSeq d n firstToAll = wfInd {P=(\z=>FirstLimited (S d) $ allDivSeq 
         = (IsFirstLimited11 k . firstToAll k . Ddown) (rs k $ lteToLt' $ lte36t21 k)
       step firstToAll (S (S (S ((S (k+k)) + (S (k+k)) + (S (k+k)))))) rs | ThreeTwo | Odd  = ?rhs4
 
+-- 下で使うコンストラクタの証明
+proofConstructorLimited  : (d : CoNat) ->
+  ((z : Nat) -> FirstLimited d $ allDivSeq z)
+    -> (n : Nat) -> FirstLimited (S d) $ allDivSeq n
+proofConstructorLimited d = \f, n => makeLimitedDivSeq d n $ \k => makeFtoA d k f
+
 
 
 -- 最終的な定理
 limitedDivSeq : (d : CoNat) -> (n : Nat) -> FirstLimited d $ allDivSeq n
 -- limitedDivSeq (S d) = \n => makeLimitedDivSeq d n $ \k => makeFtoA d k $ \m => (limitedDivSeq d m)
---                               ↑上記をコンストラクタ化する
-limitedDivSeq (S d) = ConstructorLimited2 $ \m => ConstructorLimited1 (limitedDivSeq d m)
+--                               ↑これらの関数をコンストラクタ化する↑
+limitedDivSeq (S d) = ConstructorLimited d $ \m => ConstructorId (limitedDivSeq d m)
 
 
 

@@ -181,14 +181,14 @@ allDivSeq (S w) with (parity w)
   allDivSeq (S (S (v + v))) | Odd  with (parity v)
     allDivSeq (S (S ((u + u) + (u + u))))         | Odd  | Even
       = let x = (S (S ((u + u) + (u + u))))
-        in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` dummy, [3, -1, -2] `dsp` dummy]
+        in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` divSeq (18*x+13), [3, -1, -2] `dsp` dummy]
     allDivSeq (S (S ((S (u + u)) + (S (u + u))))) | Odd  | Odd with (parity u)
       allDivSeq (S (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t))))))                 | Odd  | Odd | Even
         = let x = (S (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t))))))
-          in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` dummy, [3, -1, -2] `dsp` dummy, [1, 3, -2] `dsp` dummy]
+          in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` divSeq (18*x+13), [3, -1, -2] `dsp` dummy, [1, 3, -2] `dsp` dummy]
       allDivSeq (S (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t))))))) | Odd  | Odd | Odd
         = let x = (S (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t)))))))
-          in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` dummy, [3, -1, -2] `dsp` dummy]
+          in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` divSeq (18*x+13), [3, -1, -2] `dsp` dummy]
 -- ---------------------------------
 
 
@@ -210,12 +210,13 @@ mutual
       -> AllLimited d $ allDivSeq k
         -> FirstLimited (S d) $ allDivSeq (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
     -- -----
-    ConstructorLimited1 :
+    ConstructorId       :
       FirstLimited d $ allDivSeq z
          -> FirstLimited d $ allDivSeq z
-    ConstructorLimited2 :
+    ConstructorLimited  : (d : CoNat) ->
       ((z : Nat) -> FirstLimited d $ allDivSeq z)
         -> (n : Nat) -> FirstLimited (S d) $ allDivSeq n
+
 
   public export
   codata AllLimited : CoNat -> List (CoList Integer) -> Type where
