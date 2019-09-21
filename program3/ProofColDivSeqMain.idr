@@ -7,25 +7,9 @@ module ProofColDivSeqMain
 
 import ProofColDivSeqBase
 import ProofColDivSeqPostulate
-{-
-import Sub01Apply18x3
-import Sub02Apply54x12
-import Sub03Apply54x30
-import Sub04Apply54x48
-import Sub05Apply9x6
-import Sub06Apply36x9
-import Sub07Apply108x27
-import Sub08Apply108x63
-import Sub09Apply108x99
-import Sub10Apply108x18
-import Sub11Apply108x54
-import Sub12Apply108x90
-import Sub13Apply108x36
-import Sub14Apply108x72
-import Sub15Apply108x108
--}
 import Sub09LTE18t15
 import Sub11LTE36t21
+import Sub12LTE108t39
 
 %default total
 
@@ -50,12 +34,16 @@ makeLimitedDivSeq d n firstToAll = wfInd {P=(\z=>FirstLimited (S d) $ allDivSeq 
     step firstToAll (S ((S j) + (S j) + (S j))) rs | ThreeZero = ?rhs2
     -- 6 mod 9
     step firstToAll (S (S (j + j + j)))     rs | ThreeOne
-      = (IsFirstLimited09 j . firstToAll j . Ddown) (rs j $ lteToLt' $ lte18t15 j)
+      = (IsFirstLimited09 j . firstToAll j . Ddown j) (rs j $ lteToLt' $ lte18t15 j)
     -- 3 mod 9
     step firstToAll (S (S (S (j + j + j)))) rs | ThreeTwo with (parity j)
       step firstToAll (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))  rs | ThreeTwo | Even
-        = (IsFirstLimited11 k . firstToAll k . Ddown) (rs k $ lteToLt' $ lte36t21 k)
-      step firstToAll (S (S (S ((S (k+k)) + (S (k+k)) + (S (k+k)))))) rs | ThreeTwo | Odd  = ?rhs4
+        = (IsFirstLimited11 k . firstToAll k . Ddown k) (rs k $ lteToLt' $ lte36t21 k)
+      step firstToAll (S (S (S ((S (k+k)) + (S (k+k)) + (S (k+k)))))) rs | ThreeTwo | Odd  with (mod3 k)
+        step firstToAll (S (S (S ((S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l)))))))                                                 rs | ThreeTwo | Odd  | ThreeZero
+          = (IsFirstLimited12 l . firstToAll (l+l) . Ddown (l+l)) (rs (l+l) $ lteToLt' $ lte108t39 l)
+        step firstToAll (S (S (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))))                         rs | ThreeTwo | Odd  | ThreeOne  = ?rhs5
+        step firstToAll (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))))))) rs | ThreeTwo | Odd  | ThreeTwo  = ?rhs6
 
 -- 下で使うコンストラクタの証明
 proofConstructorLimited  : (d : CoNat) ->

@@ -200,7 +200,7 @@ mutual
   public export
   codata FirstLimited : CoNat -> List (CoList Integer) -> Type where
     -- IsFirstLimitedD0    : FirstLimited Z $ allDivSeq n
-    Ddown               : FirstLimited (S d) $ allDivSeq n -> FirstLimited d $ allDivSeq n
+    Ddown               : (n : Nat) -> FirstLimited (S d) $ allDivSeq n -> FirstLimited d $ allDivSeq n
     IsFirstLimited01    : FirstLimited d $ allDivSeq 1 -- 6*<1>+3 = 9
     IsFirstLimited09    : (j : Nat)
       -> AllLimited d $ allDivSeq j
@@ -209,6 +209,9 @@ mutual
     IsFirstLimited11    : (k : Nat)
       -> AllLimited d $ allDivSeq k
         -> FirstLimited (S d) $ allDivSeq (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
+    IsFirstLimited12    : (l : Nat)
+      -> AllLimited d $ allDivSeq (l+l)
+        -> FirstLimited (S d) $ allDivSeq (S (S (S ((S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l)))))))
     -- -----
     ConstructorId       :
       FirstLimited d $ allDivSeq z
