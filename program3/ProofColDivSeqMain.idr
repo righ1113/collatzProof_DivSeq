@@ -10,6 +10,7 @@ import ProofColDivSeqPostulate
 import Sub09LTE18t15
 import Sub11LTE36t21
 import Sub12LTE108t39
+import Sub13LTE108t75
 
 %default total
 
@@ -42,10 +43,11 @@ makeLimitedDivSeq d n firstToAll = wfInd {P=(\z=>FirstLimited (S d) $ allDivSeq 
       step firstToAll (S (S (S ((S (k+k)) + (S (k+k)) + (S (k+k)))))) rs | ThreeTwo | Odd  with (mod3 k)
         step firstToAll (S (S (S ((S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l)))))))                                                 rs | ThreeTwo | Odd  | ThreeZero
           = (IsFirstLimited12 l . firstToAll (l+l) . Ddown (l+l)) (rs (l+l) $ lteToLt' $ lte108t39 l)
-        step firstToAll (S (S (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))))                         rs | ThreeTwo | Odd  | ThreeOne  = ?rhs5
+        step firstToAll (S (S (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))))                         rs | ThreeTwo | Odd  | ThreeOne
+          = (IsFirstLimited13 l . firstToAll (S ((l+l)+(l+l))) . Ddown (S ((l+l)+(l+l)))) (rs (S ((l+l)+(l+l))) $ lteToLt' $ lte108t75 l)
         step firstToAll (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))))))) rs | ThreeTwo | Odd  | ThreeTwo  = ?rhs6
 
--- 下で使うコンストラクタの証明
+-- ConstructorLimitedコンストラクタの証明
 proofConstructorLimited  : (d : CoNat) ->
   ((z : Nat) -> FirstLimited d $ allDivSeq z)
     -> (n : Nat) -> FirstLimited (S d) $ allDivSeq n
