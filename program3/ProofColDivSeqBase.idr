@@ -12,15 +12,15 @@ codata CoList : Type -> Type where
 
 implementation Functor CoList where
   map f []        = []
-  map f (x :: dummy) = f x :: map f dummy
+  map f (x :: xs) = f x :: map f xs
 
 implementation Show a => Show (CoList a) where
-  show dummy = "[" ++ show' "" 20 dummy ++ "]" where
-    show' : String -> (n : Nat) -> (dummy : CoList a) -> String
+  show xs = "[" ++ show' "" 20 xs ++ "]" where
+    show' : String -> (n : Nat) -> (xs : CoList a) -> String
     show' acc Z     _         = acc ++ "..."
     show' acc (S n) []        = acc
     show' acc (S n) [x]       = acc ++ show x
-    show' acc (S n) (x :: dummy) = show' (acc ++ (show x) ++ ", ") n dummy
+    show' acc (S n) (x :: xs) = show' (acc ++ (show x) ++ ", ") n xs
 
 unfoldr : (a -> Maybe (b, a)) -> a -> CoList b
 unfoldr f x =
@@ -196,43 +196,69 @@ allDivSeq (S w) with (parity w)
 public export
 codata CoNat = S CoNat
 
+
 mutual
-  public export
-  codata FirstLimited : CoNat -> List (CoList Integer) -> Type where
-    -- IsFirstLimitedD0    : FirstLimited Z $ allDivSeq n
-    Ddown               : (n : Nat) -> FirstLimited (S d) $ allDivSeq n -> FirstLimited d $ allDivSeq n
-    IsFirstLimited01    : FirstLimited d $ allDivSeq 1 -- 6*<1>+3 = 9
-    IsFirstLimited09    : (j : Nat)
-      -> AllLimited d $ allDivSeq j
-        -> FirstLimited (S d) $ allDivSeq (S (S (plus (plus j j) j)))
-    IsFirstLimited10    : FirstLimited d $ allDivSeq 0 -- 6*<0>+3 = 3
-    IsFirstLimited11    : (k : Nat)
-      -> AllLimited d $ allDivSeq k
-        -> FirstLimited (S d) $ allDivSeq (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
-    IsFirstLimited12    : (l : Nat)
-      -> AllLimited d $ allDivSeq (l+l)
-        -> FirstLimited (S d) $ allDivSeq (S (S (S ((S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l)))))))
-    IsFirstLimited13    : (l : Nat)
-      -> AllLimited d $ allDivSeq (S ((l+l)+(l+l)))
-        -> FirstLimited (S d) $ allDivSeq (S (S (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))))
-    -- -----
-    ConstructorId       :
-      FirstLimited d $ allDivSeq z
-         -> FirstLimited d $ allDivSeq z
-    ConstructorLimited  : (d : CoNat) ->
-      ((z : Nat) -> FirstLimited d $ allDivSeq z)
-        -> (n : Nat) -> FirstLimited (S d) $ allDivSeq n
-
 
   public export
-  codata AllLimited : CoNat -> List (CoList Integer) -> Type where
+  data AllLimited : List (CoList Integer) -> Type where
     --全てのFirstが真ならば、全てのAllも真
-    ForallFtoForallA : ((n : Nat) -> FirstLimited d $ allDivSeq n)
-      -> ((k : Nat) -> AllLimited d $ allDivSeq k)
+    ForallFtoForallA : ((n : Nat) -> FirstLimited $ allDivSeq n)
+      -> ((k : Nat) -> AllLimited $ allDivSeq k)
+    ConstructorId2 :
+      (FirstLimited $ allDivSeq n -> AllLimited $ allDivSeq n)
+        -> (FirstLimited $ allDivSeq n -> AllLimited $ allDivSeq n)
+
+    ConstructorId3       :
+      ((z : Nat) -> FirstLimited $ allDivSeq z)
+         -> (n : Nat) -> FirstLimited $ allDivSeq n -> AllLimited $ allDivSeq n
+    ConstructorId3q       :
+      AllLimited $ allDivSeq z
+         -> AllLimited $ allDivSeq z
+
+    ConstructorId4       : (k : Nat) -> 
+      ((z : Nat) -> FirstLimited $ allDivSeq z)
+         -> FirstLimited $ allDivSeq k -> AllLimited $ allDivSeq k
   --Uninhabited (AllLimited xs) where --使わなかった
   --  uninhabited a impossible
   --allToVoid : (x : Nat) -> Not $ AllLimited (allDivSeq (S x))
   --allToVoid x prf impossible
+
+
+  public export
+  codata FirstLimited : List (CoList Integer) -> Type where
+    -- IsFirstLimitedD0    : FirstLimited Z $ allDivSeq n
+    -- Ddown               : (n : Nat) -> FirstLimited (S d) $ allDivSeq n -> FirstLimited d $ allDivSeq n
+    IsFirstLimited01    : FirstLimited $ allDivSeq 1 -- 6*<1>+3 = 9
+    IsFirstLimited09    : (j : Nat)
+      -> AllLimited $ allDivSeq j
+        -> FirstLimited $ allDivSeq (S (S (plus (plus j j) j)))
+    IsFirstLimited10    : FirstLimited $ allDivSeq 0 -- 6*<0>+3 = 3
+    IsFirstLimited11    : (k : Nat)
+      -> AllLimited $ allDivSeq k
+        -> FirstLimited $ allDivSeq (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
+    IsFirstLimited12    : (l : Nat)
+      -> AllLimited $ allDivSeq (l+l)
+        -> FirstLimited $ allDivSeq (S (S (S ((S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l)))))))
+    IsFirstLimited13    : (l : Nat)
+      -> AllLimited $ allDivSeq (S ((l+l)+(l+l)))
+        -> FirstLimited $ allDivSeq (S (S (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))))
+    -- -----
+    ConstructorId       :
+      FirstLimited $ allDivSeq z
+         -> FirstLimited $ allDivSeq z
+    ConstructorLimited  :
+      ((z : Nat) -> FirstLimited $ allDivSeq z)
+        -> (n : Nat) -> FirstLimited $ allDivSeq n
+
+    ConstructorLimited2  :
+      ((z : Nat) -> FirstLimited $ allDivSeq z -> AllLimited $ allDivSeq z)
+        -> (n : Nat) -> FirstLimited $ allDivSeq n
+    ConstructorLimited3  : (n : Nat) ->
+      constructorParts --((z : Nat) -> FirstLimited $ allDivSeq z -> AllLimited $ allDivSeq z)
+        -> FirstLimited $ allDivSeq n
+
+  postulate    constructorParts  :
+        ((z : Nat) -> FirstLimited $ allDivSeq z -> AllLimited $ allDivSeq z)
 -- ---------------------------------
 
 

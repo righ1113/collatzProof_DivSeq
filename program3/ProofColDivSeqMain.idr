@@ -15,15 +15,16 @@ import Sub13LTE108t75
 %default total
 
 
-makeFtoA : (d : CoNat) -> (n : Nat)
-  -> ((z : Nat) -> FirstLimited d $ allDivSeq z)
-    -> (FirstLimited d $ allDivSeq n -> AllLimited d $ allDivSeq n)
-makeFtoA d n prf _ = ForallFtoForallA prf $ n
+makeFtoA :
+  ((z : Nat) -> FirstLimited $ allDivSeq z)
+    -> (n : Nat) -> (FirstLimited $ allDivSeq n -> AllLimited $ allDivSeq n)
+--makeFtoA d n prf _ = ForallFtoForallA prf $ n
 
 -- 示すのに、整礎帰納法を使っている
-makeLimitedDivSeq : (d : CoNat) -> (n : Nat)
-  -> ((z : Nat) -> (FirstLimited d $ allDivSeq z -> AllLimited d $ allDivSeq z))
-    -> FirstLimited (S d) $ allDivSeq n
+makeLimitedDivSeq : (n : Nat)
+  -> ((z : Nat) -> (FirstLimited $ allDivSeq z -> AllLimited $ allDivSeq z))
+    -> FirstLimited $ allDivSeq n
+{-
 makeLimitedDivSeq d n firstToAll = wfInd {P=(\z=>FirstLimited (S d) $ allDivSeq z)} {rel=LT'} (step firstToAll) n where
   step : ((z : Nat) -> (FirstLimited d $ allDivSeq z -> AllLimited d $ allDivSeq z))
     -> (x : Nat) -> ((y : Nat) -> LT' y x -> FirstLimited (S d) $ allDivSeq y)
@@ -46,20 +47,29 @@ makeLimitedDivSeq d n firstToAll = wfInd {P=(\z=>FirstLimited (S d) $ allDivSeq 
         step firstToAll (S (S (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))))                         rs | ThreeTwo | Odd  | ThreeOne
           = (IsFirstLimited13 l . firstToAll (S ((l+l)+(l+l))) . Ddown (S ((l+l)+(l+l)))) (rs (S ((l+l)+(l+l))) $ lteToLt' $ lte108t75 l)
         step firstToAll (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))))))) rs | ThreeTwo | Odd  | ThreeTwo  = ?rhs6
-
+-}
 -- ConstructorLimitedコンストラクタの証明
-proofConstructorLimited  : (d : CoNat) ->
-  ((z : Nat) -> FirstLimited d $ allDivSeq z)
-    -> (n : Nat) -> FirstLimited (S d) $ allDivSeq n
-proofConstructorLimited d = \f, n => makeLimitedDivSeq d n $ \k => makeFtoA d k f
+proofConstructorLimited  :
+  ((z : Nat) -> FirstLimited $ allDivSeq z)
+    -> (n : Nat) -> FirstLimited $ allDivSeq n
+--proofConstructorLimited = \f, n => makeLimitedDivSeq d n $ \k => makeFtoA d k f
+proofConstructorLimited = id
 
 
+mutual
+  --fToA : (d : CoNat) -> (n : Nat)
+  --  -> (FirstLimited $ allDivSeq n -> AllLimited $ allDivSeq n)
+  --fToA d = ConstructorId3 $ \k => (limitedDivSeq d k)
 
--- 最終的な定理
-limitedDivSeq : (d : CoNat) -> (n : Nat) -> FirstLimited d $ allDivSeq n
--- limitedDivSeq (S d) = \n => makeLimitedDivSeq d n $ \k => makeFtoA d k $ \m => (limitedDivSeq d m)
---                               ↑これらの関数をコンストラクタ化する↑
-limitedDivSeq (S d) = ConstructorLimited d $ \m => ConstructorId (limitedDivSeq d m)
+  -- 最終的な定理
+  limitedDivSeq : (d : CoNat) -> (n : Nat) -> FirstLimited $ allDivSeq n
+  --limitedDivSeq (S d) = \n => makeLimitedDivSeq n $ \k => makeFtoA k $ \m => (limitedDivSeq d m)
+  --                               ↑これらの関数をコンストラクタ化する↑
+  --limitedDivSeq (S d) = ConstructorLimited $ \m => ConstructorId (limitedDivSeq d m)
+  -- limitedDivSeq (S d) = ConstructorLimited2 $ \k => ConstructorId4 k $ \m => ConstructorId (limitedDivSeq d m)
+  limitedDivSeq (S d) n = ConstructorLimited3 n
+    $ \k, prf => ConstructorId3 (\m => ConstructorId (limitedDivSeq d m)) k prf
+  --limitedDivSeq (S d) = ConstructorLimited2 $ \k => (fToA d k) --ConstructorId2 (fToA d k)@
 
 
 
