@@ -193,10 +193,6 @@ allDivSeq (S w) with (parity w)
 
 
 -- ---------------------------------
-public export
-codata CoNat = S CoNat
-
-
 mutual
 
   public export
@@ -204,6 +200,7 @@ mutual
     --全てのFirstが真ならば、全てのAllも真
     ForallFtoForallA : ((n : Nat) -> FirstLimited $ allDivSeq n)
       -> ((k : Nat) -> AllLimited $ allDivSeq k)
+{-
     ConstructorId2 :
       (FirstLimited $ allDivSeq n -> AllLimited $ allDivSeq n)
         -> (FirstLimited $ allDivSeq n -> AllLimited $ allDivSeq n)
@@ -218,6 +215,7 @@ mutual
     ConstructorId4       : (k : Nat) -> 
       ((z : Nat) -> FirstLimited $ allDivSeq z)
          -> FirstLimited $ allDivSeq k -> AllLimited $ allDivSeq k
+-}
   --Uninhabited (AllLimited xs) where --使わなかった
   --  uninhabited a impossible
   --allToVoid : (x : Nat) -> Not $ AllLimited (allDivSeq (S x))
@@ -242,6 +240,7 @@ mutual
     IsFirstLimited13    : (l : Nat)
       -> AllLimited $ allDivSeq (S ((l+l)+(l+l)))
         -> FirstLimited $ allDivSeq (S (S (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))))
+{-
     -- -----
     ConstructorId       :
       FirstLimited $ allDivSeq z
@@ -259,6 +258,7 @@ mutual
 
   postulate    constructorParts  :
         ((z : Nat) -> FirstLimited $ allDivSeq z -> AllLimited $ allDivSeq z)
+-}
 -- ---------------------------------
 
 
