@@ -2,6 +2,7 @@
 割数列を用いたコラッツ予想の証明
 
 # 変更履歴
+19/10/05　program3, Wiki：鋭意修正中  
 19/08/10　program2：program3に移行する  
 19/07/18　program：program2に移行する  
 19/05/18　Wiki：最新の状態に更新  
