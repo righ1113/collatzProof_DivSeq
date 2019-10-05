@@ -148,45 +148,46 @@ postulate dummy : CoList Integer
 0                       
 1+w
   1+2v
-    1+2(2u)             2. 9. 11.  4. 13.
+    1+2(2u)             2. 9. 11.  *4. *13.
     1+2(1+2u)
       3+4(2t)
-        3+8(2s)         2. 9. 11.  8.  6.
-        3+8(1+2s)       2. 9. 11.  8.
-      3+4(1+2t)         2. 9. 11.  5. 14.
+        3+8(2s)         2. 9. 11.  *8.  *6.
+        3+8(1+2s)       2. 9. 11.  *8.
+      3+4(1+2t)         2. 9. 11.  *5. *14.
   1+1+2v
     1+1+2(2u)           2. 9. 11.  3. 12.
     1+1+2(1+2u)
       4+4(2t)           2. 9. 11.  3. 12.  7.
       4+4(1+2t)         2. 9. 11.  3. 12.
 -}
-allDivSeq : Nat -> List (CoList Integer)
-allDivSeq Z     = [[1, 4], [2, -4] `dsp` [3,2,3,4], [3, 0, -4] `dsp` [2,3,1,1,5,4], [4, -4] `dsp` [1,1,1,5,4], [1, -2] `dsp` [6], [3, -1, -2] `dsp` [1,1,2,1,4,1,3,1,2,3,4]] -- 6*<0>+3 = 3
-allDivSeq (S w) with (parity w)
-  allDivSeq (S (v + v))     | Even with (parity v)
-    allDivSeq (S ((u + u) + (u + u)))         | Even | Even
+allDivSeq : Nat -> Nat -> List (CoList Integer)
+allDivSeq Z     _     = idris_crash "Processing does not come here."
+allDivSeq (S _) Z     = [[1, 4], [2, -4] `dsp` [3,2,3,4], [3, 0, -4] `dsp` [2,3,1,1,5,4], [4, -4] `dsp` [1,1,1,5,4], [1, -2] `dsp` [6], [3, -1, -2] `dsp` [1,1,2,1,4,1,3,1,2,3,4]] -- 6*<0>+3 = 3
+allDivSeq (S _) (S w) with (parity w)
+  allDivSeq (S _) (S (v + v))     | Even with (parity v)
+    allDivSeq (S _) (S ((u + u) + (u + u)))         | Even | Even
       = let x = (S ((u + u) + (u + u)))
         in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [6, -2, -4] `dsp` dummy, [6, -3, -2] `dsp` dummy]
-    allDivSeq (S ((S (u + u)) + (S (u + u)))) | Even | Odd  with (parity u)
-      allDivSeq (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t)))))                 | Even | Odd  | Even with (parity t)
-        allDivSeq (S ((S (((s + s) + (s + s)) + ((s + s) + (s + s)))) + (S (((s + s) + (s + s)) + ((s + s) + (s + s))))))                                 | Even | Odd  | Even | Even
+    allDivSeq (S _) (S ((S (u + u)) + (S (u + u)))) | Even | Odd  with (parity u)
+      allDivSeq (S _) (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t)))))                 | Even | Odd  | Even with (parity t)
+        allDivSeq (S _) (S ((S (((s + s) + (s + s)) + ((s + s) + (s + s)))) + (S (((s + s) + (s + s)) + ((s + s) + (s + s))))))                                 | Even | Odd  | Even | Even
           = let x = (S ((S (((s + s) + (s + s)) + ((s + s) + (s + s)))) + (S (((s + s) + (s + s)) + ((s + s) + (s + s))))))
             in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [2, 1, -2] `dsp` dummy, [4, 1, -2] `dsp` dummy]
-        allDivSeq (S ((S (((S (s + s)) + (S (s + s))) + ((S (s + s)) + (S (s + s))))) + (S (((S (s + s)) + (S (s + s))) + ((S (s + s)) + (S (s + s))))))) | Even | Odd  | Even | Odd
+        allDivSeq (S _) (S ((S (((S (s + s)) + (S (s + s))) + ((S (s + s)) + (S (s + s))))) + (S (((S (s + s)) + (S (s + s))) + ((S (s + s)) + (S (s + s))))))) | Even | Odd  | Even | Odd
           = let x = (S ((S (((S (s + s)) + (S (s + s))) + ((S (s + s)) + (S (s + s))))) + (S (((S (s + s)) + (S (s + s))) + ((S (s + s)) + (S (s + s)))))))
             in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [2, 1, -2] `dsp` dummy]
-      allDivSeq (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t)))))) | Even | Odd  | Odd
+      allDivSeq (S _) (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t)))))) | Even | Odd  | Odd
         = let x = (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t))))))
           in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [5, 0, -4] `dsp` dummy, [5, -1, -2] `dsp` dummy]
-  allDivSeq (S (S (v + v))) | Odd  with (parity v)
-    allDivSeq (S (S ((u + u) + (u + u))))         | Odd  | Even
+  allDivSeq (S _) (S (S (v + v))) | Odd  with (parity v)
+    allDivSeq (S _) (S (S ((u + u) + (u + u))))         | Odd  | Even
       = let x = (S (S ((u + u) + (u + u))))
         in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` divSeq (18*x+13), [3, -1, -2] `dsp` divSeq (9*x+6)]
-    allDivSeq (S (S ((S (u + u)) + (S (u + u))))) | Odd  | Odd with (parity u)
-      allDivSeq (S (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t))))))                 | Odd  | Odd | Even
+    allDivSeq (S _) (S (S ((S (u + u)) + (S (u + u))))) | Odd  | Odd with (parity u)
+      allDivSeq (S _) (S (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t))))))                 | Odd  | Odd | Even
         = let x = (S (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t))))))
-          in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` divSeq (18*x+13), [3, -1, -2] `dsp` divSeq (9*x+6), [1, 3, -2] `dsp` dummy]
-      allDivSeq (S (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t))))))) | Odd  | Odd | Odd
+          in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` divSeq (18*x+13), [3, -1, -2] `dsp` divSeq (9*x+6), [1, 3, -2] `dsp` divSeq (2*x+2*t+2)]
+      allDivSeq (S _) (S (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t))))))) | Odd  | Odd | Odd
         = let x = (S (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t)))))))
           in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` divSeq (18*x+13), [3, -1, -2] `dsp` divSeq (9*x+6)]
 -- ---------------------------------
@@ -194,12 +195,50 @@ allDivSeq (S w) with (parity w)
 
 -- ---------------------------------
 mutual
+  public export
+  data FirstLimited : List (CoList Integer) -> Type where
+    -- IsFirstLimitedD0    : FirstLimited Z $ allDivSeq n
+    -- Ddown               : (n : Nat) -> FirstLimited (S d) $ allDivSeq n -> FirstLimited d $ allDivSeq n
+    IsFirstLimited01    : FirstLimited $ allDivSeq (S d) 1 -- 6*<1>+3 = 9
+    IsFirstLimited09    : (j : Nat)
+      -> AllLimited $ allDivSeq (S d) j
+        -> FirstLimited $ allDivSeq (S d) (S (S (plus (plus j j) j)))
+    IsFirstLimited10    : FirstLimited $ allDivSeq (S d) 0 -- 6*<0>+3 = 3
+    IsFirstLimited11    : (k : Nat)
+      -> AllLimited $ allDivSeq (S d) k
+        -> FirstLimited $ allDivSeq (S d) (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
+    IsFirstLimited12    : (l : Nat)
+      -> AllLimited $ allDivSeq (S d) (l+l)
+        -> FirstLimited $ allDivSeq (S d) (S (S (S ((S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l)))))))
+    IsFirstLimited13    : (l : Nat)
+      -> AllLimited $ allDivSeq (S d) (S ((l+l)+(l+l)))
+        -> FirstLimited $ allDivSeq (S d) (S (S (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))))
+{-
+    -- -----
+    ConstructorId       :
+      FirstLimited $ allDivSeq z
+         -> FirstLimited $ allDivSeq z
+    ConstructorLimited  :
+      ((z : Nat) -> FirstLimited $ allDivSeq z)
+        -> (n : Nat) -> FirstLimited $ allDivSeq n
+
+    ConstructorLimited2  :
+      ((z : Nat) -> FirstLimited $ allDivSeq z -> AllLimited $ allDivSeq z)
+        -> (n : Nat) -> FirstLimited $ allDivSeq n
+    ConstructorLimited3  : (n : Nat) ->
+      constructorParts --((z : Nat) -> FirstLimited $ allDivSeq z -> AllLimited $ allDivSeq z)
+        -> FirstLimited $ allDivSeq n
+
+  postulate    constructorParts  :
+        ((z : Nat) -> FirstLimited $ allDivSeq z -> AllLimited $ allDivSeq z)
+-}
+
 
   public export
   data AllLimited : List (CoList Integer) -> Type where
     --全てのFirstが真ならば、全てのAllも真
-    ForallFtoForallA : ((n : Nat) -> FirstLimited $ allDivSeq n)
-      -> ((k : Nat) -> AllLimited $ allDivSeq k)
+    ForallFtoForallA : ((n : Nat) -> FirstLimited $ allDivSeq (S d) n)
+      -> ((k : Nat) -> AllLimited $ allDivSeq (S d) k)
 {-
     ConstructorId2 :
       (FirstLimited $ allDivSeq n -> AllLimited $ allDivSeq n)
@@ -220,45 +259,6 @@ mutual
   --  uninhabited a impossible
   --allToVoid : (x : Nat) -> Not $ AllLimited (allDivSeq (S x))
   --allToVoid x prf impossible
-
-
-  public export
-  codata FirstLimited : List (CoList Integer) -> Type where
-    -- IsFirstLimitedD0    : FirstLimited Z $ allDivSeq n
-    -- Ddown               : (n : Nat) -> FirstLimited (S d) $ allDivSeq n -> FirstLimited d $ allDivSeq n
-    IsFirstLimited01    : FirstLimited $ allDivSeq 1 -- 6*<1>+3 = 9
-    IsFirstLimited09    : (j : Nat)
-      -> AllLimited $ allDivSeq j
-        -> FirstLimited $ allDivSeq (S (S (plus (plus j j) j)))
-    IsFirstLimited10    : FirstLimited $ allDivSeq 0 -- 6*<0>+3 = 3
-    IsFirstLimited11    : (k : Nat)
-      -> AllLimited $ allDivSeq k
-        -> FirstLimited $ allDivSeq (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
-    IsFirstLimited12    : (l : Nat)
-      -> AllLimited $ allDivSeq (l+l)
-        -> FirstLimited $ allDivSeq (S (S (S ((S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l)))))))
-    IsFirstLimited13    : (l : Nat)
-      -> AllLimited $ allDivSeq (S ((l+l)+(l+l)))
-        -> FirstLimited $ allDivSeq (S (S (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))))
-{-
-    -- -----
-    ConstructorId       :
-      FirstLimited $ allDivSeq z
-         -> FirstLimited $ allDivSeq z
-    ConstructorLimited  :
-      ((z : Nat) -> FirstLimited $ allDivSeq z)
-        -> (n : Nat) -> FirstLimited $ allDivSeq n
-
-    ConstructorLimited2  :
-      ((z : Nat) -> FirstLimited $ allDivSeq z -> AllLimited $ allDivSeq z)
-        -> (n : Nat) -> FirstLimited $ allDivSeq n
-    ConstructorLimited3  : (n : Nat) ->
-      constructorParts --((z : Nat) -> FirstLimited $ allDivSeq z -> AllLimited $ allDivSeq z)
-        -> FirstLimited $ allDivSeq n
-
-  postulate    constructorParts  :
-        ((z : Nat) -> FirstLimited $ allDivSeq z -> AllLimited $ allDivSeq z)
--}
 -- ---------------------------------
 
 
