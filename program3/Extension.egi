@@ -110,5 +110,14 @@
   ) {DE AE FE CF BF EF DB AB FB})
 )
 
+;; 実行結果
+;; E:\me\Idris\collatzProof_DivSeq\program3>egison -t Extension.egi
+;; (map (lambda [$f1] (eq? (extCollatz [x {y s}]) (exponent-rewrite (extCollatz (extCollatz (f1 [x {y s}]))))) ) {E C B})
+;; []
+;; {#t #t #t}
+;; (map (lambda [$f1] (eq? (extCollatz [x {y s}]) (exponent-rewrite (extCollatz (extCollatz (extCollatz (f1 [x {y s}])))))) ) {DE AE FE CF BF EF DB AB FB})
+;; []
+;; {#t #t #t #t #t #t #t #t #t}
+
 
 
