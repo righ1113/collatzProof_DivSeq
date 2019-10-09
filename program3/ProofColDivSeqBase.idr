@@ -148,7 +148,7 @@ postulate dummy : CoList Integer
 0                       
 1+w
   1+2v
-    1+2(2u)             2. 9. 11.  *4. *13.
+    1+2(2u)             2. 9. 11.  4. 13.
     1+2(1+2u)
       3+4(2t)
         3+8(2s)         2. 9. 11.  *8.  *6.
@@ -167,7 +167,7 @@ allDivSeq (S _) (S w) with (parity w)
   allDivSeq (S _) (S (v + v))     | Even with (parity v)
     allDivSeq (S _) (S ((u + u) + (u + u)))         | Even | Even
       = let x = (S ((u + u) + (u + u)))
-        in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [6, -2, -4] `dsp` dummy, [6, -3, -2] `dsp` dummy]
+        in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [6, -2, -4] `dsp` divSeq (9*x+16), [6, -3, -2] `dsp` divSeq (4*x+2*u+8)]
     allDivSeq (S _) (S ((S (u + u)) + (S (u + u)))) | Even | Odd  with (parity u)
       allDivSeq (S _) (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t)))))                 | Even | Odd  | Even with (parity t)
         allDivSeq (S _) (S ((S (((s + s) + (s + s)) + ((s + s) + (s + s)))) + (S (((s + s) + (s + s)) + ((s + s) + (s + s))))))                                 | Even | Odd  | Even | Even
@@ -197,7 +197,7 @@ allDivSeq (S _) (S w) with (parity w)
 mutual
   public export
   data FirstLimited : List (CoList Integer) -> Type where
-    -- IsFirstLimitedD0    : FirstLimited Z $ allDivSeq n
+    IsFirstLimitedD0    : FirstLimited $ allDivSeq Z n -- 1x+1 problem
     -- Ddown               : (n : Nat) -> FirstLimited (S d) $ allDivSeq n -> FirstLimited d $ allDivSeq n
     IsFirstLimited01    : FirstLimited $ allDivSeq (S d) 1 -- 6*<1>+3 = 9
     IsFirstLimited09    : (j : Nat)
