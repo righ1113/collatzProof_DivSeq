@@ -16,15 +16,17 @@ import Sub13LTE108t75
 
 
 makeFtoA : (d, n : Nat)
-  -> ((z : Nat) -> FirstLimited $ allDivSeq d z)
+  -> ((z : Nat) -> FirstLimited $ allDivSeq (S d) z)
     -> (FirstLimited $ allDivSeq (S d) n -> AllLimited $ allDivSeq (S d) n)
+{-
 makeFtoA Z     _ _   _ = IsAllLimitedD0_S
 makeFtoA (S d) n prf _ = ForallFtoForallA prf $ n
+-}
 
 -- 示すのに、整礎帰納法を使っている
 makeLimitedDivSeq : (d, n : Nat)
-  -> ((z : Nat) -> (FirstLimited $ allDivSeq d z -> AllLimited $ allDivSeq d z))
-    -> FirstLimited $ allDivSeq d n
+  -> ((z : Nat) -> (FirstLimited $ allDivSeq (S d) z -> AllLimited $ allDivSeq (S d) z))
+    -> FirstLimited $ allDivSeq (S (S d)) n
 {-
 makeLimitedDivSeq d n firstToAll = wfInd {P=(\z=>FirstLimited $ allDivSeq (S d) z)} {rel=LT'} (step d firstToAll) n where
   step : (d : Nat) -> ((z : Nat) -> (FirstLimited $ allDivSeq d z -> AllLimited $ allDivSeq d z))
@@ -70,12 +72,12 @@ makeLimitedDivSeq d n firstToAll = wfInd {P=(\z=>FirstLimited $ allDivSeq d z)} 
 -}
 
 mutual
-  fToA : (d, n : Nat) -> (FirstLimited $ allDivSeq d n -> AllLimited $ allDivSeq d n)
-  fToA Z     _ = \_ => IsAllLimitedD0
-  fToA (S d) n = makeFtoA d n $ limitedDivSeq d
+  fToA : (d, n : Nat) -> (FirstLimited $ allDivSeq (S d) n -> AllLimited $ allDivSeq (S d) n)
+  fToA d n = makeFtoA d n $ limitedDivSeq d
 
   -- 最終的な定理
-  limitedDivSeq : (d, n : Nat) -> FirstLimited $ allDivSeq d n
-  limitedDivSeq d n = makeLimitedDivSeq d n $ fToA d
+  limitedDivSeq : (d, n : Nat) -> FirstLimited $ allDivSeq (S d) n
+  limitedDivSeq Z     _ = ?rhs1
+  limitedDivSeq (S d) n = makeLimitedDivSeq d n $ fToA d
 
 
