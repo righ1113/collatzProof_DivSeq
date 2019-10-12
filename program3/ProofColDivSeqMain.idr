@@ -15,15 +15,35 @@ import Sub13LTE108t75
 %default total
 
 
-makeFtoA : (d : Nat) ->
-  ((z : Nat) -> FirstLimited $ allDivSeq d z)
-    -> (n : Nat) -> (FirstLimited $ allDivSeq d n -> AllLimited $ allDivSeq d n)
---makeFtoA prf n _ = ForallFtoForallA prf $ n
+makeFtoA : (d, n : Nat)
+  -> ((z : Nat) -> FirstLimited $ allDivSeq d z)
+    -> (FirstLimited $ allDivSeq (S d) n -> AllLimited $ allDivSeq (S d) n)
+makeFtoA Z     _ _   _ = IsAllLimitedD0_S
+makeFtoA (S d) n prf _ = ForallFtoForallA prf $ n
 
 -- 示すのに、整礎帰納法を使っている
-makeLimitedDivSeq : (d : Nat) -> (n : Nat)
+makeLimitedDivSeq : (d, n : Nat)
   -> ((z : Nat) -> (FirstLimited $ allDivSeq d z -> AllLimited $ allDivSeq d z))
     -> FirstLimited $ allDivSeq d n
+{-
+makeLimitedDivSeq d n firstToAll = wfInd {P=(\z=>FirstLimited $ allDivSeq (S d) z)} {rel=LT'} (step d firstToAll) n where
+  step : (d : Nat) -> ((z : Nat) -> (FirstLimited $ allDivSeq d z -> AllLimited $ allDivSeq d z))
+    -> (x : Nat) -> ((y : Nat) -> LT' y x -> FirstLimited $ allDivSeq (S d) y)
+      -> FirstLimited $ allDivSeq (S d) x
+  step _ _          Z     _  = IsFirstLimited10                                     -- 6*<0>+3 = 3
+  step d firstToAll (S x) rs with (mod3 x)
+    -- 0 mod 9
+    step d firstToAll (S (Z     + Z     + Z))     rs | ThreeZero = IsFirstLimited01 -- 6*<1>+3 = 9
+    step d firstToAll (S ((S j) + (S j) + (S j))) rs | ThreeZero = ?rhs2
+    -- 6 mod 9
+    step d firstToAll (S (S (j + j + j)))     rs | ThreeOne
+      = let hoge1 = (IsFirstLimited09 j . firstToAll j) in
+        let hoge2 = (Ddown j) in
+        let hoge3 = (rs j $ lteToLt' $ lte18t15 j) in ?rhs3 --(IsFirstLimited09 j . firstToAll j . Ddown j) (rs j $ lteToLt' $ lte18t15 j)
+    -- 3 mod 9
+    step d firstToAll (S (S (S (j + j + j)))) rs | ThreeTwo =?rhs4
+-}
+{-
 makeLimitedDivSeq d n firstToAll = wfInd {P=(\z=>FirstLimited $ allDivSeq d z)} {rel=LT'} (step d firstToAll) n where
   step : (d : Nat) -> ((z : Nat) -> (FirstLimited $ allDivSeq d z -> AllLimited $ allDivSeq d z))
     -> (x : Nat) -> ((y : Nat) -> LT' y x -> FirstLimited $ allDivSeq d y)
@@ -47,14 +67,15 @@ makeLimitedDivSeq d n firstToAll = wfInd {P=(\z=>FirstLimited $ allDivSeq d z)} 
         step (S _) firstToAll (S (S (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))))                         rs | ThreeTwo | Odd  | ThreeOne
           = (IsFirstLimited13 l . firstToAll (S ((l+l)+(l+l)))) (rs (S ((l+l)+(l+l))) $ lteToLt' $ lte108t75 l)
         step (S _) firstToAll (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))))))) rs | ThreeTwo | Odd  | ThreeTwo  = ?rhs6
-
+-}
 
 mutual
-  fToA : (d : Nat) -> (n : Nat)
-    -> (FirstLimited $ allDivSeq d n -> AllLimited $ allDivSeq d n)
+  fToA : (d, n : Nat) -> (FirstLimited $ allDivSeq d n -> AllLimited $ allDivSeq d n)
+  fToA Z     _ = \_ => IsAllLimitedD0
+  fToA (S d) n = makeFtoA d n $ limitedDivSeq d
 
   -- 最終的な定理
-  limitedDivSeq : (d : Nat) -> (n : Nat) -> FirstLimited $ allDivSeq d n
-
+  limitedDivSeq : (d, n : Nat) -> FirstLimited $ allDivSeq d n
+  limitedDivSeq d n = makeLimitedDivSeq d n $ fToA d
 
 

@@ -198,7 +198,8 @@ mutual
   public export
   data FirstLimited : List (CoList Integer) -> Type where
     IsFirstLimitedD0    : FirstLimited $ allDivSeq Z n -- 1x+1 problem
-    -- Ddown               : (n : Nat) -> FirstLimited (S d) $ allDivSeq n -> FirstLimited d $ allDivSeq n
+    Dup                 : (n : Nat) -> FirstLimited $ allDivSeq (S d) n -> FirstLimited $ allDivSeq (S (S d)) n
+    Ddown               : (n : Nat) -> FirstLimited $ allDivSeq (S d) n -> FirstLimited $ allDivSeq d n
     IsFirstLimited01    : FirstLimited $ allDivSeq (S d) 1 -- 6*<1>+3 = 9
     IsFirstLimited09    : (j : Nat)
       -> AllLimited $ allDivSeq (S d) j
@@ -236,9 +237,11 @@ mutual
 
   public export
   data AllLimited : List (CoList Integer) -> Type where
-    --全てのFirstが真ならば、全てのAllも真
+    IsAllLimitedD0    : AllLimited $ allDivSeq Z n -- 1x+1 problem
+    IsAllLimitedD0_S    : AllLimited $ allDivSeq (S Z) n -- 1x+1 problem
+    --1x+1問題でも、3x+1問題でも、全てのFirstが真ならば、全てのAllも真
     ForallFtoForallA : ((n : Nat) -> FirstLimited $ allDivSeq (S d) n)
-      -> ((k : Nat) -> AllLimited $ allDivSeq (S d) k)
+      -> ((k : Nat) -> AllLimited $ allDivSeq (S (S d)) k)
 {-
     ConstructorId2 :
       (FirstLimited $ allDivSeq n -> AllLimited $ allDivSeq n)
