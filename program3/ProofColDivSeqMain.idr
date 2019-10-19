@@ -16,35 +16,40 @@ import Sub13LTE108t75
 
 
 makeFtoA : (d, n : Nat)
-  -> ((z : Nat) -> FirstLimited $ allDivSeq (S d) z)
-    -> (FirstLimited $ allDivSeq (S d) n -> AllLimited $ allDivSeq (S d) n)
+  -> ((z : Nat) -> FirstLimited $ allDivSeq z)
+    -> (FirstLimited $ allDivSeq n -> AllLimited $ allDivSeq n)
+makeFtoA _ n prf _ = ForallFtoForallA prf $ n
 {-
 makeFtoA Z     _ _   _ = IsAllLimitedD0_S
 makeFtoA (S d) n prf _ = ForallFtoForallA prf $ n
 -}
 
 -- 示すのに、整礎帰納法を使っている
-makeLimitedDivSeq : (d, n : Nat)
-  -> ((z : Nat) -> (FirstLimited $ allDivSeq (S d) z -> AllLimited $ allDivSeq (S d) z))
-    -> FirstLimited $ allDivSeq (S (S d)) n
-{-
-makeLimitedDivSeq d n firstToAll = wfInd {P=(\z=>FirstLimited $ allDivSeq (S d) z)} {rel=LT'} (step d firstToAll) n where
-  step : (d : Nat) -> ((z : Nat) -> (FirstLimited $ allDivSeq d z -> AllLimited $ allDivSeq d z))
-    -> (x : Nat) -> ((y : Nat) -> LT' y x -> FirstLimited $ allDivSeq (S d) y)
-      -> FirstLimited $ allDivSeq (S d) x
-  step _ _          Z     _  = IsFirstLimited10                                     -- 6*<0>+3 = 3
-  step d firstToAll (S x) rs with (mod3 x)
+makeLimitedDivSeq' : (d, n : Nat)
+  -> ((z : Nat) -> (FirstLimited $ allDivSeq {d=d} z -> AllLimited $ allDivSeq {d=d} z))
+    -> FirstLimited $ allDivSeq {d=d} n
+{--}
+makeLimitedDivSeq' d n firstToAll = wfInd {P=(\z=>FirstLimited $ allDivSeq {d=d} z)} {rel=LT'} (step d firstToAll) n where
+  step : (d : Nat) -> ((z : Nat) -> (FirstLimited $ allDivSeq {d=d} z -> AllLimited $ allDivSeq {d=d} z))
+    -> (x : Nat) -> ((y : Nat) -> LT' y x -> FirstLimited $ allDivSeq {d=d} y)
+      -> FirstLimited $ allDivSeq {d=d} x
+  step Z     _          _     _  = IsFirstLimitedD0                                     -- 1x+1 problem
+  step (S d) _          Z     _  = IsFirstLimited10                                     -- 6*<0>+3 = 3
+  step (S d) firstToAll (S x) rs with (mod3 x)
     -- 0 mod 9
-    step d firstToAll (S (Z     + Z     + Z))     rs | ThreeZero = IsFirstLimited01 -- 6*<1>+3 = 9
-    step d firstToAll (S ((S j) + (S j) + (S j))) rs | ThreeZero = ?rhs2
+    step (S d) firstToAll (S (Z     + Z     + Z))     rs | ThreeZero = IsFirstLimited01 -- 6*<1>+3 = 9
+    step (S d) firstToAll (S ((S j) + (S j) + (S j))) rs | ThreeZero = ?rhs2
     -- 6 mod 9
-    step d firstToAll (S (S (j + j + j)))     rs | ThreeOne
+    step (S d) firstToAll (S (S (j + j + j)))     rs | ThreeOne
+      = (IsFirstLimited09 j . firstToAll j) (rs j $ lteToLt' $ lte18t15 j)
+{-
       = let hoge1 = (IsFirstLimited09 j . firstToAll j) in
         let hoge2 = (Ddown j) in
         let hoge3 = (rs j $ lteToLt' $ lte18t15 j) in ?rhs3 --(IsFirstLimited09 j . firstToAll j . Ddown j) (rs j $ lteToLt' $ lte18t15 j)
-    -- 3 mod 9
-    step d firstToAll (S (S (S (j + j + j)))) rs | ThreeTwo =?rhs4
 -}
+    -- 3 mod 9
+    step (S d) firstToAll (S (S (S (j + j + j)))) rs | ThreeTwo =?rhs4
+{--}
 {-
 makeLimitedDivSeq d n firstToAll = wfInd {P=(\z=>FirstLimited $ allDivSeq d z)} {rel=LT'} (step d firstToAll) n where
   step : (d : Nat) -> ((z : Nat) -> (FirstLimited $ allDivSeq d z -> AllLimited $ allDivSeq d z))
@@ -70,14 +75,20 @@ makeLimitedDivSeq d n firstToAll = wfInd {P=(\z=>FirstLimited $ allDivSeq d z)} 
           = (IsFirstLimited13 l . firstToAll (S ((l+l)+(l+l)))) (rs (S ((l+l)+(l+l))) $ lteToLt' $ lte108t75 l)
         step (S _) firstToAll (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))))))) rs | ThreeTwo | Odd  | ThreeTwo  = ?rhs6
 -}
+makeLimitedDivSeq : (d, n : Nat)
+  -> ((z : Nat) -> (FirstLimited $ allDivSeq {d=d} z -> AllLimited $ allDivSeq {d=d} z))
+    -> FirstLimited $ allDivSeq {d=(S d)} n
+makeLimitedDivSeq d n firstToAll = makeLimitedDivSeq' (S d) n firstToAll
+
 
 mutual
-  fToA : (d, n : Nat) -> (FirstLimited $ allDivSeq (S d) n -> AllLimited $ allDivSeq (S d) n)
+  fToA : (d, n : Nat) -> (FirstLimited $ allDivSeq {d=d} n -> AllLimited $ allDivSeq {d=d} n)
   fToA d n = makeFtoA d n $ limitedDivSeq d
 
   -- 最終的な定理
-  limitedDivSeq : (d, n : Nat) -> FirstLimited $ allDivSeq (S d) n
-  limitedDivSeq Z     _ = ?rhs1
+  limitedDivSeq : (d, n : Nat) -> FirstLimited $ allDivSeq {d=d} n
+  limitedDivSeq Z     _ = IsFirstLimitedD0 -- 1x+1 problem
   limitedDivSeq (S d) n = makeLimitedDivSeq d n $ fToA d
+
 
 
