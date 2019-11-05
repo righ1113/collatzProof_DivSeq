@@ -1,7 +1,32 @@
 # collatzProof_DivSeq
-割数列を用いたコラッツ予想の証明
+割数列を用いたコラッツ予想の一定理
+
+<br />
+<br />
+<br />
+
+# うまくいきませんでした
+## (ロ)二つの述語を用意します。
+P(d, n) : FirstLimited(d, n)　:　nの完全割数列は有限長である  
+Q(d, n) : AllLimited(d, n)　　:　nの完全割数列および拡張完全割数列達は全て有限長である  
+示したい命題は、∀d.∀n.FirstLimited(d, n) です。　　　---(a)  
+
+## (ハ)補題を二つ証明します。
+makeFtoA          : ∀d.∀n.(∀z.P(d, z) -> (P(d, n) -> Q(d, n)))  
+makeLimitedDivSeq : ∀d.∀n.(∀z.(P(d, z) -> Q(d, z)) -> P(d, n))  
+　★（ First -> All ならコラッツ予想は真）  
+※これは達成できました。  
+
+## (ニ)
+補題を使って、(a)を、相互再帰で証明します。  
+**※ここがうまくいきません。**  
+
+<br />
+<br />
+<br />
 
 # 変更履歴
+19/11/05　諦めました  
 19/10/05　program3, Wiki：鋭意修正中  
 19/08/10　program2：program3に移行する  
 19/07/18　program：program2に移行する  
@@ -45,8 +70,10 @@
 
 （5chが元ネタ）  
 
-# 証明&プログラムの説明
+# 説明
 [Wiki](https://github.com/righ1113/collatzProof_DivSeq/wiki)をみてね  
-  
-  
-  
+（修正中に諦めたからぐちゃぐちゃですが）
+
+<br />
+<br />
+<br />
