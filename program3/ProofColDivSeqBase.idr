@@ -214,25 +214,6 @@ mutual
     IsFirstLimited13    : (l : Nat)
       -> AllLimited $ allDivSeq (S d) (S ((l+l)+(l+l)))
         -> FirstLimited $ allDivSeq (S d) (S (S (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))))
-{-
-    -- -----
-    ConstructorId       :
-      FirstLimited $ allDivSeq z
-         -> FirstLimited $ allDivSeq z
-    ConstructorLimited  :
-      ((z : Nat) -> FirstLimited $ allDivSeq z)
-        -> (n : Nat) -> FirstLimited $ allDivSeq n
-
-    ConstructorLimited2  :
-      ((z : Nat) -> FirstLimited $ allDivSeq z -> AllLimited $ allDivSeq z)
-        -> (n : Nat) -> FirstLimited $ allDivSeq n
-    ConstructorLimited3  : (n : Nat) ->
-      constructorParts --((z : Nat) -> FirstLimited $ allDivSeq z -> AllLimited $ allDivSeq z)
-        -> FirstLimited $ allDivSeq n
-
-  postulate    constructorParts  :
-        ((z : Nat) -> FirstLimited $ allDivSeq z -> AllLimited $ allDivSeq z)
--}
 
 
   public export
@@ -240,24 +221,8 @@ mutual
     IsAllLimitedD0    : AllLimited $ allDivSeq Z n -- 1x+1 problem
     IsAllLimitedD0_S    : AllLimited $ allDivSeq (S Z) n -- 1x+1 problem
     --1x+1問題でも、3x+1問題でも、全てのFirstが真ならば、全てのAllも真
-    ForallFtoForallA : ((n : Nat) -> FirstLimited $ allDivSeq (S d) n)
-      -> ((k : Nat) -> AllLimited $ allDivSeq (S (S d)) k)
-{-
-    ConstructorId2 :
-      (FirstLimited $ allDivSeq n -> AllLimited $ allDivSeq n)
-        -> (FirstLimited $ allDivSeq n -> AllLimited $ allDivSeq n)
-
-    ConstructorId3       :
-      ((z : Nat) -> FirstLimited $ allDivSeq z)
-         -> (n : Nat) -> FirstLimited $ allDivSeq n -> AllLimited $ allDivSeq n
-    ConstructorId3q       :
-      AllLimited $ allDivSeq z
-         -> AllLimited $ allDivSeq z
-
-    ConstructorId4       : (k : Nat) -> 
-      ((z : Nat) -> FirstLimited $ allDivSeq z)
-         -> FirstLimited $ allDivSeq k -> AllLimited $ allDivSeq k
--}
+    ForallFtoForallA : ((n : Nat) -> FirstLimited $ allDivSeq d n)
+      -> ((k : Nat) -> AllLimited $ allDivSeq d k)
   --Uninhabited (AllLimited xs) where --使わなかった
   --  uninhabited a impossible
   --allToVoid : (x : Nat) -> Not $ AllLimited (allDivSeq (S x))
