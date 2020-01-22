@@ -16,18 +16,10 @@ import Sub13LTE108t75
 %default total
 
 
-makeFtoA : (d, n : Nat)
-  -> ((z : Nat) -> FirstLimited $ allDivSeq d z)
-    -> (FirstLimited $ allDivSeq d n -> AllLimited $ allDivSeq d n)
-{--}
-makeFtoA _ n prf _ = ForallFtoForallA prf $ n
-{--}
-
 -- 示すのに、整礎帰納法を使っている
 makeLimitedDivSeq : (d, n : Nat)
   -> ((z : Nat) -> (FirstLimited $ allDivSeq d z -> AllLimited $ allDivSeq d z))
     -> FirstLimited $ allDivSeq d n
-{--}
 makeLimitedDivSeq d n firstToAll = wfInd {P=(\z=>FirstLimited $ allDivSeq d z)} {rel=LT'} (step d firstToAll) n where
   step : (d : Nat) -> ((z : Nat) -> (FirstLimited $ allDivSeq d z -> AllLimited $ allDivSeq d z))
     -> (x : Nat) -> ((y : Nat) -> LT' y x -> FirstLimited $ allDivSeq d y)
@@ -51,15 +43,10 @@ makeLimitedDivSeq d n firstToAll = wfInd {P=(\z=>FirstLimited $ allDivSeq d z)} 
         step (S _) firstToAll (S (S (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))))                         rs | ThreeTwo | Odd  | ThreeOne
           = (IsFirstLimited13 l . firstToAll (S ((l+l)+(l+l)))) (rs (S ((l+l)+(l+l))) $ lteToLt' $ lte108t75 l)
         step (S _) firstToAll (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))))))) rs | ThreeTwo | Odd  | ThreeTwo  = ?rhs6
-{--}
 
-mutual
-  fToA : (d, n : Nat) -> (FirstLimited $ allDivSeq (S d) n -> AllLimited $ allDivSeq (S d) n)
-  -- fToA d n = makeFtoA d n $ limitedDivSeq d
 
-  -- 最終的な定理
-  limitedDivSeq : (d, n : Nat) -> FirstLimited $ allDivSeq (S d) n
-  -- limitedDivSeq Z     _ = ?rhs1
-  -- limitedDivSeq (S d) n = makeLimitedDivSeq d n $ fToA d
+-- 最終的な定理
+limitedDivSeq : (d, n : Nat) -> FirstLimited $ allDivSeq (S d) n
+
 
 

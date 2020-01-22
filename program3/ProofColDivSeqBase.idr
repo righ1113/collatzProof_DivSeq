@@ -145,14 +145,19 @@ divSeq n = divSeq' (S (S (S (n+n+n+n+n+n)))) (S (S (S (n+n+n+n+n+n)))) where
 
 postulate dummy : CoList Integer
 {-
+*8.
+                    <---------------------
+72t+45  E[2,-4] y=x/12-3/4  6t+3        12x+7
+108t+99=6(18t+16)+3 EF[2,1,-2] y=2x/9-1 24t+21=6(4t+3)+3         4x+4+2t
+
 0                       
 1+w
   1+2v
     1+2(2u)             2. 9. 11.  4. 13.
     1+2(1+2u)
       3+4(2t)
-        3+8(2s)         2. 9. 11.  *8.  *6.
-        3+8(1+2s)       2. 9. 11.  *8.
+        3+8(2s)         2. 9. 11.  8.  *6.
+        3+8(1+2s)       2. 9. 11.  8.
       3+4(1+2t)         2. 9. 11.  *5. *14.
   1+1+2v
     1+1+2(2u)           2. 9. 11.  3. 12.
@@ -160,6 +165,7 @@ postulate dummy : CoList Integer
       4+4(2t)           2. 9. 11.  3. 12.  7.
       4+4(1+2t)         2. 9. 11.  3. 12.
 -}
+-- この部分の実装は、証明の本質には影響しない
 allDivSeq : Nat -> Nat -> List (CoList Integer)
 allDivSeq Z     _     = idris_crash "Processing does not come here."
 allDivSeq (S _) Z     = [[1, 4], [2, -4] `dsp` [3,2,3,4], [3, 0, -4] `dsp` [2,3,1,1,5,4], [4, -4] `dsp` [1,1,1,5,4], [1, -2] `dsp` [6], [3, -1, -2] `dsp` [1,1,2,1,4,1,3,1,2,3,4]] -- 6*<0>+3 = 3
@@ -172,10 +178,10 @@ allDivSeq (S _) (S w) with (parity w)
       allDivSeq (S _) (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t)))))                 | Even | Odd  | Even with (parity t)
         allDivSeq (S _) (S ((S (((s + s) + (s + s)) + ((s + s) + (s + s)))) + (S (((s + s) + (s + s)) + ((s + s) + (s + s))))))                                 | Even | Odd  | Even | Even
           = let x = (S ((S (((s + s) + (s + s)) + ((s + s) + (s + s)))) + (S (((s + s) + (s + s)) + ((s + s) + (s + s))))))
-            in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [2, 1, -2] `dsp` dummy, [4, 1, -2] `dsp` dummy]
+            in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [2, 1, -2] `dsp` divSeq (4*x+8*s+4), [4, 1, -2] `dsp` dummy]
         allDivSeq (S _) (S ((S (((S (s + s)) + (S (s + s))) + ((S (s + s)) + (S (s + s))))) + (S (((S (s + s)) + (S (s + s))) + ((S (s + s)) + (S (s + s))))))) | Even | Odd  | Even | Odd
           = let x = (S ((S (((S (s + s)) + (S (s + s))) + ((S (s + s)) + (S (s + s))))) + (S (((S (s + s)) + (S (s + s))) + ((S (s + s)) + (S (s + s)))))))
-            in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [2, 1, -2] `dsp` dummy]
+            in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [2, 1, -2] `dsp` divSeq (4*x+8*s+4)]
       allDivSeq (S _) (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t)))))) | Even | Odd  | Odd
         = let x = (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t))))))
           in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [5, 0, -4] `dsp` dummy, [5, -1, -2] `dsp` dummy]
