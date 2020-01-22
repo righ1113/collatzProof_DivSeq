@@ -1,7 +1,7 @@
 {-
-> cd collatzProof_DivSeq/program3
-> chcp 65001
-> idris
+$ cd collatzProof_DivSeq/program3
+$ chcp 65001
+$ idris
 > :l ProofColDivSeqMain
 -}
 module ProofColDivSeqMain
