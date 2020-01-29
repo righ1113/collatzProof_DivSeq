@@ -223,6 +223,9 @@ mutual
     IsFirstLimited13    : (l : Nat)
       -> AllLimited $ allDivSeq (S ((l+l)+(l+l)))
         -> FirstLimited $ allDivSeq (S (S (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))))
+    IsFirstLimited14    : (l : Nat)
+      -> AllLimited $ allDivSeq (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
+        -> FirstLimited $ allDivSeq (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l)))))))))
 
   public export
   data AllLimited : List (CoList Integer) -> Type where
