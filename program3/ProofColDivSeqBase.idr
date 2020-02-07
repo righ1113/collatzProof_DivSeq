@@ -210,6 +210,27 @@ mutual
     --Dup                 : (n : Nat) -> FirstLimited $ allDivSeq (S d) n -> FirstLimited $ allDivSeq (S (S d)) n
     --Ddown               : (n : Nat) -> FirstLimited $ allDivSeq (S d) n -> FirstLimited $ allDivSeq d n
     IsFirstLimited01    : FirstLimited $ allDivSeq 1 -- 6*<1>+3 = 9
+    IsFirstLimited02    : (l : Nat)
+      -> AllLimited $ allDivSeq l
+        -> FirstLimited $ allDivSeq (S (((S (l+l))+(S (l+l))) + ((S (l+l))+(S (l+l))) + ((S (l+l))+(S (l+l)))))
+    IsFirstLimited03    : (m : Nat)
+      -> AllLimited $ allDivSeq (m+m)
+        -> FirstLimited $ allDivSeq (S (((S (S ((m+m+m)+(m+m+m))))+(S (S ((m+m+m)+(m+m+m))))) + ((S (S ((m+m+m)+(m+m+m))))+(S (S ((m+m+m)+(m+m+m))))) + ((S (S ((m+m+m)+(m+m+m))))+(S (S ((m+m+m)+(m+m+m)))))))
+    IsFirstLimited04    : (m : Nat)
+      -> AllLimited $ allDivSeq (S ((m+m)+(m+m)))
+        -> FirstLimited $ allDivSeq (S (((S (S ((S (m+m+m))+(S (m+m+m)))))+(S (S ((S (m+m+m))+(S (m+m+m)))))) + ((S (S ((S (m+m+m))+(S (m+m+m)))))+(S (S ((S (m+m+m))+(S (m+m+m)))))) + ((S (S ((S (m+m+m))+(S (m+m+m)))))+(S (S ((S (m+m+m))+(S (m+m+m))))))))
+    IsFirstLimited05    : (m : Nat)
+      -> AllLimited $ allDivSeq (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
+        -> FirstLimited $ allDivSeq (S (((S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))+(S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))) + ((S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))+(S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))) + ((S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))+(S (S ((S (S (m+m+m)))+(S (S (m+m+m)))))))))
+    IsFirstLimited06    : (l : Nat)
+      -> AllLimited $ allDivSeq (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
+        -> FirstLimited $ allDivSeq (S ((S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l)))))
+    IsFirstLimited07    : (l : Nat)
+      -> AllLimited $ allDivSeq (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
+        -> FirstLimited $ allDivSeq (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))
+    IsFirstLimited08    : (l : Nat)
+      -> AllLimited $ allDivSeq (S (S (S ((l+l)+(l+l)))))
+        -> FirstLimited $ allDivSeq (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l)))))))
     IsFirstLimited09    : (j : Nat)
       -> AllLimited $ allDivSeq j
         -> FirstLimited $ allDivSeq (S (S (plus (plus j j) j)))
