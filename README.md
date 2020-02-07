@@ -1,16 +1,6 @@
 # collatzProof_DivSeq
 割数列を用いたコラッツ予想の一定理  
 
-<br />
-<br />
-<br />
-
-
-
-<br />
-<br />
-<br />
-
 # 変更履歴
 19/11/05　諦めました  
 19/10/05　program3, Wiki：鋭意修正中  
@@ -56,9 +46,8 @@
 
 （5chが元ネタ）  
 
-# 説明
+# 証明&プログラムの説明
 [Wiki](https://github.com/righ1113/collatzProof_DivSeq/wiki)をみてね  
-（修正中に諦めたからぐちゃぐちゃですが）
 
 <br />
 <br />
