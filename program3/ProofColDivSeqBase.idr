@@ -162,14 +162,14 @@ divSeq n = divSeq' (S (S (S (n+n+n+n+n+n)))) (S (S (S (n+n+n+n+n+n)))) where
       3+4(2t)
         3+8(2s)         2. 9. 11.  8.  6.
         3+8(1+2s)       2. 9. 11.  8.
-      3+4(1+2t)         2. 9. 11.  5. *14.
+      3+4(1+2t)         2. 9. 11.  5. 14.
   1+1+2v
     1+1+2(2u)           2. 9. 11.  3. 12.
     1+1+2(1+2u)
       4+4(2t)           2. 9. 11.  3. 12.  7.
       4+4(1+2t)         2. 9. 11.  3. 12.
 -}
--- この部分の実装は、証明の本質には影響しない
+-- この部分の実装は、コンストラクタIsFirstLimited01~14の正当性を補強している
 allDivSeq : Nat -> List (CoList Integer)
 allDivSeq Z     = [[1, 4], [2, -4] `dsp` [3,2,3,4], [3, 0, -4] `dsp` [2,3,1,1,5,4], [4, -4] `dsp` [1,1,1,5,4], [1, -2] `dsp` [6], [3, -1, -2] `dsp` [1,1,2,1,4,1,3,1,2,3,4]] -- 6*<0>+3 = 3
 allDivSeq (S w) with (parity w)
@@ -206,9 +206,10 @@ allDivSeq (S w) with (parity w)
 mutual
   public export
   data FirstLimited : List (CoList Integer) -> Type where
-    --IsFirstLimitedD0    : FirstLimited $ allDivSeq Z n -- 1x+1 problem
-    --Dup                 : (n : Nat) -> FirstLimited $ allDivSeq (S d) n -> FirstLimited $ allDivSeq (S (S d)) n
-    --Ddown               : (n : Nat) -> FirstLimited $ allDivSeq (S d) n -> FirstLimited $ allDivSeq d n
+    -- 全てのAllが真ならば、全てのFirstも真
+    ForallAtoForallF : ((k : Nat) -> AllLimited $ allDivSeq k)
+      -> ((n : Nat) -> FirstLimited $ allDivSeq n)
+
     IsFirstLimited01    : FirstLimited $ allDivSeq 1 -- 6*<1>+3 = 9
     IsFirstLimited02    : (l : Nat)
       -> AllLimited $ allDivSeq l
@@ -250,9 +251,7 @@ mutual
 
   public export
   data AllLimited : List (CoList Integer) -> Type where
-    --IsAllLimitedD0    : AllLimited $ allDivSeq Z n -- 1x+1 problem
-    --IsAllLimitedD0_S    : AllLimited $ allDivSeq (S Z) n -- 1x+1 problem
-    --1x+1問題でも、3x+1問題でも、全てのFirstが真ならば、全てのAllも真
+    -- 全てのFirstが真ならば、全てのAllも真
     ForallFtoForallA : ((n : Nat) -> FirstLimited $ allDivSeq n)
       -> ((k : Nat) -> AllLimited $ allDivSeq k)
   --Uninhabited (AllLimited xs) where --使わなかった
