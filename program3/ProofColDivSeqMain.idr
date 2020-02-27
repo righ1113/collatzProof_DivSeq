@@ -26,12 +26,12 @@ import Sub14LTE108t111
 
 -- 示すのに、整礎帰納法を使っている
 makeLimitedDivSeq : (n : Nat)
-  -> ((z : Nat) -> (FirstLimited $ allDivSeq z -> AllLimited $ allDivSeq z))
-    -> FirstLimited $ allDivSeq n
-makeLimitedDivSeq n firstToAll = wfInd {P=(\z=>FirstLimited $ allDivSeq z)} {rel=LT'} (step firstToAll) n where
-  step : ((z : Nat) -> (FirstLimited $ allDivSeq z -> AllLimited $ allDivSeq z))
-    -> (x : Nat) -> ((y : Nat) -> LT' y x -> FirstLimited $ allDivSeq y)
-      -> FirstLimited $ allDivSeq x
+  -> ((z : Nat) -> ((FirstLimited . ProofColDivSeqBase.allDivSeq) z -> (AllLimited . ProofColDivSeqBase.allDivSeq) z))
+    -> (FirstLimited . ProofColDivSeqBase.allDivSeq) n
+makeLimitedDivSeq n firstToAll = wfInd {P=(\z=>(FirstLimited . ProofColDivSeqBase.allDivSeq) z)} {rel=LT'} (step firstToAll) n where
+  step : ((z : Nat) -> ((FirstLimited . ProofColDivSeqBase.allDivSeq) z -> (AllLimited . ProofColDivSeqBase.allDivSeq) z))
+    -> (x : Nat) -> ((y : Nat) -> LT' y x -> (FirstLimited . ProofColDivSeqBase.allDivSeq) y)
+      -> (FirstLimited . ProofColDivSeqBase.allDivSeq) x
   step _          Z     _  = IsFirstLimited10                                                          -- 6*<0>+3 = 3
   step firstToAll (S x) rs with (mod3 x)
     -- 0 mod 9
@@ -70,13 +70,13 @@ makeLimitedDivSeq n firstToAll = wfInd {P=(\z=>FirstLimited $ allDivSeq z)} {rel
           = (IsFirstLimited14 l . firstToAll (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))) (rs (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l)))))))) $ lteToLt' $ lte108t111 l)
 
 -- 最終的な定理
-limitedDivSeq : (n : Nat) -> FirstLimited $ allDivSeq n
+limitedDivSeq : (n : Nat) -> (FirstLimited . ProofColDivSeqBase.allDivSeq) n
 {-
 手での証明
-  1.∀n.First$Seq n -> ∀n.All$Seq nと∀n.All$Seq n -> ∀n.First$Seq nより、∀n.First$Seq n <-> ∀n.All$Seq nが言える。
-  2.外延的等価性により、∀n.First$Seq n <-> ∀n.All$Seq nからFirst$Seq <-> All$Seq...(1)が言える。
-  3.makeLimitedDivSeqを(1)で書き換えて、∀z.(First$Seq z -> First$Seq z) -> ∀n.First$Seq n...(2)が言える。
-  4.(2)に\_->idを渡して、最終的な定理∀n.First$Seq nを得る。
+  1.∀n.First.Seq n -> ∀n.All.Seq nと∀n.All.Seq n -> ∀n.First.Seq nより、∀n.First.Seq n <-> ∀n.All.Seq nが言える。
+  2.外延的等価性により、∀n.First.Seq n <-> ∀n.All.Seq nからFirst.Seq <-> All.Seq...(1)が言える。
+  3.makeLimitedDivSeqを(1)で書き換えて、∀z.(First.Seq z -> First.Seq z) -> ∀n.First.Seq n...(2)が言える。
+  4.(2)に\_->idを渡して、最終的な定理∀n.First.Seq nを得る。
 -}
 
 
