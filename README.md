@@ -1,11 +1,12 @@
 # collatzProof_DivSeq
-割数列を用いたコラッツ予想の一定理  
+割数列を用いたコラッツ予想の証明  
 
 <br />
 <br />
 <br />
 
 # 変更履歴
+20/03/20　復活しました　program：ver3.0をリリース  
 19/11/05　諦めました  
 19/10/05　program3, Wiki：鋭意修正中  
 19/08/10　program2：program3に移行する  
