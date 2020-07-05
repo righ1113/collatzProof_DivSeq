@@ -1,123 +1,86 @@
+-- Egison Version == 4.0.3
 
-;; star変換
-;; x ≡ 3 mod 9 	A[6,-4] y=4x/3-7 	B[1,-2] y=x/6-1/2
-;; x ≡ 6 mod 9 	C[4,-4] y=x/3-2 	D[3,-2] y=2x/3-1
-;; x ≡ 0 mod 9 	E[2,-4] y=x/12-3/4 	F[5,-2] y=8x/3-3
-(define $A
-  (lambda [$x $sequ]
-    [(- (/ (* 4 x) 3) 7) (cons 6 (cons (- (car sequ) 4) (cdr sequ)))] ))
-(define $B
-  (lambda [$x $sequ]
-    [(- (/ x 6) (/ 1 2)) (cons 1 (cons (- (car sequ) 2) (cdr sequ)))] ))
-(define $C
-  (lambda [$x $sequ]
-    [(- (/ x 3) 2) (cons 4 (cons (- (car sequ) 4) (cdr sequ)))] ))
-(define $D
-  (lambda [$x $sequ]
-    [(- (/ (* 2 x) 3) 1) (cons 3 (cons (- (car sequ) 2) (cdr sequ)))] ))
-(define $E
-  (lambda [$x $sequ]
-    [(- (/ x 12) (/ 3 4)) (cons 2 (cons (- (car sequ) 4) (cdr sequ)))] ))
-(define $F
-  (lambda [$x $sequ]
-    [(- (/ (* 8 x) 3) 3) (cons 5 (cons (- (car sequ) 2) (cdr sequ)))] ))
+--
+-- Codes
+--
+
+{-
+  star変換
+  x ≡ 3 mod 9 	A[6,-4] y=4x/3-7 	B[1,-2] y=x/6-1/2
+  x ≡ 6 mod 9 	C[4,-4] y=x/3-2 	D[3,-2] y=2x/3-1
+  x ≡ 0 mod 9 	E[2,-4] y=x/12-3/4 	F[5,-2] y=8x/3-3
+-}
+A x sequ := ((4 * x) / 3  - 7    , 6 :: (((head sequ) - 4) :: (tail sequ)) )
+B x sequ := (      x / 6  - 1 / 2, 1 :: (((head sequ) - 2) :: (tail sequ)) )
+C x sequ := (      x / 3  - 2    , 4 :: (((head sequ) - 4) :: (tail sequ)) )
+D x sequ := ((2 * x) / 3  - 1    , 3 :: (((head sequ) - 2) :: (tail sequ)) )
+E x sequ := (      x / 12 - 3 / 4, 2 :: (((head sequ) - 4) :: (tail sequ)) )
+F x sequ := ((8 * x) / 3  - 3    , 5 :: (((head sequ) - 2) :: (tail sequ)) )
 
 
-;; 拡張star変換
-;; No.1 none
+-- 拡張star変換
+-- No.1 none
 
-;; No.2 E
+-- No.2 E
 
-;; No.3 DE
-(define $DE
-  (lambda [$x $sequ]
-    (D(E [x sequ])) ))
-;; No.4 AE
-(define $AE
-  (lambda [$x $sequ]
-    (A(E [x sequ])) ))
-;; No.5 FE
-(define $FE
-  (lambda [$x $sequ]
-    (F(E [x sequ])) ))
+-- No.3 DE
+DE x sequ := D (E x sequ)
+-- No.4 AE
+AE x sequ := A (E x sequ)
+-- No.5 FE
+FE x sequ := F (E x sequ)
 
-;; No.6 CF
-(define $CF
-  (lambda [$x $sequ]
-    (C(F [x sequ])) ))
-;; No.7 BF
-(define $BF
-  (lambda [$x $sequ]
-    (B(F [x sequ])) ))
-;; No.8 EF
-(define $EF
-  (lambda [$x $sequ]
-    (E(F [x sequ])) ))
+-- No.6 CF
+CF x sequ := C (F x sequ)
+-- No.7 BF
+BF x sequ := B (F x sequ)
+-- No.8 EF
+EF x sequ := E (F x sequ)
 
-;; No.9 C
+-- No.9 C
 
-;; No.10 none
+-- No.10 none
 
-;; No.11 B
+-- No.11 B
 
-;; No.12 DB
-(define $DB
-  (lambda [$x $sequ]
-    (D(B [x sequ])) ))
-;; No.13 AB
-(define $AB
-  (lambda [$x $sequ]
-    (A(B [x sequ])) ))
-;; No.14 FB
-(define $FB
-  (lambda [$x $sequ]
-    (F(B [x sequ])) ))
+-- No.12 DB
+DB x sequ := D (B x sequ)
+-- No.13 AB
+AB x sequ := A (B x sequ)
+-- No.14 FB
+FB x sequ := F (B x sequ)
 
 
-;; 拡張コラッツ操作
-(define $extCollatz
-  (lambda [$x $sequ]
-    [(/ (+ (* 3 x) 1) (** 2 (car sequ))) (cdr sequ)] ))
+-- 拡張コラッツ操作
+extCollatz x sequ :=
+  (((3 * x) + 1) / (2 ^ (head sequ)), tail sequ)
 
-(define $rewrite-rule-for-collatz
-  (lambda [$term]
-    (match term math-expr
-      {[(/ $a (* ,16 (,** ,2 (+ $y ,-4))))
-          (/' a  (**' 2 y))]
-       [(/ $a (* ,4  (,** ,2 (+ $y ,-2))))
-          (/' a  (**' 2 y))]
-       [_ term]})))
+rewriteRuleForCollatz term :=
+  match term as mathExpr with
+    | $a / (#16 * #`(^) #2 ($y + #(-4))) -> a /' (2 ^' y)
+    | $a / (#4  * #`(^) #2 ($y + #(-2))) -> a /' (2 ^' y)
+    | _                                  -> term
 
-(define $exponent-rewrite
-  (lambda [$x $sequ]
-    [(rewrite-rule-for-collatz x) sequ] ))
+exponentRewrite x sequ := (rewriteRuleForCollatz x, sequ)
+
+myTest := extCollatz (x, [y, s]) = exponentRewrite (extCollatz (extCollatz (E (x, [y, s]))))
 
 
 
-;; > egison -t Extension.egi で実行
-;; 拡張コラッツ操作2回
-(test (io (print "(map (lambda [$f1] (eq? (extCollatz [x {y s}]) (exponent-rewrite (extCollatz (extCollatz (f1 [x {y s}]))))) ) {E C B})")))
-(test
-  (map (lambda [$f1]
-    (eq? (extCollatz [x {y s}]) (exponent-rewrite (extCollatz (extCollatz (f1 [x {y s}])))))
-  ) {E C B})
-)
-;; 拡張コラッツ操作3回
-(test (io (print "(map (lambda [$f1] (eq? (extCollatz [x {y s}]) (exponent-rewrite (extCollatz (extCollatz (extCollatz (f1 [x {y s}])))))) ) {DE AE FE CF BF EF DB AB FB})")))
-(test
-  (map (lambda [$f1]
-    (eq? (extCollatz [x {y s}]) (exponent-rewrite (extCollatz (extCollatz (extCollatz (f1 [x {y s}]))))))
-  ) {DE AE FE CF BF EF DB AB FB})
-)
+--
+-- Tests
+--
+-- $ egison -t Extension.egi
 
-;; 実行結果
-;; E:\me\Idris\collatzProof_DivSeq\program3>egison -t Extension.egi
-;; (map (lambda [$f1] (eq? (extCollatz [x {y s}]) (exponent-rewrite (extCollatz (extCollatz (f1 [x {y s}]))))) ) {E C B})
-;; []
-;; {#t #t #t}
-;; (map (lambda [$f1] (eq? (extCollatz [x {y s}]) (exponent-rewrite (extCollatz (extCollatz (extCollatz (f1 [x {y s}])))))) ) {DE AE FE CF BF EF DB AB FB})
-;; []
-;; {#t #t #t #t #t #t #t #t #t}
+-- 拡張コラッツ操作2回
+assertEqual "twice"
+  (map 1#(extCollatz (x, [y, s]) = exponentRewrite (extCollatz (extCollatz (%1 (x, [y, s]))))) [E, C, B])
+  [True, True, True]
+
+-- 拡張コラッツ操作3回
+assertEqual "third time"
+  (map 1#(extCollatz (x, [y, s]) = exponentRewrite (extCollatz (extCollatz (extCollatz (%1 (x, [y, s])))))) [DE, AE, FE, CF, BF, EF, DB, AB, FB])
+  [True, True, True, True, True, True, True, True, True]
 
 
 
