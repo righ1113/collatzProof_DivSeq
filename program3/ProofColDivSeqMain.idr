@@ -6,7 +6,7 @@ $ idris
 -}
 module ProofColDivSeqMain
 
-import ProofColDivSeqBase
+import ProofColDivSeqBase as B
 import ProofColDivSeqPostulate
 import Sub02LTE72t45
 import Sub03LTE216t81
@@ -25,13 +25,13 @@ import Sub14LTE108t111
 
 
 -- 示すのに、整礎帰納法を使っている
-makeLimitedDivSeq : (n : Nat)
-  -> ((z : Nat) -> ((FirstLimited . ProofColDivSeqBase.allDivSeq) z -> (AllLimited . ProofColDivSeqBase.allDivSeq) z))
-    -> (FirstLimited . ProofColDivSeqBase.allDivSeq) n
-makeLimitedDivSeq n firstToAll = wfInd {P=(\z=>(FirstLimited . ProofColDivSeqBase.allDivSeq) z)} {rel=LT'} (step firstToAll) n where
-  step : ((z : Nat) -> ((FirstLimited . ProofColDivSeqBase.allDivSeq) z -> (AllLimited . ProofColDivSeqBase.allDivSeq) z))
-    -> (x : Nat) -> ((y : Nat) -> LT' y x -> (FirstLimited . ProofColDivSeqBase.allDivSeq) y)
-      -> (FirstLimited . ProofColDivSeqBase.allDivSeq) x
+makeLimitedDivSeq :
+  ((z : Nat) -> ((FirstLimited . B.allDivSeq) z -> (AllLimited . B.allDivSeq) z))
+    ->  (n : Nat) -> (FirstLimited . B.allDivSeq) n
+makeLimitedDivSeq firstToAll n = wfInd {P=(\z=>(FirstLimited . B.allDivSeq) z)} {rel=LT'} (step firstToAll) n where
+  step : ((z : Nat) -> ((FirstLimited . B.allDivSeq) z -> (AllLimited . B.allDivSeq) z))
+    -> (x : Nat) -> ((y : Nat) -> LT' y x -> (FirstLimited . B.allDivSeq) y)
+      -> (FirstLimited . B.allDivSeq) x
   step _          Z     _  = IsFirstLimited10                                                          -- 6*<0>+3 = 3
   step firstToAll (S x) rs with (mod3 x)
     -- 0 mod 9
@@ -69,15 +69,23 @@ makeLimitedDivSeq n firstToAll = wfInd {P=(\z=>(FirstLimited . ProofColDivSeqBas
         step firstToAll (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))))))) rs | ThreeTwo | Odd  | ThreeTwo
           = (IsFirstLimited14 l . firstToAll (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))) (rs (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l)))))))) $ lteToLt' $ lte108t111 l)
 
+-- 十分条件
+firstToAll :
+  (z : Nat) -> ((FirstLimited . B.allDivSeq) z -> (AllLimited . B.allDivSeq) z)
+firstToAll z first =
+  let
+    suff2_1 = IsFirstLimitedSuff2_1 z first
+    suff2_2 = IsFirstLimitedSuff2_2 z first
+    suff2_3 = IsFirstLimitedSuff2_3 z first
+    suff2_4 = IsFirstLimitedSuff2_4 z first
+    suff2_5 = IsFirstLimitedSuff2_5 z first
+    suff2_6 = IsFirstLimitedSuff2_6 z first
+    all2    = IsAllLimited02 z suff2_1 suff2_2 suff2_3 suff2_4 suff2_5 suff2_6
+  in IsAllLimited01 z IsAllLimited00 all2 ?rhs5 ?rhs6 ?rhs7 ?rhs8 ?rhs9 ?rhs10
+
 -- 最終的な定理
-limitedDivSeq : (n : Nat) -> (FirstLimited . ProofColDivSeqBase.allDivSeq) n
-{-
-手での証明
-  1.∀n.First.Seq n -> ∀n.All.Seq nと∀n.All.Seq n -> ∀n.First.Seq nより、∀n.First.Seq n <-> ∀n.All.Seq nが言える。
-  2.外延的等価性により、∀n.First.Seq n <-> ∀n.All.Seq nからFirst.Seq <-> All.Seq...(1)が言える。
-  3.makeLimitedDivSeqを(1)で書き換えて、∀z.(First.Seq z -> First.Seq z) -> ∀n.First.Seq n...(2)が言える。
-  4.(2)に\_->idを渡して、最終的な定理∀n.First.Seq nを得る。
--}
+limitedDivSeq : (n : Nat) -> (FirstLimited . B.allDivSeq) n
+limitedDivSeq = makeLimitedDivSeq firstToAll
 
 
 
