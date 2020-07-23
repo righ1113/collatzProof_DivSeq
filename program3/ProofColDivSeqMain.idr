@@ -88,7 +88,13 @@ firstToAll z first =
     suff3_5 = IsFirstLimitedSuff3_5 z first
     suff3_6 = IsFirstLimitedSuff3_6 z first
     all3    = IsAllLimited03 z suff3_1 suff3_2 suff3_3 suff3_4 suff3_5 suff3_6
-  in IsAllLimited01 z IsAllLimited00 all2 all3 ?rhs6 ?rhs7 ?rhs8 ?rhs9 ?rhs10
+    suff4_1 = IsFirstLimitedSuff4_1 z first
+    suff4_2 = IsFirstLimitedSuff4_2 z first
+    suff4_3 = IsFirstLimitedSuff4_3 z first
+    suff4_4 = IsFirstLimitedSuff4_4 z first
+    suff4_5 = IsFirstLimitedSuff4_5 z first
+    all4    = IsAllLimited04 z suff4_1 suff4_2 suff4_3 suff4_4 suff4_5
+  in IsAllLimited01 z IsAllLimited00 all2 all3 all4 ?rhs7 ?rhs8 ?rhs9 ?rhs10
 
 -- 最終的な定理
 limitedDivSeq : (n : Nat) -> (FirstLimited . B.allDivSeq) n

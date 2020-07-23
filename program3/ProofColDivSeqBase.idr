@@ -283,6 +283,22 @@ mutual
       -> (FirstLimited . ProofColDivSeqBase.allDivSeq) z
         -> (FirstLimited . ProofColDivSeqBase.allDivSeq) ((3 + 8 * (2 * z)) + 2 * z + 1)
 
+    IsFirstLimitedSuff4_1 : (z : Nat)
+      -> (FirstLimited . ProofColDivSeqBase.allDivSeq) z
+        -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (3 + 8 * (1 + 2 * z))
+    IsFirstLimitedSuff4_2 : (z : Nat)
+      -> (FirstLimited . ProofColDivSeqBase.allDivSeq) z
+        -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (12 * (3 + 8 * (1 + 2 * z)) + 7)
+    IsFirstLimitedSuff4_3 : (z : Nat)
+      -> (FirstLimited . ProofColDivSeqBase.allDivSeq) z
+        -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (3 * (3 + 8 * (1 + 2 * z)) + 2)
+    IsFirstLimitedSuff4_4 : (z : Nat)
+      -> (FirstLimited . ProofColDivSeqBase.allDivSeq) z
+        -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (6 * (3 + 8 * (1 + 2 * z)) + 3)
+    IsFirstLimitedSuff4_5 : (z : Nat)
+      -> (FirstLimited . ProofColDivSeqBase.allDivSeq) z
+        -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (4 * (3 + 8 * (1 + 2 * z)) + 8 * z + 4)
+
   public export
   data AllLimited : List (CoList Integer) -> Type where
     IsAllLimited00 : (AllLimited . ProofColDivSeqBase.allDivSeq) Z -- 6*<0>+3 = 3
@@ -312,6 +328,13 @@ mutual
               -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (4 * (3 + 8 * (2 * z)) + 8 * z + 4)
                 -> (FirstLimited . ProofColDivSeqBase.allDivSeq) ((3 + 8 * (2 * z)) + 2 * z + 1)
                   -> (AllLimited . ProofColDivSeqBase.allDivSeq) (3 + 8 * (2 * z))
+    IsAllLimited04 : (z : Nat)
+      -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (3 + 8 * (1 + 2 * z))
+        -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (12 * (3 + 8 * (1 + 2 * z)) + 7)
+          -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (3 * (3 + 8 * (1 + 2 * z)) + 2)
+            -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (6 * (3 + 8 * (1 + 2 * z)) + 3)
+              -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (4 * (3 + 8 * (1 + 2 * z)) + 8 * z + 4)
+                  -> (AllLimited . ProofColDivSeqBase.allDivSeq) (3 + 8 * (1 + 2 * z))
   --Uninhabited (AllLimited xs) where --使わなかった
   --  uninhabited a impossible
   --allToVoid : (x : Nat) -> Not $ AllLimited (allDivSeq (S x))
