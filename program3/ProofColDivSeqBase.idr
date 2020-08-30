@@ -337,6 +337,28 @@ mutual
       -> (FirstLimited . ProofColDivSeqBase.allDivSeq) z
         -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (9 * (1 + 1 + 2 * (2 * z)) + 6)
 
+    IsFirstLimitedSuff7_1 : (z : Nat)
+      -> (FirstLimited . ProofColDivSeqBase.allDivSeq) z
+        -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (4 + 4 * (2 * z))
+    IsFirstLimitedSuff7_2 : (z : Nat)
+      -> (FirstLimited . ProofColDivSeqBase.allDivSeq) z
+        -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (12 * (4 + 4 * (2 * z)) + 7)
+    IsFirstLimitedSuff7_3 : (z : Nat)
+      -> (FirstLimited . ProofColDivSeqBase.allDivSeq) z
+        -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (3 * (4 + 4 * (2 * z)) + 2)
+    IsFirstLimitedSuff7_4 : (z : Nat)
+      -> (FirstLimited . ProofColDivSeqBase.allDivSeq) z
+        -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (6 * (4 + 4 * (2 * z)) + 3)
+    IsFirstLimitedSuff7_5 : (z : Nat)
+      -> (FirstLimited . ProofColDivSeqBase.allDivSeq) z
+        -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (18 * (4 + 4 * (2 * z)) + 13)
+    IsFirstLimitedSuff7_6 : (z : Nat)
+      -> (FirstLimited . ProofColDivSeqBase.allDivSeq) z
+        -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (9 * (4 + 4 * (2 * z)) + 6)
+    IsFirstLimitedSuff7_7 : (z : Nat)
+      -> (FirstLimited . ProofColDivSeqBase.allDivSeq) z
+        -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (2 * (4 + 4 * (2 * z)) + 2 * z + 2)
+
   public export
   data AllLimited : List (CoList Integer) -> Type where
     IsAllLimited00 : (AllLimited . ProofColDivSeqBase.allDivSeq) Z -- 6*<0>+3 = 3
@@ -372,23 +394,32 @@ mutual
           -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (3 * (3 + 8 * (1 + 2 * z)) + 2)
             -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (6 * (3 + 8 * (1 + 2 * z)) + 3)
               -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (4 * (3 + 8 * (1 + 2 * z)) + 8 * z + 4)
-                  -> (AllLimited . ProofColDivSeqBase.allDivSeq) (3 + 8 * (1 + 2 * z))
+                -> (AllLimited . ProofColDivSeqBase.allDivSeq) (3 + 8 * (1 + 2 * z))
     IsAllLimited05 : (z : Nat)
       -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (3 + 4 * (1 + 2 * z))
         -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (12 * (3 + 4 * (1 + 2 * z)) + 7)
           -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (3 * (3 + 4 * (1 + 2 * z)) + 2)
             -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (6 * (3 + 4 * (1 + 2 * z)) + 3)
               -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (4 * (3 + 4 * (1 + 2 * z)) + 4 * z + 9)
-                  -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (2 * (3 + 4 * (1 + 2 * z)) + 2 * z + 11)
-                    -> (AllLimited . ProofColDivSeqBase.allDivSeq) (3 + 4 * (1 + 2 * z))
+                -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (2 * (3 + 4 * (1 + 2 * z)) + 2 * z + 11)
+                  -> (AllLimited . ProofColDivSeqBase.allDivSeq) (3 + 4 * (1 + 2 * z))
     IsAllLimited06 : (z : Nat)
       -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (1 + 1 + 2 * (2 * z))
         -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (12 * (1 + 1 + 2 * (2 * z)) + 7)
           -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (3 * (1 + 1 + 2 * (2 * z)) + 2)
             -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (6 * (1 + 1 + 2 * (2 * z)) + 3)
               -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (18 * (1 + 1 + 2 * (2 * z)) + 13)
-                  -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (9 * (1 + 1 + 2 * (2 * z)) + 6)
-                    -> (AllLimited . ProofColDivSeqBase.allDivSeq) (1 + 1 + 2 * (2 * z))
+                -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (9 * (1 + 1 + 2 * (2 * z)) + 6)
+                  -> (AllLimited . ProofColDivSeqBase.allDivSeq) (1 + 1 + 2 * (2 * z))
+    IsAllLimited07 : (z : Nat)
+      -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (4 + 4 * (2 * z))
+        -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (12 * (4 + 4 * (2 * z)) + 7)
+          -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (3 * (4 + 4 * (2 * z)) + 2)
+            -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (6 * (4 + 4 * (2 * z)) + 3)
+              -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (18 * (4 + 4 * (2 * z)) + 13)
+                -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (9 * (4 + 4 * (2 * z)) + 6)
+                  -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (2 * (4 + 4 * (2 * z)) + 2 * z + 2)
+                    -> (AllLimited . ProofColDivSeqBase.allDivSeq) (4 + 4 * (2 * z))
   --Uninhabited (AllLimited xs) where --使わなかった
   --  uninhabited a impossible
   --allToVoid : (x : Nat) -> Not $ AllLimited (allDivSeq (S x))
