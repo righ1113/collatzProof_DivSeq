@@ -380,6 +380,8 @@ mutual
 
   public export
   data AllLimited : List (CoList Integer) -> Type where
+    IsFtoA : ((n : Nat) -> (FirstLimited . ProofColDivSeqBase.allDivSeq) n)
+      -> ((k : Nat) -> (AllLimited . ProofColDivSeqBase.allDivSeq) k)
     IsAllLimited00 : (AllLimited . ProofColDivSeqBase.allDivSeq) Z -- 6*<0>+3 = 3
     IsAllLimited01 : (z : Nat)
       -> (AllLimited . ProofColDivSeqBase.allDivSeq) Z
