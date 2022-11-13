@@ -130,6 +130,9 @@ limitedDivSeq : (n : Nat) -> (FirstLimited . B.allDivSeq) n
 limitedDivSeq = makeLimitedDivSeq firstToAll
 
 
+postulate
+  Huga5    : (m : Nat)
+    -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
 mutual
   -- 示すのに、整礎帰納法を使っている
   limitedDivSeq2 : (n : Nat) -> (FirstLimited . B.allDivSeq) n
@@ -156,7 +159,20 @@ mutual
           step (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))))))) rs | ThreeOne | Odd  | ThreeTwo --= ?rhs1006
             = (IsFirstLimited14 l . firstToAll2 (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))) (rs (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l)))))))) $ lteToLt' $ lte108t111 l)
       -- 0 mod 9
-      step (S (S (S (S (j + j + j))))) rs | ThreeTwo = ?rhs1001
+      step (S (S (S (S (j + j + j))))) rs | ThreeTwo with (parity j)
+        step (S (S (S (S ((k+k) + (k+k) + (k+k)))))) rs | ThreeTwo | Even with (parity k)
+          step (S (S (S (S (((l+l)+(l+l)) + ((l+l)+(l+l)) + ((l+l)+(l+l))))))) rs | ThreeTwo | Even | Even
+            = (IsFirstLimited02_2 l . firstToAll2 l) ?rhs01 --(rs l $ lteToLt' $ lte72t45 l)
+          step (S (S (S (S ((S (l+l)+S (l+l)) + (S (l+l)+S (l+l)) + (S (l+l)+S (l+l))))))) rs | ThreeTwo | Even | Odd with (mod3 l)
+            step (S (S (S (S ((S ((m+m+m)+(m+m+m))+S ((m+m+m)+(m+m+m))) + (S ((m+m+m)+(m+m+m))+S ((m+m+m)+(m+m+m))) + (S ((m+m+m)+(m+m+m))+S ((m+m+m)+(m+m+m)))))))) rs | ThreeTwo | Even | Odd | ThreeZero = ?rhs03
+            step (S (S (S (S ((S (S (m+m+m)+S (m+m+m))+S (S (m+m+m)+S (m+m+m))) + (S (S (m+m+m)+S (m+m+m))+S (S (m+m+m)+S (m+m+m))) + (S (S (m+m+m)+S (m+m+m))+S (S (m+m+m)+S (m+m+m)))))))) rs | ThreeTwo | Even | Odd | ThreeOne = ?rhs04
+            step (S (S (S (S ((S (S (S (m+m+m))+S (S (m+m+m)))+S (S (S (m+m+m))+S (S (m+m+m)))) + (S (S (S (m+m+m))+S (S (m+m+m)))+S (S (S (m+m+m))+S (S (m+m+m)))) + (S (S (S (m+m+m))+S (S (m+m+m)))+S (S (S (m+m+m))+S (S (m+m+m))))))))) rs | ThreeTwo | Even | Odd | ThreeTwo
+              = (IsFirstLimited05_2 m . firstToAll2 (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))) (Huga5 m) --?rhs05 --(rs (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m)))))))) $ lteToLt' $ lte216t225 m)
+        step (S (S (S (S (S (k+k) + S (k+k) + S (k+k)))))) rs | ThreeTwo | Odd with (mod3 k)
+          step (S (S (S (S (S ((l+l+l)+(l+l+l)) + S ((l+l+l)+(l+l+l)) + S ((l+l+l)+(l+l+l))))))) rs | ThreeTwo | Odd | ThreeZero = ?rhs06
+          step (S (S (S (S (S (S (l+l+l)+S (l+l+l)) + S (S (l+l+l)+S (l+l+l)) + S (S (l+l+l)+S (l+l+l))))))) rs | ThreeTwo | Odd | ThreeOne = ?rhs07
+          step (S (S (S (S (S (S (S (l+l+l))+S (S (l+l+l))) + S (S (S (l+l+l))+S (S (l+l+l))) + S (S (S (l+l+l))+S (S (l+l+l)))))))) rs | ThreeTwo | Odd | ThreeTwo
+            = (IsFirstLimited08_2 l . firstToAll2 (S (S (S ((l+l)+(l+l)))))) ?rhs08 --(rs (S (S (S ((l+l)+(l+l))))) $ lteToLt' $ lte108t99 l)
 
   -- 元十分条件
   firstToAll2 :
