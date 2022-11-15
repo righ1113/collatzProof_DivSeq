@@ -250,7 +250,7 @@ mutual
   data AllLimited : Nat -> List (CoList Integer) -> Type where
     IsAllLimited00 : (AllLimited Z . ProofColDivSeqBase.allDivSeq) Z -- 6*<0>+3 = 3
     IsFtoA : ((n : Nat) -> (FirstLimited . ProofColDivSeqBase.allDivSeq) n)
-      -> ((q : Nat) -> (n : Nat) -> (AllLimited q . ProofColDivSeqBase.allDivSeq) (q*n))
+      -> ((q : Nat) -> (n : Nat) -> (AllLimited q . ProofColDivSeqBase.allDivSeq) n)
   --Uninhabited (AllLimited xs) where --使わなかった
   --  uninhabited a impossible
   --allToVoid : (x : Nat) -> Not $ AllLimited (allDivSeq (S x))
