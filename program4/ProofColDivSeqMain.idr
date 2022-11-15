@@ -1,5 +1,5 @@
 {-
-$ cd collatzProof_DivSeq/program3
+$ cd collatzProof_DivSeq/program4
 $ chcp 65001
 $ idris
 > :l ProofColDivSeqMain
