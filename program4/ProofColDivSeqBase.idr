@@ -208,49 +208,49 @@ mutual
   data FirstLimited : List (CoList Integer) -> Type where
     IsFirstLimited01    : (FirstLimited . ProofColDivSeqBase.allDivSeq) 1 -- 6*<1>+3 = 9
     IsFirstLimited02    : (q, l : Nat)
-      -> (AllLimited q . ProofColDivSeqBase.allDivSeq) l
+      -> (AllLimited q . ProofColDivSeqBase.allDivSeq) (q*l)
         -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (S (((S (l+l))+(S (l+l))) + ((S (l+l))+(S (l+l))) + ((S (l+l))+(S (l+l)))))
     IsFirstLimited03    : (q, m : Nat)
-      -> (AllLimited q . ProofColDivSeqBase.allDivSeq) (m+m)
+      -> (AllLimited q . ProofColDivSeqBase.allDivSeq) (q*(m+m))
         -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (S (((S (S ((m+m+m)+(m+m+m))))+(S (S ((m+m+m)+(m+m+m))))) + ((S (S ((m+m+m)+(m+m+m))))+(S (S ((m+m+m)+(m+m+m))))) + ((S (S ((m+m+m)+(m+m+m))))+(S (S ((m+m+m)+(m+m+m)))))))
     IsFirstLimited04    : (q, m : Nat)
-      -> (AllLimited q . ProofColDivSeqBase.allDivSeq) (S ((m+m)+(m+m)))
+      -> (AllLimited q . ProofColDivSeqBase.allDivSeq) (q*(S ((m+m)+(m+m))))
         -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (S (((S (S ((S (m+m+m))+(S (m+m+m)))))+(S (S ((S (m+m+m))+(S (m+m+m)))))) + ((S (S ((S (m+m+m))+(S (m+m+m)))))+(S (S ((S (m+m+m))+(S (m+m+m)))))) + ((S (S ((S (m+m+m))+(S (m+m+m)))))+(S (S ((S (m+m+m))+(S (m+m+m))))))))
     IsFirstLimited05    : (q, m : Nat)
-      -> (AllLimited q . ProofColDivSeqBase.allDivSeq) (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
+      -> (AllLimited q . ProofColDivSeqBase.allDivSeq) (q*(S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m)))))))))
         -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (S (((S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))+(S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))) + ((S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))+(S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))) + ((S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))+(S (S ((S (S (m+m+m)))+(S (S (m+m+m)))))))))
     IsFirstLimited06    : (q, l : Nat)
-      -> (AllLimited q . ProofColDivSeqBase.allDivSeq) (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
+      -> (AllLimited q . ProofColDivSeqBase.allDivSeq) (q*(S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l)))))
         -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (S ((S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l)))))
     IsFirstLimited07    : (q, l : Nat)
-      -> (AllLimited q . ProofColDivSeqBase.allDivSeq) (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
+      -> (AllLimited q . ProofColDivSeqBase.allDivSeq) (q*(S (S (S (S (l+l+l+l)+(l+l+l+l))))))
         -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))
     IsFirstLimited08    : (q, l : Nat)
-      -> (AllLimited q . ProofColDivSeqBase.allDivSeq) (S (S (S ((l+l)+(l+l)))))
+      -> (AllLimited q . ProofColDivSeqBase.allDivSeq) (q*(S (S (S ((l+l)+(l+l))))))
         -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l)))))))
     IsFirstLimited09    : (q, j : Nat)
-      -> (AllLimited q . ProofColDivSeqBase.allDivSeq) j
+      -> (AllLimited q . ProofColDivSeqBase.allDivSeq) (q*j)
         -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (S (S (plus (plus j j) j)))
     IsFirstLimited10    : (FirstLimited . ProofColDivSeqBase.allDivSeq) 0 -- 6*<0>+3 = 3
     IsFirstLimited11    : (q, k : Nat)
-      -> (AllLimited q . ProofColDivSeqBase.allDivSeq) k
+      -> (AllLimited q . ProofColDivSeqBase.allDivSeq) (q*k)
         -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
     IsFirstLimited12    : (q, l : Nat)
-      -> (AllLimited q . ProofColDivSeqBase.allDivSeq) (l+l)
+      -> (AllLimited q . ProofColDivSeqBase.allDivSeq) (q*(l+l))
         -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (S (S (S ((S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l)))))))
     IsFirstLimited13    : (q, l : Nat)
-      -> (AllLimited q . ProofColDivSeqBase.allDivSeq) (S ((l+l)+(l+l)))
+      -> (AllLimited q . ProofColDivSeqBase.allDivSeq) (q*(S ((l+l)+(l+l))))
         -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (S (S (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))))
     IsFirstLimited14    : (q, l : Nat)
-      -> (AllLimited q . ProofColDivSeqBase.allDivSeq) (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
+      -> (AllLimited q . ProofColDivSeqBase.allDivSeq) (q*(S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l)))))))))
         -> (FirstLimited . ProofColDivSeqBase.allDivSeq) (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l)))))))))
 
 
   public export
   data AllLimited : Nat -> List (CoList Integer) -> Type where
+    IsAllLimited00 : (AllLimited Z . ProofColDivSeqBase.allDivSeq) Z -- 6*<0>+3 = 3
     IsFtoA : ((n : Nat) -> (FirstLimited . ProofColDivSeqBase.allDivSeq) n)
-      -> ((q : Nat) -> (n : Nat) -> (AllLimited q . ProofColDivSeqBase.allDivSeq) n)
-    IsAllLimitedInvalid : (n : Nat) -> (AllLimited Z . ProofColDivSeqBase.allDivSeq) n
+      -> ((q : Nat) -> (n : Nat) -> (AllLimited q . ProofColDivSeqBase.allDivSeq) (q*n))
   --Uninhabited (AllLimited xs) where --使わなかった
   --  uninhabited a impossible
   --allToVoid : (x : Nat) -> Not $ AllLimited (allDivSeq (S x))
