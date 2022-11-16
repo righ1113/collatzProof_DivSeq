@@ -72,9 +72,9 @@ mutual
 
   -- 元十分条件
   firstToAll :
-    (q, z : Nat) -> ((FirstLimited . B.allDivSeq) z -> (AllLimited q . B.allDivSeq) (q*z))
+    (q, z : Nat) -> ((FirstLimited . B.allDivSeq) z -> (AllLimited q . B.allDivSeqA q) (q*z))
   firstToAll Z     _ _ = IsAllLimited00
-  firstToAll (S q) z _ = (IsFtoA (limitedDivSeq q)) (S q) ((S q)*z)
+  firstToAll (S q) z _ = IsFtoA (limitedDivSeq q) (S q) z
 
 
 
