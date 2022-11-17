@@ -26,10 +26,9 @@ import Sub14LTE108t111
 
 -- 相互再帰
 mutual
-  -- 最終的な定理
   -- 示すのに、整礎帰納法を使っている
-  limitedDivSeq : (q, n : Nat) -> (FirstLimited . B.allDivSeq) n
-  limitedDivSeq q n = wfInd {P=(FirstLimited . B.allDivSeq)} {rel=LT'} (step q) n where
+  makeLimitedDivSeq : (q, n : Nat) -> (FirstLimited . B.allDivSeq) n
+  makeLimitedDivSeq q n = wfInd {P=(FirstLimited . B.allDivSeq)} {rel=LT'} (step q) n where
     step : (q : Nat)
       -> (x : Nat) -> ((y : Nat) -> LT' y x -> (FirstLimited . B.allDivSeq) y)
         -> (FirstLimited . B.allDivSeq) x
@@ -74,7 +73,12 @@ mutual
   firstToAll :
     (q, z : Nat) -> ((FirstLimited . B.allDivSeq) z -> (AllLimited q . B.allDivSeqA q) (q*z))
   firstToAll Z     _ _ = IsAllLimited00
-  firstToAll (S q) z _ = IsFtoA (limitedDivSeq q) (S q) z
+  firstToAll (S q) z _ = IsFtoA (makeLimitedDivSeq q) (S q) z
+
+
+-- 最終的な定理
+limitedDivSeq : (n : Nat) -> (FirstLimited . B.allDivSeq) n
+limitedDivSeq = makeLimitedDivSeq (S Z)
 
 
 
