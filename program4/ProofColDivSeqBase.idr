@@ -177,6 +177,7 @@ allDivSeq (S w) with (parity w)
     allDivSeq (S ((u + u) + (u + u)))         | Even | Even
       = let x = (S ((u + u) + (u + u)))
         in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [6, -2, -4] `dsp` divSeq (9*x+16), [6, -3, -2] `dsp` divSeq (4*x+2*u+8)]
+                                        -- (12*x+7) = (S (((S (l+l))+(S (l+l))) + ((S (l+l))+(S (l+l))) + ((S (l+l))+(S (l+l)))))
     allDivSeq (S ((S (u + u)) + (S (u + u)))) | Even | Odd  with (parity u)
       allDivSeq (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t)))))                 | Even | Odd  | Even with (parity t)
         allDivSeq (S ((S (((s + s) + (s + s)) + ((s + s) + (s + s)))) + (S (((s + s) + (s + s)) + ((s + s) + (s + s))))))                                 | Even | Odd  | Even | Even
@@ -199,7 +200,7 @@ allDivSeq (S w) with (parity w)
       allDivSeq (S (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t))))))) | Odd  | Odd | Odd
         = let x = (S (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t)))))))
           in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` divSeq (18*x+13), [3, -1, -2] `dsp` divSeq (9*x+6)]
--- AllLimited 用には、引数を q 倍で与える箱を用意する
+-- 引数n は q 倍で来るので、 q で割る
 allDivSeqA : Nat -> Nat -> List (CoList Integer)
 allDivSeqA Z     _ = allDivSeq Z
 allDivSeqA (S q) n = allDivSeq (divNatNZ n (S q) SIsNotZ)
@@ -254,7 +255,7 @@ mutual
   data AllLimited : Nat -> List (CoList Integer) -> Type where
     IsAllLimited00 : (AllLimited Z . ProofColDivSeqBase.allDivSeqA q) Z -- 6*<0>+3 = 3
     IsFtoA : ((n : Nat) -> (FirstLimited . ProofColDivSeqBase.allDivSeq) n)
-      -> ((q : Nat) -> (n : Nat) -> (AllLimited q . ProofColDivSeqBase.allDivSeqA q) (q*n))
+      -> ((q, n : Nat) -> (AllLimited q . ProofColDivSeqBase.allDivSeqA q) (q*n))
   --Uninhabited (AllLimited xs) where --使わなかった
   --  uninhabited a impossible
   --allToVoid : (x : Nat) -> Not $ AllLimited (allDivSeq (S x))
