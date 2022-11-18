@@ -253,7 +253,7 @@ mutual
 
   public export
   data AllLimited : List (CoList Integer) -> Type where
-    IsAllLimited00 : (AllLimited . ProofColDivSeqBase.allDivSeqA q) Z -- 6*<0>+3 = 3
+    IsAllLimited00 : (AllLimited . ProofColDivSeqBase.allDivSeqA Z) Z -- 6*<0>+3 = 3
     IsFtoA : ((n : Nat) -> (FirstLimited . ProofColDivSeqBase.allDivSeq) n)
       -> ((q, n : Nat) -> (AllLimited . ProofColDivSeqBase.allDivSeqA q) (q*n))
   --Uninhabited (AllLimited xs) where --使わなかった
