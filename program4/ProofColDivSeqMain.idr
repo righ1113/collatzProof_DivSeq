@@ -70,7 +70,7 @@ mutual
             = (IsFirstLimited14 q l . firstToAll q (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))) (rs (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l)))))))) $ lteToLt' $ lte108t111 l)
 
   -- 元十分条件
-  firstToAll : (q, z : Nat) -> (FirstLimited . B.allDivSeq) z -> (AllLimited q . B.allDivSeqA q) (q*z)
+  firstToAll : (q, z : Nat) -> (FirstLimited . B.allDivSeq) z -> (AllLimited . B.allDivSeqA q) (q*z)
   firstToAll Z     _ _ = IsAllLimited00
   firstToAll (S q) z _ = IsFtoA (makeLimitedDivSeq q) (S q) z
 
