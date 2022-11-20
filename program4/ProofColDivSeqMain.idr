@@ -27,16 +27,16 @@ import Sub14LTE108t111
 -- 相互再帰
 mutual
   -- 示すのに、整礎帰納法を使っている
-  makeLimitedDivSeq : (q, n : Nat) -> (FirstLimited . B.allDivSeq) n
-  makeLimitedDivSeq q n = wfInd {P=(FirstLimited . B.allDivSeq)} {rel=LT'} (step q) n where
+  makeLimitedDivSeq : (q, n : Nat) -> (FirstLimited . B.allDivSeqF q) n
+  makeLimitedDivSeq q n = wfInd {P=(FirstLimited . B.allDivSeqF q)} {rel=LT'} (step q) n where
     step : (q : Nat)
-      -> (x : Nat) -> ((y : Nat) -> LT' y x -> (FirstLimited . B.allDivSeq) y)
-        -> (FirstLimited . B.allDivSeq) x
-    step _ Z     _  = IsFirstLimited10                                                          -- 6*<0>+3 = 3
+      -> (x : Nat) -> ((y : Nat) -> LT' y x -> (FirstLimited . B.allDivSeqF q) y)
+        -> (FirstLimited . B.allDivSeqF q) x
+    step q Z     _  = IsFirstLimited10 q                                                          -- 6*<0>+3 = 3
     step q (S x) rs with (mod3 x)
       -- 0 mod 9
       step q (S (j + j + j)) rs | ThreeZero with (parity j)
-        step q (S ((Z+Z) + (Z+Z) + (Z+Z)))             rs | ThreeZero | Even = IsFirstLimited01 -- 6*<1>+3 = 9
+        step q (S ((Z+Z) + (Z+Z) + (Z+Z)))             rs | ThreeZero | Even = IsFirstLimited01 q -- 6*<1>+3 = 9
         step q (S (((S k)+(S k)) + ((S k)+(S k)) + ((S k)+(S k))))             rs | ThreeZero | Even with (parity k)
           step q (S (((S (l+l))+(S (l+l))) + ((S (l+l))+(S (l+l))) + ((S (l+l))+(S (l+l)))))                         rs | ThreeZero | Even | Even
             = (IsFirstLimited02 q l . firstToAll q l) (rs l $ lteToLt' $ lte72t45 l)
@@ -70,14 +70,14 @@ mutual
             = (IsFirstLimited14 q l . firstToAll q (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))) (rs (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l)))))))) $ lteToLt' $ lte108t111 l)
 
   -- 元十分条件
-  firstToAll : (q, z : Nat) -> (FirstLimited . B.allDivSeq) z -> (AllLimited . B.allDivSeqA q) (q*z)
+  firstToAll : (q, z : Nat) -> (FirstLimited . B.allDivSeqF q) z -> (AllLimited . B.allDivSeqA q) (q*z)
   firstToAll Z     _ _ = IsAllLimited00
   firstToAll (S q) z _ = IsFtoA (makeLimitedDivSeq q) (S q) z
 
 
 -- 最終的な定理
-limitedDivSeq : (n : Nat) -> (FirstLimited . B.allDivSeq) n
-limitedDivSeq = makeLimitedDivSeq (S Z)
+limitedDivSeq : (n : Nat) -> (FirstLimited . B.allDivSeqF 1) n
+limitedDivSeq = makeLimitedDivSeq 1
 
 
 
