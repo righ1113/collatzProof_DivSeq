@@ -27,11 +27,12 @@ import Sub14LTE108t111
 -- 相互再帰
 mutual
   -- 示すのに、整礎帰納法を使っている
-  makeLimitedDivSeq : (q, n : Nat) -> (FirstLimited . B.allDivSeqF q) n
-  makeLimitedDivSeq q n = wfInd {P=(FirstLimited . B.allDivSeqF q)} {rel=LT'} (step q) n where
+  makeLimitedDivSeq : (q, n : Nat) -> (FirstLimited . B.allDivSeqFA q) n
+  makeLimitedDivSeq q n = wfInd {P=(FirstLimited . B.allDivSeqFA q)} {rel=LT'} (step q) n where
     step : (q : Nat)
-      -> (x : Nat) -> ((y : Nat) -> LT' y x -> (FirstLimited . B.allDivSeqF q) y)
-        -> (FirstLimited . B.allDivSeqF q) x
+      -> (x : Nat) -> ((y : Nat) -> LT' y x -> (FirstLimited . B.allDivSeqFA q) y)
+        -> (FirstLimited . B.allDivSeqFA q) x
+    -- q=0 のときは、 -> (FirstLimited . B.allDivSeqFA q) x が FirstLimited (allDivSeq Z) に潰れる
     step q Z     _  = IsFirstLimited10 q                                                          -- 6*<0>+3 = 3
     step q (S x) rs with (mod3 x)
       -- 0 mod 9
@@ -70,13 +71,13 @@ mutual
             = (IsFirstLimited14 q l . firstToAll q (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))) (rs (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l)))))))) $ lteToLt' $ lte108t111 l)
 
   -- 元十分条件
-  firstToAll : (q, z : Nat) -> (FirstLimited . B.allDivSeqF q) z -> (AllLimited . B.allDivSeqA q) (q*z)
-  firstToAll Z     _ _ = IsAllLimited00
+  firstToAll : (q, z : Nat) -> (FirstLimited . B.allDivSeqFA q) z -> (AllLimited . B.allDivSeqFA q) z
+  firstToAll Z     z _ = IsAllLimited00 z
   firstToAll (S q) z _ = IsFtoA (makeLimitedDivSeq q) (S q) z
 
 
 -- 最終的な定理
-limitedDivSeq : (n : Nat) -> (FirstLimited . B.allDivSeqF 1) n
+limitedDivSeq : (n : Nat) -> (FirstLimited . B.allDivSeqFA 1) n
 limitedDivSeq = makeLimitedDivSeq 1
 
 
