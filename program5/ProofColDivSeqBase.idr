@@ -219,7 +219,7 @@ codata Limited : FA -> Stream Unit -> List (CoList Integer) -> Nat -> Type where
       -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l)))))))))) (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l)))))))))
 
   IsFtoA           : (q : Stream Unit) -> ((n : Nat) -> Limited First q (ProofColDivSeqBase.allDivSeq n) n)
-    -> ((n : Nat) -> Limited All q (ProofColDivSeqBase.allDivSeq n) n)
+    -> ((k : Nat) -> Limited All q (ProofColDivSeqBase.allDivSeq k) k)
 -- ---------------------------------
 
 
