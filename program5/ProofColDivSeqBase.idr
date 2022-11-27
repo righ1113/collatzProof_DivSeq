@@ -171,6 +171,22 @@ allDivSeq (S w) with (parity w)
 
 
 -- ---------------------------------
+syntax no02_12t07 = (S (((S (l+l))+(S (l+l))) + ((S (l+l))+(S (l+l))) + ((S (l+l))+(S (l+l)))))
+syntax noxx_12t13 = (S (((S (S (l+l)))+(S (S (l+l)))) + ((S (S (l+l)))+(S (S (l+l)))) + ((S (S (l+l)))+(S (S (l+l))))))
+
+syntax no03_36t13 = (S (((S (S ((m+m+m)+(m+m+m))))+(S (S ((m+m+m)+(m+m+m))))) + ((S (S ((m+m+m)+(m+m+m))))+(S (S ((m+m+m)+(m+m+m))))) + ((S (S ((m+m+m)+(m+m+m))))+(S (S ((m+m+m)+(m+m+m)))))))
+syntax no04_36t25 = (S (((S (S ((S (m+m+m))+(S (m+m+m)))))+(S (S ((S (m+m+m))+(S (m+m+m)))))) + ((S (S ((S (m+m+m))+(S (m+m+m)))))+(S (S ((S (m+m+m))+(S (m+m+m)))))) + ((S (S ((S (m+m+m))+(S (m+m+m)))))+(S (S ((S (m+m+m))+(S (m+m+m))))))))
+syntax no05_36t37 = (S (((S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))+(S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))) + ((S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))+(S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))) + ((S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))+(S (S ((S (S (m+m+m)))+(S (S (m+m+m)))))))))
+
+syntax no06_18t04 = (S ((S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l)))))
+syntax no07_18t10 = (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))
+syntax no08_18t16 = (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l)))))))
+
+syntax no12_18t06 = (S (S (S ((S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l)))))))
+syntax no13_18t12 = (S (S (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))))
+syntax no14_18t18 = (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l)))))))))
+
+
 public export
 data FA = First | All
 
@@ -180,26 +196,26 @@ codata Limited : FA -> Stream Unit -> List (CoList Integer) -> Nat -> Type where
 
   IsFirstLimited02 : (q : Stream Unit) -> (l : Nat)
     -> Limited All q (ProofColDivSeqBase.allDivSeq l) l
-      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq (S (((S (l+l))+(S (l+l))) + ((S (l+l))+(S (l+l))) + ((S (l+l))+(S (l+l)))))) (S (((S (l+l))+(S (l+l))) + ((S (l+l))+(S (l+l))) + ((S (l+l))+(S (l+l)))))
+      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq no02_12t07) no02_12t07
   IsFirstLimited03 : (q : Stream Unit) -> (m : Nat)
     -> Limited All q (ProofColDivSeqBase.allDivSeq (m+m)) (m+m)
-      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq (S (((S (S ((m+m+m)+(m+m+m))))+(S (S ((m+m+m)+(m+m+m))))) + ((S (S ((m+m+m)+(m+m+m))))+(S (S ((m+m+m)+(m+m+m))))) + ((S (S ((m+m+m)+(m+m+m))))+(S (S ((m+m+m)+(m+m+m)))))))) (S (((S (S ((m+m+m)+(m+m+m))))+(S (S ((m+m+m)+(m+m+m))))) + ((S (S ((m+m+m)+(m+m+m))))+(S (S ((m+m+m)+(m+m+m))))) + ((S (S ((m+m+m)+(m+m+m))))+(S (S ((m+m+m)+(m+m+m)))))))
+      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq no03_36t13) no03_36t13
   IsFirstLimited04 : (q : Stream Unit) -> (m : Nat)
     -> Limited All q (ProofColDivSeqBase.allDivSeq (S ((m+m)+(m+m)))) (S ((m+m)+(m+m)))
-      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq (S (((S (S ((S (m+m+m))+(S (m+m+m)))))+(S (S ((S (m+m+m))+(S (m+m+m)))))) + ((S (S ((S (m+m+m))+(S (m+m+m)))))+(S (S ((S (m+m+m))+(S (m+m+m)))))) + ((S (S ((S (m+m+m))+(S (m+m+m)))))+(S (S ((S (m+m+m))+(S (m+m+m))))))))) (S (((S (S ((S (m+m+m))+(S (m+m+m)))))+(S (S ((S (m+m+m))+(S (m+m+m)))))) + ((S (S ((S (m+m+m))+(S (m+m+m)))))+(S (S ((S (m+m+m))+(S (m+m+m)))))) + ((S (S ((S (m+m+m))+(S (m+m+m)))))+(S (S ((S (m+m+m))+(S (m+m+m))))))))
+      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq no04_36t25) no04_36t25
   IsFirstLimited05 : (q : Stream Unit) -> (m : Nat)
     -> Limited All q (ProofColDivSeqBase.allDivSeq (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))) (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
-      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq (S (((S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))+(S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))) + ((S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))+(S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))) + ((S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))+(S (S ((S (S (m+m+m)))+(S (S (m+m+m)))))))))) (S (((S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))+(S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))) + ((S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))+(S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))) + ((S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))+(S (S ((S (S (m+m+m)))+(S (S (m+m+m)))))))))
+      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq no05_36t37) no05_36t37
 
   IsFirstLimited06 : (q : Stream Unit) -> (l : Nat)
     -> Limited All q (ProofColDivSeqBase.allDivSeq (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))) (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
-      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq (S ((S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l)))))) (S ((S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l)))))
+      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq no06_18t04) no06_18t04
   IsFirstLimited07 : (q : Stream Unit) -> (l : Nat)
     -> Limited All q (ProofColDivSeqBase.allDivSeq (S (S (S (S (l+l+l+l)+(l+l+l+l)))))) (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
-      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))) (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))
+      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq no07_18t10) no07_18t10
   IsFirstLimited08 : (q : Stream Unit) -> (l : Nat)
     -> Limited All q (ProofColDivSeqBase.allDivSeq (S (S (S ((l+l)+(l+l)))))) (S (S (S ((l+l)+(l+l)))))
-      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l)))))))) (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l)))))))
+      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq no08_18t16) no08_18t16
   IsFirstLimited09 : (q : Stream Unit) -> (j : Nat)
     -> Limited All q (ProofColDivSeqBase.allDivSeq j) j
       -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq (S (S (plus (plus j j) j)))) (S (S (plus (plus j j) j)))
@@ -210,13 +226,13 @@ codata Limited : FA -> Stream Unit -> List (CoList Integer) -> Nat -> Type where
       -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))) (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
   IsFirstLimited12 : (q : Stream Unit) -> (l : Nat)
     -> Limited All q (ProofColDivSeqBase.allDivSeq (l+l)) (l+l)
-      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq (S (S (S ((S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l)))))))) (S (S (S ((S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l)))))))
+      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq no12_18t06) no12_18t06
   IsFirstLimited13 : (q : Stream Unit) -> (l : Nat)
     -> Limited All q (ProofColDivSeqBase.allDivSeq (S ((l+l)+(l+l)))) (S ((l+l)+(l+l)))
-      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq (S (S (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))))) (S (S (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))))
+      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq no13_18t12) no13_18t12
   IsFirstLimited14 : (q : Stream Unit) -> (l : Nat)
     -> Limited All q (ProofColDivSeqBase.allDivSeq (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))) (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
-      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l)))))))))) (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l)))))))))
+      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq no14_18t18) no14_18t18
 
   IsFtoA           : (q : Stream Unit) -> ((n : Nat) -> Limited First q (ProofColDivSeqBase.allDivSeq n) n)
     -> ((k : Nat) -> Limited All q (ProofColDivSeqBase.allDivSeq k) k)

@@ -21,22 +21,22 @@ makeLimitedDivSeq (()::xs) n with (norm n)
       makeLimitedDivSeq (()::xs) (S ((Z+Z) + (Z+Z) + (Z+Z)))                         | Sa | ThreeZero | Even = IsFirstLimited01 xs -- 6*<1>+3 = 9
       makeLimitedDivSeq (()::xs) (S (((S k)+(S k)) + ((S k)+(S k)) + ((S k)+(S k)))) | Sa | ThreeZero | Even with (parity k)
 
-        makeLimitedDivSeq (()::xs) (S (((S (l+l))+(S (l+l))) + ((S (l+l))+(S (l+l))) + ((S (l+l))+(S (l+l)))))                         | Sa | ThreeZero | Even | Even
+        makeLimitedDivSeq (()::xs) no02_12t07 | Sa | ThreeZero | Even | Even
           = IsFirstLimited02 xs l $ IsFtoA xs (makeLimitedDivSeq xs) l
-        makeLimitedDivSeq (()::xs) (S (((S (S (l+l)))+(S (S (l+l)))) + ((S (S (l+l)))+(S (S (l+l)))) + ((S (S (l+l)))+(S (S (l+l)))))) | Sa | ThreeZero | Even | Odd  with (mod3 l)
-          makeLimitedDivSeq (()::xs) (S (((S (S ((m+m+m)+(m+m+m))))+(S (S ((m+m+m)+(m+m+m))))) + ((S (S ((m+m+m)+(m+m+m))))+(S (S ((m+m+m)+(m+m+m))))) + ((S (S ((m+m+m)+(m+m+m))))+(S (S ((m+m+m)+(m+m+m)))))))                                                                                                 | Sa | ThreeZero | Even | Odd | ThreeZero
+        makeLimitedDivSeq (()::xs) noxx_12t13 | Sa | ThreeZero | Even | Odd  with (mod3 l)
+          makeLimitedDivSeq (()::xs) no03_36t13 | Sa | ThreeZero | Even | Odd | ThreeZero
             = IsFirstLimited03 xs m $ IsFtoA xs (makeLimitedDivSeq xs) (m+m)
-          makeLimitedDivSeq (()::xs) (S (((S (S ((S (m+m+m))+(S (m+m+m)))))+(S (S ((S (m+m+m))+(S (m+m+m)))))) + ((S (S ((S (m+m+m))+(S (m+m+m)))))+(S (S ((S (m+m+m))+(S (m+m+m)))))) + ((S (S ((S (m+m+m))+(S (m+m+m)))))+(S (S ((S (m+m+m))+(S (m+m+m))))))))                                                 | Sa | ThreeZero | Even | Odd | ThreeOne
+          makeLimitedDivSeq (()::xs) no04_36t25 | Sa | ThreeZero | Even | Odd | ThreeOne
             = IsFirstLimited04 xs m $ IsFtoA xs (makeLimitedDivSeq xs) (S ((m+m)+(m+m)))
-          makeLimitedDivSeq (()::xs) (S (((S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))+(S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))) + ((S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))+(S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))) + ((S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))+(S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))))) | Sa | ThreeZero | Even | Odd | ThreeTwo
+          makeLimitedDivSeq (()::xs) no05_36t37 | Sa | ThreeZero | Even | Odd | ThreeTwo
             = IsFirstLimited05 xs m $ IsFtoA xs (makeLimitedDivSeq xs) (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
 
       makeLimitedDivSeq (()::xs) (S ((S (k+k)) + (S (k+k)) + (S (k+k)))) | Sa | ThreeZero | Odd with (mod3 k)
-        makeLimitedDivSeq (()::xs) (S ((S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l)))))                                                 | Sa | ThreeZero | Odd | ThreeZero
+        makeLimitedDivSeq (()::xs) no06_18t04 | Sa | ThreeZero | Odd | ThreeZero
           = IsFirstLimited06 xs l $ IsFtoA xs (makeLimitedDivSeq xs) (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
-        makeLimitedDivSeq (()::xs) (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))                         | Sa | ThreeZero | Odd | ThreeOne
+        makeLimitedDivSeq (()::xs) no07_18t10 | Sa | ThreeZero | Odd | ThreeOne
           = IsFirstLimited07 xs l $ IsFtoA xs (makeLimitedDivSeq xs) (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
-        makeLimitedDivSeq (()::xs) (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))))) | Sa | ThreeZero | Odd | ThreeTwo
+        makeLimitedDivSeq (()::xs) no08_18t16 | Sa | ThreeZero | Odd | ThreeTwo
           = IsFirstLimited08 xs l $ IsFtoA xs (makeLimitedDivSeq xs) (S (S (S ((l+l)+(l+l)))))
     -- 6 mod 9
     makeLimitedDivSeq (()::xs) (S (S (j + j + j)))     | Sa | ThreeOne
@@ -47,11 +47,11 @@ makeLimitedDivSeq (()::xs) n with (norm n)
       makeLimitedDivSeq (()::xs) (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))  | Sa | ThreeTwo | Even
         = IsFirstLimited11 xs k $ IsFtoA xs (makeLimitedDivSeq xs) k
       makeLimitedDivSeq (()::xs) (S (S (S ((S (k+k)) + (S (k+k)) + (S (k+k)))))) | Sa | ThreeTwo | Odd  with (mod3 k)
-        makeLimitedDivSeq (()::xs) (S (S (S ((S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l)))))))                                                 | Sa | ThreeTwo | Odd  | ThreeZero
+        makeLimitedDivSeq (()::xs) no12_18t06 | Sa | ThreeTwo | Odd  | ThreeZero
           = IsFirstLimited12 xs l $ IsFtoA xs (makeLimitedDivSeq xs) (l+l)
-        makeLimitedDivSeq (()::xs) (S (S (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))))                         | Sa | ThreeTwo | Odd  | ThreeOne
+        makeLimitedDivSeq (()::xs) no13_18t12 | Sa | ThreeTwo | Odd  | ThreeOne
           = IsFirstLimited13 xs l $ IsFtoA xs (makeLimitedDivSeq xs) (S ((l+l)+(l+l)))
-        makeLimitedDivSeq (()::xs) (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))))))) | Sa | ThreeTwo | Odd  | ThreeTwo
+        makeLimitedDivSeq (()::xs) no14_18t18 | Sa | ThreeTwo | Odd  | ThreeTwo
           = IsFirstLimited14 xs l $ IsFtoA xs (makeLimitedDivSeq xs) (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
 
 
