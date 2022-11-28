@@ -31,14 +31,6 @@ unfoldr f x =
 
 
 -- ---------------------------------
-public export
-data Norm : Nat -> Type where
-  Za : Norm Z
-  Sa : Norm (S n)
-norm : (n : Nat) -> Norm n
-norm Z     = Za
-norm (S n) = Sa {n=n}
-
 -- mod2
 public export
 data Parity : Nat -> Type where
