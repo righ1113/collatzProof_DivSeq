@@ -30,6 +30,47 @@ unfoldr f x =
 -- ----- from libs/contrib/Data/CoList.idr -----
 
 
+-- ----- from libs/contrib/Data/Nat/DivMod/IteratedSubtraction.idr -----
+public export
+data LT' : (n, m : Nat) -> Type where
+  ||| n < 1 + n
+  LTSucc : LT' n (S n)
+  ||| n < m implies that n < m + 1
+  LTStep : LT' n m -> LT' n (S m)
+
+||| Nothing is strictly less than zero
+implementation Uninhabited (LT' n 0) where
+  uninhabited LTSucc impossible
+
+||| Zero is less than any non-zero number.
+LTZeroLeast : LT' Z (S n)
+LTZeroLeast {n = Z}   = LTSucc
+LTZeroLeast {n = S n} = LTStep LTZeroLeast
+
+||| If n < m, then 1 + n < 1 + m
+ltSuccSucc : LT' n m -> LT' (S n) (S m)
+ltSuccSucc LTSucc      = LTSucc
+ltSuccSucc (LTStep lt) = LTStep $ ltSuccSucc lt
+
+||| If n + 1 < m, then n < m
+lteToLt' : LTE (S n) m -> LT' n m
+lteToLt' {n = Z}   (LTESucc x) = LTZeroLeast
+lteToLt' {n = S k} (LTESucc x) = ltSuccSucc $ lteToLt' x
+
+implementation WellFounded LT' where
+  wellFounded x = Access (acc x)
+    where
+      ||| Show accessibility by induction on the structure of the LT' witness
+      acc : (x, y : Nat) -> LT' y x -> Accessible LT' y
+      -- Zero is vacuously accessible: there's nothing smaller to check
+      acc Z     y lt = absurd lt
+      -- If the element being accessed is one smaller, we're done
+      acc (S y) y LTSucc = Access (acc y)
+      -- If the element is more than one smaller, we need to go further
+      acc (S k) y (LTStep smaller) = acc k y smaller
+-- ----- from libs/contrib/Data/Nat/DivMod/IteratedSubtraction.idr -----
+
+
 -- ---------------------------------
 -- mod2
 public export
@@ -128,37 +169,38 @@ divSeq n = divSeq' (S (S (S (n+n+n+n+n+n)))) (S (S (S (n+n+n+n+n+n)))) where
       4+4(2t)           2. 9. 11.  3. 12.  7.
       4+4(1+2t)         2. 9. 11.  3. 12.
 -}
--- この部分の実装は、コンストラクタIsFirstLimited01~14の正当性を補強している
-allDivSeq : Nat -> List (CoList Integer)
-allDivSeq Z     = [[1, 4], [2, -4] `dsp` [3,2,3,4], [3, 0, -4] `dsp` [2,3,1,1,5,4], [4, -4] `dsp` [1,1,1,5,4], [1, -2] `dsp` [6], [3, -1, -2] `dsp` [1,1,2,1,4,1,3,1,2,3,4]] -- 6*<0>+3 = 3
+-- この部分の実装は、コンストラクタIsSingleLimited01~14の正当性を補強している
+-- 先頭要素（n の完全割数列）を削除しました
+allDivSeq : (n : Nat) -> List (CoList Integer)
+allDivSeq Z     = [[2, -4] `dsp` [3,2,3,4], [3, 0, -4] `dsp` [2,3,1,1,5,4], [4, -4] `dsp` [1,1,1,5,4], [1, -2] `dsp` [6], [3, -1, -2] `dsp` [1,1,2,1,4,1,3,1,2,3,4]] -- 6*<0>+3 = 3
 allDivSeq (S w) with (parity w)
   allDivSeq (S (v + v))     | Even with (parity v)
     allDivSeq (S ((u + u) + (u + u)))         | Even | Even
       = let x = (S ((u + u) + (u + u)))
-        in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [6, -2, -4] `dsp` divSeq (9*x+16), [6, -3, -2] `dsp` divSeq (4*x+2*u+8)]
+        in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [6, -2, -4] `dsp` divSeq (9*x+16), [6, -3, -2] `dsp` divSeq (4*x+2*u+8)]
                                         -- (12*x+7) = (S (((S (l+l))+(S (l+l))) + ((S (l+l))+(S (l+l))) + ((S (l+l))+(S (l+l)))))
     allDivSeq (S ((S (u + u)) + (S (u + u)))) | Even | Odd  with (parity u)
       allDivSeq (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t)))))                 | Even | Odd  | Even with (parity t)
         allDivSeq (S ((S (((s + s) + (s + s)) + ((s + s) + (s + s)))) + (S (((s + s) + (s + s)) + ((s + s) + (s + s))))))                                 | Even | Odd  | Even | Even
           = let x = (S ((S (((s + s) + (s + s)) + ((s + s) + (s + s)))) + (S (((s + s) + (s + s)) + ((s + s) + (s + s))))))
-            in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [2, 1, -2] `dsp` divSeq (4*x+8*s+4), [4, 1, -2] `dsp` divSeq (x+2*s+1)]
+            in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [2, 1, -2] `dsp` divSeq (4*x+8*s+4), [4, 1, -2] `dsp` divSeq (x+2*s+1)]
         allDivSeq (S ((S (((S (s + s)) + (S (s + s))) + ((S (s + s)) + (S (s + s))))) + (S (((S (s + s)) + (S (s + s))) + ((S (s + s)) + (S (s + s))))))) | Even | Odd  | Even | Odd
           = let x = (S ((S (((S (s + s)) + (S (s + s))) + ((S (s + s)) + (S (s + s))))) + (S (((S (s + s)) + (S (s + s))) + ((S (s + s)) + (S (s + s)))))))
-            in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [2, 1, -2] `dsp` divSeq (4*x+8*s+4)]
+            in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [2, 1, -2] `dsp` divSeq (4*x+8*s+4)]
       allDivSeq (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t)))))) | Even | Odd  | Odd
         = let x = (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t))))))
-          in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [5, 0, -4] `dsp` divSeq (4*x+4*t+9), [5, -1, -2] `dsp` divSeq (2*x+2*t+11)]
+          in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [5, 0, -4] `dsp` divSeq (4*x+4*t+9), [5, -1, -2] `dsp` divSeq (2*x+2*t+11)]
   allDivSeq (S (S (v + v))) | Odd  with (parity v)
     allDivSeq (S (S ((u + u) + (u + u))))         | Odd  | Even
       = let x = (S (S ((u + u) + (u + u))))
-        in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` divSeq (18*x+13), [3, -1, -2] `dsp` divSeq (9*x+6)]
+        in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` divSeq (18*x+13), [3, -1, -2] `dsp` divSeq (9*x+6)]
     allDivSeq (S (S ((S (u + u)) + (S (u + u))))) | Odd  | Odd with (parity u)
       allDivSeq (S (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t))))))                 | Odd  | Odd | Even
         = let x = (S (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t))))))
-          in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` divSeq (18*x+13), [3, -1, -2] `dsp` divSeq (9*x+6), [1, 3, -2] `dsp` divSeq (2*x+2*t+2)]
+          in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` divSeq (18*x+13), [3, -1, -2] `dsp` divSeq (9*x+6), [1, 3, -2] `dsp` divSeq (2*x+2*t+2)]
       allDivSeq (S (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t))))))) | Odd  | Odd | Odd
         = let x = (S (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t)))))))
-          in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` divSeq (18*x+13), [3, -1, -2] `dsp` divSeq (9*x+6)]
+          in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` divSeq (18*x+13), [3, -1, -2] `dsp` divSeq (9*x+6)]
 -- ---------------------------------
 
 
@@ -180,54 +222,56 @@ syntax no14_18t18 = (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S 
 
 
 public export
-data FA = First | All
+data SE = Single | Exts
 
 public export
-codata Limited : FA -> Stream Unit -> List (CoList Integer) -> Nat -> Type where
-  IsFirstLimited01 : (q : Stream Unit) -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq 1) 1 -- 6*<1>+3 = 9
+codata Limited : SE -> Stream Unit -> List (CoList Integer) -> Nat -> Type where
+  IsSingleLimited01 : (q : Stream Unit) -> Limited Single (()::q) (ProofColDivSeqBase.allDivSeq 1) 1 -- 6*<1>+3 = 9
 
-  IsFirstLimited02 : (q : Stream Unit) -> (l : Nat)
-    -> Limited All q (ProofColDivSeqBase.allDivSeq l) l
-      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq no02_12t07) no02_12t07
-  IsFirstLimited03 : (q : Stream Unit) -> (m : Nat)
-    -> Limited All q (ProofColDivSeqBase.allDivSeq (m+m)) (m+m)
-      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq no03_36t13) no03_36t13
-  IsFirstLimited04 : (q : Stream Unit) -> (m : Nat)
-    -> Limited All q (ProofColDivSeqBase.allDivSeq (S ((m+m)+(m+m)))) (S ((m+m)+(m+m)))
-      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq no04_36t25) no04_36t25
-  IsFirstLimited05 : (q : Stream Unit) -> (m : Nat)
-    -> Limited All q (ProofColDivSeqBase.allDivSeq (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))) (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
-      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq no05_36t37) no05_36t37
+  IsSingleLimited02 : (q : Stream Unit) -> (l : Nat)
+    -> Limited Exts q (ProofColDivSeqBase.allDivSeq l) l
+      -> Limited Single (()::q) (ProofColDivSeqBase.allDivSeq no02_12t07) no02_12t07
+  IsSingleLimited03 : (q : Stream Unit) -> (m : Nat)
+    -> Limited Exts q (ProofColDivSeqBase.allDivSeq (m+m)) (m+m)
+      -> Limited Single (()::q) (ProofColDivSeqBase.allDivSeq no03_36t13) no03_36t13
+  IsSingleLimited04 : (q : Stream Unit) -> (m : Nat)
+    -> Limited Exts q (ProofColDivSeqBase.allDivSeq (S ((m+m)+(m+m)))) (S ((m+m)+(m+m)))
+      -> Limited Single (()::q) (ProofColDivSeqBase.allDivSeq no04_36t25) no04_36t25
+  IsSingleLimited05 : (q : Stream Unit) -> (m : Nat)
+    -> Limited Exts q (ProofColDivSeqBase.allDivSeq (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))) (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
+      -> Limited Single (()::q) (ProofColDivSeqBase.allDivSeq no05_36t37) no05_36t37
 
-  IsFirstLimited06 : (q : Stream Unit) -> (l : Nat)
-    -> Limited All q (ProofColDivSeqBase.allDivSeq (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))) (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
-      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq no06_18t04) no06_18t04
-  IsFirstLimited07 : (q : Stream Unit) -> (l : Nat)
-    -> Limited All q (ProofColDivSeqBase.allDivSeq (S (S (S (S (l+l+l+l)+(l+l+l+l)))))) (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
-      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq no07_18t10) no07_18t10
-  IsFirstLimited08 : (q : Stream Unit) -> (l : Nat)
-    -> Limited All q (ProofColDivSeqBase.allDivSeq (S (S (S ((l+l)+(l+l)))))) (S (S (S ((l+l)+(l+l)))))
-      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq no08_18t16) no08_18t16
-  IsFirstLimited09 : (q : Stream Unit) -> (j : Nat)
-    -> Limited All q (ProofColDivSeqBase.allDivSeq j) j
-      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq (S (S (plus (plus j j) j)))) (S (S (plus (plus j j) j)))
-  IsFirstLimited10 : (q : Stream Unit) -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq 0) 0 -- 6*<0>+3 = 3
+  IsSingleLimited06 : (q : Stream Unit) -> (l : Nat)
+    -> Limited Exts q (ProofColDivSeqBase.allDivSeq (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))) (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
+      -> Limited Single (()::q) (ProofColDivSeqBase.allDivSeq no06_18t04) no06_18t04
+  IsSingleLimited07 : (q : Stream Unit) -> (l : Nat)
+    -> Limited Exts q (ProofColDivSeqBase.allDivSeq (S (S (S (S (l+l+l+l)+(l+l+l+l)))))) (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
+      -> Limited Single (()::q) (ProofColDivSeqBase.allDivSeq no07_18t10) no07_18t10
+  IsSingleLimited08 : (q : Stream Unit) -> (l : Nat)
+    -> Limited Exts q (ProofColDivSeqBase.allDivSeq (S (S (S ((l+l)+(l+l)))))) (S (S (S ((l+l)+(l+l)))))
+      -> Limited Single (()::q) (ProofColDivSeqBase.allDivSeq no08_18t16) no08_18t16
+  IsSingleLimited09 : (q : Stream Unit) -> (j : Nat)
+    -> Limited Exts q (ProofColDivSeqBase.allDivSeq j) j
+      -> Limited Single (()::q) (ProofColDivSeqBase.allDivSeq (S (S (plus (plus j j) j)))) (S (S (plus (plus j j) j)))
+  IsSingleLimited10 : (q : Stream Unit) -> Limited Single (()::q) (ProofColDivSeqBase.allDivSeq 0) 0 -- 6*<0>+3 = 3
 
-  IsFirstLimited11 : (q : Stream Unit) -> (k : Nat)
-    -> Limited All q (ProofColDivSeqBase.allDivSeq k) k
-      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))) (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
-  IsFirstLimited12 : (q : Stream Unit) -> (l : Nat)
-    -> Limited All q (ProofColDivSeqBase.allDivSeq (l+l)) (l+l)
-      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq no12_18t06) no12_18t06
-  IsFirstLimited13 : (q : Stream Unit) -> (l : Nat)
-    -> Limited All q (ProofColDivSeqBase.allDivSeq (S ((l+l)+(l+l)))) (S ((l+l)+(l+l)))
-      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq no13_18t12) no13_18t12
-  IsFirstLimited14 : (q : Stream Unit) -> (l : Nat)
-    -> Limited All q (ProofColDivSeqBase.allDivSeq (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))) (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
-      -> Limited First (()::q) (ProofColDivSeqBase.allDivSeq no14_18t18) no14_18t18
+  IsSingleLimited11 : (q : Stream Unit) -> (k : Nat)
+    -> Limited Exts q (ProofColDivSeqBase.allDivSeq k) k
+      -> Limited Single (()::q) (ProofColDivSeqBase.allDivSeq (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))) (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
+  IsSingleLimited12 : (q : Stream Unit) -> (l : Nat)
+    -> Limited Exts q (ProofColDivSeqBase.allDivSeq (l+l)) (l+l)
+      -> Limited Single (()::q) (ProofColDivSeqBase.allDivSeq no12_18t06) no12_18t06
+  IsSingleLimited13 : (q : Stream Unit) -> (l : Nat)
+    -> Limited Exts q (ProofColDivSeqBase.allDivSeq (S ((l+l)+(l+l)))) (S ((l+l)+(l+l)))
+      -> Limited Single (()::q) (ProofColDivSeqBase.allDivSeq no13_18t12) no13_18t12
+  IsSingleLimited14 : (q : Stream Unit) -> (l : Nat)
+    -> Limited Exts q (ProofColDivSeqBase.allDivSeq (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))) (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
+      -> Limited Single (()::q) (ProofColDivSeqBase.allDivSeq no14_18t18) no14_18t18
 
-  IsFtoA           : (q : Stream Unit) -> ((n : Nat) -> Limited First q (ProofColDivSeqBase.allDivSeq n) n)
-    -> ((k : Nat) -> Limited All q (ProofColDivSeqBase.allDivSeq k) k)
+  -- コラッツ値が同じ、完全・拡張完全割数列が双方1に辿り着くとき、合流すると定義する
+  -- コラッツが真なら、当然合流するよね
+  IsStoSE          : (q : Stream Unit) -> ((n : Nat) -> Limited Single q (ProofColDivSeqBase.allDivSeq n) n)
+    -> ((k : Nat) -> Limited Single (()::q) (ProofColDivSeqBase.allDivSeq k) k -> Limited Exts q (ProofColDivSeqBase.allDivSeq k) k)
 -- ---------------------------------
 
 
