@@ -37,37 +37,42 @@ mutual
     step (()::qs) (S (S x)) rs with (mod3 x)
       -- 6 mod 9
       step (()::qs) (S (S (j + j + j)))         rs | ThreeZero
-        = IsSingleLimited09 qs j $ singleToExts qs j $ rs j $ lteToLt' $ lte18t15 j
+              = IsSingleLimited09 qs j $ singleToExts qs j $ rs j $ lteToLt' $ lte18t15 j
       -- 3 mod 9
       step (()::qs) (S (S (S (j + j + j))))     rs | ThreeOne with (parity j)
         step (()::qs) (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))  rs | ThreeOne | Even
-          = IsSingleLimited11 qs k $ singleToExts qs k $ rs k $ lteToLt' $ lte36t21 k
+              = IsSingleLimited11 qs k $ singleToExts qs k $ rs k $ lteToLt' $ lte36t21 k
         step (()::qs) (S (S (S ((S (k+k)) + (S (k+k)) + (S (k+k)))))) rs | ThreeOne | Odd  with (mod3 k)
           step (()::qs) no12_18t06 rs | ThreeOne | Odd  | ThreeZero
-            = IsSingleLimited12 qs l $ singleToExts qs (l+l) $ rs (l+l) $ lteToLt' $ lte108t39 l
+              = IsSingleLimited12 qs l $ singleToExts qs (l+l) $ rs (l+l) $ lteToLt' $ lte108t39 l
           step (()::qs) no13_18t12 rs | ThreeOne | Odd  | ThreeOne
-            = IsSingleLimited13 qs l $ singleToExts qs (S ((l+l)+(l+l))) $ rs (S ((l+l)+(l+l))) $ lteToLt' $ lte108t75 l
+              = IsSingleLimited13 qs l $ singleToExts qs (S ((l+l)+(l+l))) $ rs (S ((l+l)+(l+l))) $ lteToLt' $ lte108t75 l
           step (()::qs) no14_18t18 rs | ThreeOne | Odd  | ThreeTwo
-            = IsSingleLimited14 qs l $ singleToExts qs (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l)))))))) $ rs (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l)))))))) $ lteToLt' $ lte108t111 l
+              = let x = (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l)))))))) in
+                IsSingleLimited14 qs l $ singleToExts qs x $ rs x $ lteToLt' $ lte108t111 l
       -- 0 mod 9
       step (()::qs) (S (S (S (S (j + j + j))))) rs | ThreeTwo with (parity j)
         step (()::qs) (S (S (S (S ((k+k) + (k+k) + (k+k)))))) rs | ThreeTwo | Even with (mod3 k)
           step (()::qs) no06_18t04 rs | ThreeTwo | Even | ThreeZero
-            = IsSingleLimited06 qs l $ singleToExts qs (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l)))) $ rs (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l)))) $ lteToLt' $ lte108t27_2 l
+              = let x = (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l)))) in
+                IsSingleLimited06 qs l $ singleToExts qs x $ rs x $ lteToLt' $ lte108t27_2 l
           step (()::qs) no07_18t10 rs | ThreeTwo | Even | ThreeOne
-            = IsSingleLimited07 qs l $ singleToExts qs (S (S (S (S (l+l+l+l)+(l+l+l+l))))) $ rs (S (S (S (S (l+l+l+l)+(l+l+l+l))))) $ lteToLt' $ lte108t63_2 l
+              = let x = (S (S (S (S (l+l+l+l)+(l+l+l+l))))) in
+                IsSingleLimited07 qs l $ singleToExts qs x $ rs x $ lteToLt' $ lte108t63_2 l
           step (()::qs) no08_18t16 rs | ThreeTwo | Even | ThreeTwo
-            = IsSingleLimited08 qs l $ singleToExts qs (S (S (S ((l+l)+(l+l))))) $ rs (S (S (S ((l+l)+(l+l))))) $ lteToLt' $ lte108t99_2 l
+              = let x = (S (S (S ((l+l)+(l+l))))) in
+                IsSingleLimited08 qs l $ singleToExts qs x $ rs x $ lteToLt' $ lte108t99_2 l
         step (()::qs) (S (S (S (S (S (k+k) + S (k+k) + S (k+k)))))) rs | ThreeTwo | Odd with (parity k)
           step (()::qs) no02_12t07 rs | ThreeTwo | Odd | Even
-            = IsSingleLimited02 qs l $ singleToExts qs l $ rs l $ lteToLt' $ lte72t45_2 l
+              = IsSingleLimited02 qs l $ singleToExts qs l $ rs l $ lteToLt' $ lte72t45_2 l
           step (()::qs) noxx_12t13 rs | ThreeTwo | Odd | Odd  with (mod3 l)
             step (()::qs) no03_36t13 rs | ThreeTwo | Odd | Odd | ThreeZero
               = IsSingleLimited03 qs m $ singleToExts qs (m+m) $ rs (m+m) $ lteToLt' $ lte216t81_2 m
             step (()::qs) no04_36t25 rs | ThreeTwo | Odd | Odd | ThreeOne
               = IsSingleLimited04 qs m $ singleToExts qs (S ((m+m)+(m+m))) $ rs (S ((m+m)+(m+m))) $ lteToLt' $ lte216t153_2 m
             step (()::qs) no05_36t37 rs | ThreeTwo | Odd | Odd | ThreeTwo
-              = IsSingleLimited05 qs m $ singleToExts qs (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m)))))))) $ rs (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m)))))))) $ lteToLt' $ lte216t225_2 m
+              = let x = (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m)))))))) in
+                IsSingleLimited05 qs m $ singleToExts qs x $ rs x $ lteToLt' $ lte216t225_2 m
 
   -- 元十分条件
   singleToExts : (q : Stream Unit) -> (n : Nat) -> Limited Single (()::q) (B.allDivSeq n) n -> Limited Exts q (B.allDivSeq n) n
