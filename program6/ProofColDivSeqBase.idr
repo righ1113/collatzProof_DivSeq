@@ -171,8 +171,8 @@ divSeq n = divSeq' (S (S (S (n+n+n+n+n+n)))) (S (S (S (n+n+n+n+n+n)))) where
     3+2(1+2u)           2. 9. 11.  4. 13.
 -}
 allDivSeqExts : Nat -> List (CoList Integer)
-allDivSeqExts Z     = [[2, -4] `dsp` [3,2,3,4], [3, 0, -4] `dsp` [2,3,1,1,5,4], [4, -4] `dsp` [1,1,1,5,4], [1, -2] `dsp` [6], [3, -1, -2] `dsp` [1,1,2,1,4,1,3,1,2,3,4]] -- 6*<0>+3 = 3
-allDivSeqExts (S Z) = []
+allDivSeqExts Z     = [[2, -4] `dsp` [3,2,3,4], [3, 0, -4] `dsp` [2,3,1,1,5,4], [4, -4] `dsp` [1,1,1,5,4], [1, -2] `dsp` [6], [3, -1, -2] `dsp` [1,1,2,1,4,1,3,1,2,3,4]]                      -- 6*<0>+3 = 3
+allDivSeqExts (S Z) = [[2, -4] `dsp` [5,1,2,3,4], [1, -2] `dsp` [2,1,2,2,4,1,1,2,3,4], [4, -4] `dsp` [2,2,1,3,1,2,3,4], [6, -3, -2] `dsp` [1,2,8], [6, -2, -4] `dsp` [2,1,3,2,2,4,1,1,2,3,4]] -- 6*<1>+3 = 9
 allDivSeqExts (S (S w)) with (parity w)
   allDivSeqExts (S (S (v + v)))     | Even  with (parity v)
     allDivSeqExts (S (S ((u + u) + (u + u))))         | Even | Even
@@ -205,8 +205,8 @@ allDivSeqExts (S (S w)) with (parity w)
 -- 先頭要素（n の完全割数列）を削除しました
 -- 十分条件を証明するために変更しました
 allDivSeq : Nat -> List (CoList Integer)
-allDivSeq Z     = [[2, -4] `dsp` [3,2,3,4], [3, 0, -4] `dsp` [2,3,1,1,5,4], [4, -4] `dsp` [1,1,1,5,4], [1, -2] `dsp` [6], [3, -1, -2] `dsp` [1,1,2,1,4,1,3,1,2,3,4]] -- 6*<0>+3 = 3
-allDivSeq (S Z) = []
+allDivSeq Z     = [[2, -4] `dsp` [3,2,3,4], [3, 0, -4] `dsp` [2,3,1,1,5,4], [4, -4] `dsp` [1,1,1,5,4], [1, -2] `dsp` [6], [3, -1, -2] `dsp` [1,1,2,1,4,1,3,1,2,3,4]]                      -- 6*<0>+3 = 3
+allDivSeq (S Z) = [[2, -4] `dsp` [5,1,2,3,4], [1, -2] `dsp` [2,1,2,2,4,1,1,2,3,4], [4, -4] `dsp` [2,2,1,3,1,2,3,4], [6, -3, -2] `dsp` [1,2,8], [6, -2, -4] `dsp` [2,1,3,2,2,4,1,1,2,3,4]] -- 6*<1>+3 = 9
 allDivSeq (S (S w)) with (parity w)
   allDivSeq (S (S (v + v)))     | Even  with (parity v)
     allDivSeq (S (S ((u + u) + (u + u))))         | Even | Even
@@ -305,6 +305,8 @@ data ExtsLimited : List (CoList Integer) -> Type where
   IsExtsLimited14 : (l : Nat)
     -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
       -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) no14_18t18
+
+
 public export
 data SingleLimited : Nat -> Type where
   IsSingleLimited01 : SingleLimited 1 -- 6*<1>+3 = 9

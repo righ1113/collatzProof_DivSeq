@@ -24,74 +24,57 @@ import Sub14LTE108t111
 %default total
 
 
-{-
--- 相互再帰
-mutual
-  -- 示すのに、整礎帰納法を使っている
-  makeLimitedDivSeq : (q : Stream Unit) -> (n : Nat) -> Limited Single q (B.allDivSeq n) n
-  makeLimitedDivSeq q n = wfInd {P=(\k=>(Limited Single q (B.allDivSeq k) k))} {rel=LT'} (step q) n where
-    step : (q : Stream Unit)
-      -> (x : Nat) -> ((y : Nat) -> LT' y x -> Limited Single q (B.allDivSeq y) y)
-        -> Limited Single q (B.allDivSeq x) x
-    step (()::qs) Z         _  = IsSingleLimited10 qs -- 6*<0>+3 = 3
-    step (()::qs) (S Z)     _  = IsSingleLimited01 qs -- 6*<1>+3 = 9
-    step (()::qs) (S (S x)) rs with (mod3 x)
-      -- 6 mod 9
-      step (()::qs) (S (S (j + j + j)))         rs | ThreeZero
-              = IsSingleLimited09 qs j $ singleToExts qs j $ rs j $ lteToLt' $ lte18t15 j
-      -- 3 mod 9
-      step (()::qs) (S (S (S (j + j + j))))     rs | ThreeOne with (parity j)
-        step (()::qs) (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))  rs | ThreeOne | Even
-              = IsSingleLimited11 qs k $ singleToExts qs k $ rs k $ lteToLt' $ lte36t21 k
-        step (()::qs) (S (S (S ((S (k+k)) + (S (k+k)) + (S (k+k)))))) rs | ThreeOne | Odd  with (mod3 k)
-          step (()::qs) no12_18t06 rs | ThreeOne | Odd  | ThreeZero
-              = IsSingleLimited12 qs l $ singleToExts qs (l+l) $ rs (l+l) $ lteToLt' $ lte108t39 l
-          step (()::qs) no13_18t12 rs | ThreeOne | Odd  | ThreeOne
-              = IsSingleLimited13 qs l $ singleToExts qs (S ((l+l)+(l+l))) $ rs (S ((l+l)+(l+l))) $ lteToLt' $ lte108t75 l
-          step (()::qs) no14_18t18 rs | ThreeOne | Odd  | ThreeTwo
-              = let x = (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l)))))))) in
-                IsSingleLimited14 qs l $ singleToExts qs x $ rs x $ lteToLt' $ lte108t111 l
-      -- 0 mod 9
-      step (()::qs) (S (S (S (S (j + j + j))))) rs | ThreeTwo with (parity j)
-        step (()::qs) (S (S (S (S ((k+k) + (k+k) + (k+k)))))) rs | ThreeTwo | Even with (mod3 k)
-          step (()::qs) no06_18t04 rs | ThreeTwo | Even | ThreeZero
-              = let x = (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l)))) in
-                IsSingleLimited06 qs l $ singleToExts qs x $ rs x $ lteToLt' $ lte108t27_2 l
-          step (()::qs) no07_18t10 rs | ThreeTwo | Even | ThreeOne
-              = let x = (S (S (S (S (l+l+l+l)+(l+l+l+l))))) in
-                IsSingleLimited07 qs l $ singleToExts qs x $ rs x $ lteToLt' $ lte108t63_2 l
-          step (()::qs) no08_18t16 rs | ThreeTwo | Even | ThreeTwo
-              = let x = (S (S (S ((l+l)+(l+l))))) in
-                IsSingleLimited08 qs l $ singleToExts qs x $ rs x $ lteToLt' $ lte108t99_2 l
-        step (()::qs) (S (S (S (S (S (k+k) + S (k+k) + S (k+k)))))) rs | ThreeTwo | Odd with (parity k)
-          step (()::qs) no02_12t07 rs | ThreeTwo | Odd | Even
-              = IsSingleLimited02 qs l $ singleToExts qs l $ rs l $ lteToLt' $ lte72t45_2 l
-          step (()::qs) noxx_12t13 rs | ThreeTwo | Odd | Odd  with (mod3 l)
-            step (()::qs) no03_36t13 rs | ThreeTwo | Odd | Odd | ThreeZero
-              = IsSingleLimited03 qs m $ singleToExts qs (m+m) $ rs (m+m) $ lteToLt' $ lte216t81_2 m
-            step (()::qs) no04_36t25 rs | ThreeTwo | Odd | Odd | ThreeOne
-              = IsSingleLimited04 qs m $ singleToExts qs (S ((m+m)+(m+m))) $ rs (S ((m+m)+(m+m))) $ lteToLt' $ lte216t153_2 m
-            step (()::qs) no05_36t37 rs | ThreeTwo | Odd | Odd | ThreeTwo
-              = let x = (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m)))))))) in
-                IsSingleLimited05 qs m $ singleToExts qs x $ rs x $ lteToLt' $ lte216t225_2 m
-
-  -- 元十分条件
-  singleToExts : (q : Stream Unit) -> (n : Nat) -> Limited Single (()::q) (B.allDivSeq n) n -> Limited Exts q (B.allDivSeq n) n
-  singleToExts q n p = IsStoSE q (makeLimitedDivSeq q) n p
-
-
-namespace S
-  u : Stream Unit
-  u = repeat ()
-
--- 最終的な定理
-limitedDivSeq : (n : Nat) -> Limited Single S.u (B.allDivSeq n) n
-limitedDivSeq = makeLimitedDivSeq S.u
--}
+-- 示すのに、整礎帰納法を使っている
+makeLimitedDivSeq : ((k : Nat) -> SingleLimited k -> (ExtsLimited . B.allDivSeq) k) -> (n : Nat) -> SingleLimited n
+makeLimitedDivSeq sToE n = wfInd {P=SingleLimited} {rel=LT'} (step sToE) n where
+  step : ((k : Nat) -> SingleLimited k -> (ExtsLimited . B.allDivSeq) k)
+    -> (x : Nat) -> ((y : Nat) -> LT' y x -> SingleLimited y)
+      -> SingleLimited x
+  step sToE Z         _  = IsSingleLimited10 -- 6*<0>+3 = 3
+  step sToE (S Z)     _  = IsSingleLimited01 -- 6*<1>+3 = 9
+  step sToE (S (S x)) rs with (mod3 x)
+    -- 6 mod 9
+    step sToE (S (S (j + j + j)))         rs | ThreeZero
+            = IsSingleLimited09 j $ sToE j $ rs j $ lteToLt' $ lte18t15 j
+    -- 3 mod 9
+    step sToE (S (S (S (j + j + j))))     rs | ThreeOne with (parity j)
+      step sToE (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))  rs | ThreeOne | Even
+            = IsSingleLimited11 k $ sToE k $ rs k $ lteToLt' $ lte36t21 k
+      step sToE (S (S (S ((S (k+k)) + (S (k+k)) + (S (k+k)))))) rs | ThreeOne | Odd  with (mod3 k)
+        step sToE no12_18t06 rs | ThreeOne | Odd  | ThreeZero
+            = IsSingleLimited12 l $ sToE (l+l) $ rs (l+l) $ lteToLt' $ lte108t39 l
+        step sToE no13_18t12 rs | ThreeOne | Odd  | ThreeOne
+            = IsSingleLimited13 l $ sToE (S ((l+l)+(l+l))) $ rs (S ((l+l)+(l+l))) $ lteToLt' $ lte108t75 l
+        step sToE no14_18t18 rs | ThreeOne | Odd  | ThreeTwo
+            = let x = (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l)))))))) in
+              IsSingleLimited14 l $ sToE x $ rs x $ lteToLt' $ lte108t111 l
+    -- 0 mod 9
+    step sToE (S (S (S (S (j + j + j))))) rs | ThreeTwo with (parity j)
+      step sToE (S (S (S (S ((k+k) + (k+k) + (k+k)))))) rs | ThreeTwo | Even with (mod3 k)
+        step sToE no06_18t04 rs | ThreeTwo | Even | ThreeZero
+            = let x = (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l)))) in
+              IsSingleLimited06 l $ sToE x $ rs x $ lteToLt' $ lte108t27_2 l
+        step sToE no07_18t10 rs | ThreeTwo | Even | ThreeOne
+            = let x = (S (S (S (S (l+l+l+l)+(l+l+l+l))))) in
+              IsSingleLimited07 l $ sToE x $ rs x $ lteToLt' $ lte108t63_2 l
+        step sToE no08_18t16 rs | ThreeTwo | Even | ThreeTwo
+            = let x = (S (S (S ((l+l)+(l+l))))) in
+              IsSingleLimited08 l $ sToE x $ rs x $ lteToLt' $ lte108t99_2 l
+      step sToE (S (S (S (S (S (k+k) + S (k+k) + S (k+k)))))) rs | ThreeTwo | Odd with (parity k)
+        step sToE no02_12t07 rs | ThreeTwo | Odd | Even
+            = IsSingleLimited02 l $ sToE l $ rs l $ lteToLt' $ lte72t45_2 l
+        step sToE noxx_12t13 rs | ThreeTwo | Odd | Odd  with (mod3 l)
+          step sToE no03_36t13 rs | ThreeTwo | Odd | Odd | ThreeZero
+            = IsSingleLimited03 m $ sToE (m+m) $ rs (m+m) $ lteToLt' $ lte216t81_2 m
+          step sToE no04_36t25 rs | ThreeTwo | Odd | Odd | ThreeOne
+            = IsSingleLimited04 m $ sToE (S ((m+m)+(m+m))) $ rs (S ((m+m)+(m+m))) $ lteToLt' $ lte216t153_2 m
+          step sToE no05_36t37 rs | ThreeTwo | Odd | Odd | ThreeTwo
+            = let x = (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m)))))))) in
+              IsSingleLimited05 m $ sToE x $ rs x $ lteToLt' $ lte216t225_2 m
 
 -- 十分条件
-singleToExts2 : (n : Nat) -> SingleLimited n -> (ExtsLimited . B.allDivSeq) n
-singleToExts2 n rs = case rs of
+singleToExts : (n : Nat) -> SingleLimited n -> (ExtsLimited . B.allDivSeq) n
+singleToExts n rs = case rs of
   IsSingleLimited10     => IsExtsLimited10 -- 6*<0>+3 = 3
   IsSingleLimited01     => IsExtsLimited01 -- 6*<1>+3 = 9
   IsSingleLimited09 j p => IsExtsLimited09 j p
@@ -106,6 +89,10 @@ singleToExts2 n rs = case rs of
   IsSingleLimited03 m p => IsExtsLimited03 m p
   IsSingleLimited04 m p => IsExtsLimited04 m p
   IsSingleLimited05 m p => IsExtsLimited05 m p
+
+-- 最終的な定理
+limitedDivSeq : (n : Nat) -> SingleLimited n
+limitedDivSeq = makeLimitedDivSeq singleToExts
 
 
 
