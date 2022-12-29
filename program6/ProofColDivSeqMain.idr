@@ -88,7 +88,7 @@ singleToExts n rs = case rs of
   IsSingleLimited02 l p => IsExtsLimited02 l p
   IsSingleLimited03 m p => IsExtsLimited03 m p
   IsSingleLimited04 m p => IsExtsLimited04 m p
-  IsSingleLimited05 m p => IsExtsLimited05 m p
+  IsSingleLimited05 m p => IsExtsLimited05 m p -- allDivSeq の皮を一段はがすイメージ
 
 -- 最終的な定理
 limitedDivSeq : (n : Nat) -> SingleLimited n

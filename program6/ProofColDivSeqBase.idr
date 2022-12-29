@@ -170,40 +170,10 @@ divSeq n = divSeq' (S (S (S (n+n+n+n+n+n)))) (S (S (S (n+n+n+n+n+n)))) where
       3+4(1+2t)         2. 9. 11.  5. 14.
     3+2(1+2u)           2. 9. 11.  4. 13.
 -}
-allDivSeqExts : Nat -> List (CoList Integer)
-allDivSeqExts Z     = [[2, -4] `dsp` [3,2,3,4], [3, 0, -4] `dsp` [2,3,1,1,5,4], [4, -4] `dsp` [1,1,1,5,4], [1, -2] `dsp` [6], [3, -1, -2] `dsp` [1,1,2,1,4,1,3,1,2,3,4]]                      -- 6*<0>+3 = 3
-allDivSeqExts (S Z) = [[2, -4] `dsp` [5,1,2,3,4], [1, -2] `dsp` [2,1,2,2,4,1,1,2,3,4], [4, -4] `dsp` [2,2,1,3,1,2,3,4], [6, -3, -2] `dsp` [1,2,8], [6, -2, -4] `dsp` [2,1,3,2,2,4,1,1,2,3,4]] -- 6*<1>+3 = 9
-allDivSeqExts (S (S w)) with (parity w)
-  allDivSeqExts (S (S (v + v)))     | Even  with (parity v)
-    allDivSeqExts (S (S ((u + u) + (u + u))))         | Even | Even
-      = let x = (S (S ((u + u) + (u + u))))
-        in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` divSeq (18*x+13), [3, -1, -2] `dsp` divSeq (9*x+6)]
-    allDivSeqExts (S (S ((S (u + u)) + (S (u + u))))) | Even | Odd with (parity u)
-      allDivSeqExts (S (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t))))))                 | Even | Odd | Even
-        = let x = (S (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t))))))
-          in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` divSeq (18*x+13), [3, -1, -2] `dsp` divSeq (9*x+6), [1, 3, -2] `dsp` divSeq (2*x+2*t+2)]
-      allDivSeqExts (S (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t))))))) | Even | Odd | Odd
-        = let x = (S (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t)))))))
-          in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` divSeq (18*x+13), [3, -1, -2] `dsp` divSeq (9*x+6)]
-  allDivSeqExts (S (S (S (v + v)))) | Odd with (parity v)
-    allDivSeqExts (S (S (S ((u + u) + (u + u)))))         | Odd  | Even with (parity u)
-      allDivSeqExts (S (S (S (((t + t) + (t + t)) + ((t + t) + (t + t))))))         | Odd  | Even | Even with (parity t)
-        allDivSeqExts (S (S (S ((((s + s) + (s + s)) + ((s + s) + (s + s))) + (((s + s) + (s + s)) + ((s + s) + (s + s)))))))                 | Odd  | Even | Even | Even
-          = let x = (S (S (S ((((s + s) + (s + s)) + ((s + s) + (s + s))) + (((s + s) + (s + s)) + ((s + s) + (s + s)))))))
-            in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [2, 1, -2] `dsp` divSeq (4*x+8*s+4), [4, 1, -2] `dsp` divSeq (x+2*s+1)]
-        allDivSeqExts (S (S (S (((S (s + s) + S (s + s)) + (S (s + s) + S (s + s))) + ((S (s + s) + S (s + s)) + (S (s + s) + S (s + s))))))) | Odd  | Even | Even | Odd
-          = let x = (S (S (S (((S (s + s) + S (s + s)) + (S (s + s) + S (s + s))) + ((S (s + s) + S (s + s)) + (S (s + s) + S (s + s)))))))
-            in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [2, 1, -2] `dsp` divSeq (4*x+8*s+4)]
-      allDivSeqExts (S (S (S ((S (t + t) + S (t + t)) + (S (t + t) + S (t + t)))))) | Odd  | Even | Odd
-        = let x = (S (S (S ((S (t + t) + S (t + t)) + (S (t + t) + S (t + t))))))
-          in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [5, 0, -4] `dsp` divSeq (4*x+4*t+9), [5, -1, -2] `dsp` divSeq (2*x+2*t+11)]
-    allDivSeqExts (S (S (S ((S (u + u)) + (S (u + u)))))) | Odd  | Odd
-      = let x = (S (S (S ((S (u + u)) + (S (u + u))))))
-        in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [6, -2, -4] `dsp` divSeq (9*x+16), [6, -3, -2] `dsp` divSeq (4*x+2*u+8)]
-                              -- (12*x+7) = (S (((S (l+l))+(S (l+l))) + ((S (l+l))+(S (l+l))) + ((S (l+l))+(S (l+l)))))
 -- この部分の実装は、コンストラクタIsSingleLimited01~14の正当性を補強している
 -- 先頭要素（n の完全割数列）を削除しました
 -- 十分条件を証明するために変更しました
+partial -- allDivSeq は無限に allDivSeq を含んでいる事を表現したいので、停止せずともよい
 allDivSeq : Nat -> List (CoList Integer)
 allDivSeq Z     = [[2, -4] `dsp` [3,2,3,4], [3, 0, -4] `dsp` [2,3,1,1,5,4], [4, -4] `dsp` [1,1,1,5,4], [1, -2] `dsp` [6], [3, -1, -2] `dsp` [1,1,2,1,4,1,3,1,2,3,4]]                      -- 6*<0>+3 = 3
 allDivSeq (S Z) = [[2, -4] `dsp` [5,1,2,3,4], [1, -2] `dsp` [2,1,2,2,4,1,1,2,3,4], [4, -4] `dsp` [2,2,1,3,1,2,3,4], [6, -3, -2] `dsp` [1,2,8], [6, -2, -4] `dsp` [2,1,3,2,2,4,1,1,2,3,4]] -- 6*<1>+3 = 9
@@ -212,35 +182,35 @@ allDivSeq (S (S w)) with (parity w)
     allDivSeq (S (S ((u + u) + (u + u))))         | Even | Even
       = let x = (S (S ((u + u) + (u + u))))
         in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` divSeq (18*x+13), [3, -1, -2] `dsp` divSeq (9*x+6)]
-            ++ allDivSeqExts (12*x+7) ++ allDivSeqExts (3*x+2) ++ allDivSeqExts (6*x+3) ++ allDivSeqExts (18*x+13) ++ allDivSeqExts (9*x+6)
+            ++ allDivSeq (12*x+7) ++ allDivSeq (3*x+2) ++ allDivSeq (6*x+3) ++ allDivSeq (18*x+13) ++ allDivSeq (9*x+6)
     allDivSeq (S (S ((S (u + u)) + (S (u + u))))) | Even | Odd with (parity u)
       allDivSeq (S (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t))))))                 | Even | Odd | Even
         = let x = (S (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t))))))
           in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` divSeq (18*x+13), [3, -1, -2] `dsp` divSeq (9*x+6), [1, 3, -2] `dsp` divSeq (2*x+2*t+2)]
-              ++ allDivSeqExts (12*x+7) ++ allDivSeqExts (3*x+2) ++ allDivSeqExts (6*x+3) ++ allDivSeqExts (18*x+13) ++ allDivSeqExts (9*x+6) ++ allDivSeqExts (2*x+2*t+2)
+              ++ allDivSeq (12*x+7) ++ allDivSeq (3*x+2) ++ allDivSeq (6*x+3) ++ allDivSeq (18*x+13) ++ allDivSeq (9*x+6) ++ allDivSeq (2*x+2*t+2)
       allDivSeq (S (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t))))))) | Even | Odd | Odd
         = let x = (S (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t)))))))
           in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` divSeq (18*x+13), [3, -1, -2] `dsp` divSeq (9*x+6)]
-              ++ allDivSeqExts (12*x+7) ++ allDivSeqExts (3*x+2) ++ allDivSeqExts (6*x+3) ++ allDivSeqExts (18*x+13) ++ allDivSeqExts (9*x+6)
+              ++ allDivSeq (12*x+7) ++ allDivSeq (3*x+2) ++ allDivSeq (6*x+3) ++ allDivSeq (18*x+13) ++ allDivSeq (9*x+6)
   allDivSeq (S (S (S (v + v)))) | Odd with (parity v)
     allDivSeq (S (S (S ((u + u) + (u + u)))))         | Odd  | Even with (parity u)
       allDivSeq (S (S (S (((t + t) + (t + t)) + ((t + t) + (t + t))))))         | Odd  | Even | Even with (parity t)
         allDivSeq (S (S (S ((((s + s) + (s + s)) + ((s + s) + (s + s))) + (((s + s) + (s + s)) + ((s + s) + (s + s)))))))                 | Odd  | Even | Even | Even
           = let x = (S (S (S ((((s + s) + (s + s)) + ((s + s) + (s + s))) + (((s + s) + (s + s)) + ((s + s) + (s + s)))))))
             in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [2, 1, -2] `dsp` divSeq (4*x+8*s+4), [4, 1, -2] `dsp` divSeq (x+2*s+1)]
-                ++ allDivSeqExts (12*x+7) ++ allDivSeqExts (3*x+2) ++ allDivSeqExts (6*x+3) ++ allDivSeqExts (4*x+8*s+4) ++ allDivSeqExts (x+2*s+1)
+                ++ allDivSeq (12*x+7) ++ allDivSeq (3*x+2) ++ allDivSeq (6*x+3) ++ allDivSeq (4*x+8*s+4) ++ allDivSeq (x+2*s+1)
         allDivSeq (S (S (S (((S (s + s) + S (s + s)) + (S (s + s) + S (s + s))) + ((S (s + s) + S (s + s)) + (S (s + s) + S (s + s))))))) | Odd  | Even | Even | Odd
           = let x = (S (S (S (((S (s + s) + S (s + s)) + (S (s + s) + S (s + s))) + ((S (s + s) + S (s + s)) + (S (s + s) + S (s + s)))))))
             in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [2, 1, -2] `dsp` divSeq (4*x+8*s+4)]
-                ++ allDivSeqExts (12*x+7) ++ allDivSeqExts (3*x+2) ++ allDivSeqExts (6*x+3) ++ allDivSeqExts (4*x+8*s+4)
+                ++ allDivSeq (12*x+7) ++ allDivSeq (3*x+2) ++ allDivSeq (6*x+3) ++ allDivSeq (4*x+8*s+4)
       allDivSeq (S (S (S ((S (t + t) + S (t + t)) + (S (t + t) + S (t + t)))))) | Odd  | Even | Odd
         = let x = (S (S (S ((S (t + t) + S (t + t)) + (S (t + t) + S (t + t))))))
           in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [5, 0, -4] `dsp` divSeq (4*x+4*t+9), [5, -1, -2] `dsp` divSeq (2*x+2*t+11)]
-              ++ allDivSeqExts (12*x+7) ++ allDivSeqExts (3*x+2) ++ allDivSeqExts (6*x+3) ++ allDivSeqExts (4*x+4*t+9) ++ allDivSeqExts (2*x+2*t+11)
+              ++ allDivSeq (12*x+7) ++ allDivSeq (3*x+2) ++ allDivSeq (6*x+3) ++ allDivSeq (4*x+4*t+9) ++ allDivSeq (2*x+2*t+11)
     allDivSeq (S (S (S ((S (u + u)) + (S (u + u)))))) | Odd  | Odd
       = let x = (S (S (S ((S (u + u)) + (S (u + u))))))
         in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [6, -2, -4] `dsp` divSeq (9*x+16), [6, -3, -2] `dsp` divSeq (4*x+2*u+8)]
-            ++ allDivSeqExts (12*x+7) ++ allDivSeqExts (3*x+2) ++ allDivSeqExts (6*x+3) ++ allDivSeqExts (9*x+16) ++ allDivSeqExts (4*x+2*u+8)
+            ++ allDivSeq (12*x+7) ++ allDivSeq (3*x+2) ++ allDivSeq (6*x+3) ++ allDivSeq (9*x+16) ++ allDivSeq (4*x+2*u+8)
 -- ---------------------------------
 
 
@@ -264,7 +234,6 @@ syntax no14_18t18 = (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S 
 public export
 data ExtsLimited : List (CoList Integer) -> Type where
   IsExtsLimited01 : (ExtsLimited . ProofColDivSeqBase.allDivSeq) 1 -- 6*<1>+3 = 9
-
   IsExtsLimited02 : (l : Nat)
     -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) l
       -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) no02_12t07
@@ -277,7 +246,6 @@ data ExtsLimited : List (CoList Integer) -> Type where
   IsExtsLimited05 : (m : Nat)
     -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
       -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) no05_36t37
-
   IsExtsLimited06 : (l : Nat)
     -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
       -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) no06_18t04
@@ -287,12 +255,10 @@ data ExtsLimited : List (CoList Integer) -> Type where
   IsExtsLimited08 : (l : Nat)
     -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (S (S (S ((l+l)+(l+l)))))
       -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) no08_18t16
-
   IsExtsLimited09 : (j : Nat)
     -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) j
       -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (S (S (plus (plus j j) j)))
   IsExtsLimited10 : (ExtsLimited . ProofColDivSeqBase.allDivSeq) 0 -- 6*<0>+3 = 3
-
   IsExtsLimited11 : (k : Nat)
     -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) k
       -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
@@ -310,7 +276,6 @@ data ExtsLimited : List (CoList Integer) -> Type where
 public export
 data SingleLimited : Nat -> Type where
   IsSingleLimited01 : SingleLimited 1 -- 6*<1>+3 = 9
-
   IsSingleLimited02 : (l : Nat)
     -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) l
       -> SingleLimited no02_12t07
@@ -323,7 +288,6 @@ data SingleLimited : Nat -> Type where
   IsSingleLimited05 : (m : Nat)
     -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
       -> SingleLimited no05_36t37
-
   IsSingleLimited06 : (l : Nat)
     -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
       -> SingleLimited no06_18t04
@@ -333,12 +297,10 @@ data SingleLimited : Nat -> Type where
   IsSingleLimited08 : (l : Nat)
     -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (S (S (S ((l+l)+(l+l)))))
       -> SingleLimited no08_18t16
-
   IsSingleLimited09 : (j : Nat)
     -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) j
       -> SingleLimited (S (S (plus (plus j j) j)))
   IsSingleLimited10 : SingleLimited 0 -- 6*<0>+3 = 3
-
   IsSingleLimited11 : (k : Nat)
     -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) k
       -> SingleLimited (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
