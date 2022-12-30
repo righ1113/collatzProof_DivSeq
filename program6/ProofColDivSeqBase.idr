@@ -143,6 +143,22 @@ divSeq n = divSeq' (S (S (S (n+n+n+n+n+n)))) (S (S (S (n+n+n+n+n+n)))) where
         (unfoldr (\b => if b <= 1 then Nothing
                                   else Just (countEven (b*3+1) (b*3+1) 0) ) (S (j + j)))
 
+
+syntax no02_12t07 = (S (S (S (S (S ((l+l)+(l+l)) + S ((l+l)+(l+l)) + S ((l+l)+(l+l)))))))
+syntax noxx_12t13 = (S (S (S (S (S (S (l+l)+S (l+l)) + S (S (l+l)+S (l+l)) + S (S (l+l)+S (l+l)))))))
+
+syntax no03_36t13 = (S (S (S (S (S (S ((m+m+m)+(m+m+m))+S ((m+m+m)+(m+m+m))) + S (S ((m+m+m)+(m+m+m))+S ((m+m+m)+(m+m+m))) + S (S ((m+m+m)+(m+m+m))+S ((m+m+m)+(m+m+m))))))))
+syntax no04_36t25 = (S (S (S (S (S (S (S (m+m+m)+S (m+m+m))+S (S (m+m+m)+S (m+m+m))) + S (S (S (m+m+m)+S (m+m+m))+S (S (m+m+m)+S (m+m+m))) + S (S (S (m+m+m)+S (m+m+m))+S (S (m+m+m)+S (m+m+m))))))))
+syntax no05_36t37 = (S (S (S (S (S (S (S (S (m+m+m))+S (S (m+m+m)))+S (S (S (m+m+m))+S (S (m+m+m)))) + S (S (S (S (m+m+m))+S (S (m+m+m)))+S (S (S (m+m+m))+S (S (m+m+m)))) + S (S (S (S (m+m+m))+S (S (m+m+m)))+S (S (S (m+m+m))+S (S (m+m+m)))))))))
+
+syntax no06_18t04 = (S (S (S (S (((l+l+l)+(l+l+l)) + ((l+l+l)+(l+l+l)) + ((l+l+l)+(l+l+l)))))))
+syntax no07_18t10 = (S (S (S (S ((S (l+l+l)+S (l+l+l)) + (S (l+l+l)+S (l+l+l)) + (S (l+l+l)+S (l+l+l)))))))
+syntax no08_18t16 = (S (S (S (S ((S (S (l+l+l))+S (S (l+l+l))) + (S (S (l+l+l))+S (S (l+l+l))) + (S (S (l+l+l))+S (S (l+l+l))))))))
+
+syntax no12_18t06 = (S (S (S ((S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l)))))))
+syntax no13_18t12 = (S (S (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))))
+syntax no14_18t18 = (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l)))))))))
+
 {-
 72t+45  E[2,-4] y=x/12-3/4  6t+3        12x+7
 *8.                    <---------------------
@@ -172,8 +188,6 @@ divSeq n = divSeq' (S (S (S (n+n+n+n+n+n)))) (S (S (S (n+n+n+n+n+n)))) where
 -}
 -- この部分の実装は、コンストラクタIsSingleLimited01~14の正当性を補強している
 -- 先頭要素（n の完全割数列）を削除しました
--- 十分条件を証明するために変更しました
-partial -- allDivSeq は無限に allDivSeq を含んでいる事を表現したいので、停止せずともよい
 allDivSeq : Nat -> List (CoList Integer)
 allDivSeq Z     = [[2, -4] `dsp` [3,2,3,4], [3, 0, -4] `dsp` [2,3,1,1,5,4], [4, -4] `dsp` [1,1,1,5,4], [1, -2] `dsp` [6], [3, -1, -2] `dsp` [1,1,2,1,4,1,3,1,2,3,4]]                      -- 6*<0>+3 = 3
 allDivSeq (S Z) = [[2, -4] `dsp` [5,1,2,3,4], [1, -2] `dsp` [2,1,2,2,4,1,1,2,3,4], [4, -4] `dsp` [2,2,1,3,1,2,3,4], [6, -3, -2] `dsp` [1,2,8], [6, -2, -4] `dsp` [2,1,3,2,2,4,1,1,2,3,4]] -- 6*<1>+3 = 9
@@ -182,136 +196,156 @@ allDivSeq (S (S w)) with (parity w)
     allDivSeq (S (S ((u + u) + (u + u))))         | Even | Even
       = let x = (S (S ((u + u) + (u + u))))
         in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` divSeq (18*x+13), [3, -1, -2] `dsp` divSeq (9*x+6)]
-            ++ allDivSeq (12*x+7) ++ allDivSeq (3*x+2) ++ allDivSeq (6*x+3) ++ allDivSeq (18*x+13) ++ allDivSeq (9*x+6)
     allDivSeq (S (S ((S (u + u)) + (S (u + u))))) | Even | Odd with (parity u)
       allDivSeq (S (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t))))))                 | Even | Odd | Even
         = let x = (S (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t))))))
           in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` divSeq (18*x+13), [3, -1, -2] `dsp` divSeq (9*x+6), [1, 3, -2] `dsp` divSeq (2*x+2*t+2)]
-              ++ allDivSeq (12*x+7) ++ allDivSeq (3*x+2) ++ allDivSeq (6*x+3) ++ allDivSeq (18*x+13) ++ allDivSeq (9*x+6) ++ allDivSeq (2*x+2*t+2)
       allDivSeq (S (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t))))))) | Even | Odd | Odd
         = let x = (S (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t)))))))
           in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` divSeq (18*x+13), [3, -1, -2] `dsp` divSeq (9*x+6)]
-              ++ allDivSeq (12*x+7) ++ allDivSeq (3*x+2) ++ allDivSeq (6*x+3) ++ allDivSeq (18*x+13) ++ allDivSeq (9*x+6)
   allDivSeq (S (S (S (v + v)))) | Odd with (parity v)
     allDivSeq (S (S (S ((u + u) + (u + u)))))         | Odd  | Even with (parity u)
       allDivSeq (S (S (S (((t + t) + (t + t)) + ((t + t) + (t + t))))))         | Odd  | Even | Even with (parity t)
         allDivSeq (S (S (S ((((s + s) + (s + s)) + ((s + s) + (s + s))) + (((s + s) + (s + s)) + ((s + s) + (s + s)))))))                 | Odd  | Even | Even | Even
           = let x = (S (S (S ((((s + s) + (s + s)) + ((s + s) + (s + s))) + (((s + s) + (s + s)) + ((s + s) + (s + s)))))))
             in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [2, 1, -2] `dsp` divSeq (4*x+8*s+4), [4, 1, -2] `dsp` divSeq (x+2*s+1)]
-                ++ allDivSeq (12*x+7) ++ allDivSeq (3*x+2) ++ allDivSeq (6*x+3) ++ allDivSeq (4*x+8*s+4) ++ allDivSeq (x+2*s+1)
         allDivSeq (S (S (S (((S (s + s) + S (s + s)) + (S (s + s) + S (s + s))) + ((S (s + s) + S (s + s)) + (S (s + s) + S (s + s))))))) | Odd  | Even | Even | Odd
           = let x = (S (S (S (((S (s + s) + S (s + s)) + (S (s + s) + S (s + s))) + ((S (s + s) + S (s + s)) + (S (s + s) + S (s + s)))))))
             in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [2, 1, -2] `dsp` divSeq (4*x+8*s+4)]
-                ++ allDivSeq (12*x+7) ++ allDivSeq (3*x+2) ++ allDivSeq (6*x+3) ++ allDivSeq (4*x+8*s+4)
       allDivSeq (S (S (S ((S (t + t) + S (t + t)) + (S (t + t) + S (t + t)))))) | Odd  | Even | Odd
         = let x = (S (S (S ((S (t + t) + S (t + t)) + (S (t + t) + S (t + t))))))
           in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [5, 0, -4] `dsp` divSeq (4*x+4*t+9), [5, -1, -2] `dsp` divSeq (2*x+2*t+11)]
-              ++ allDivSeq (12*x+7) ++ allDivSeq (3*x+2) ++ allDivSeq (6*x+3) ++ allDivSeq (4*x+4*t+9) ++ allDivSeq (2*x+2*t+11)
     allDivSeq (S (S (S ((S (u + u)) + (S (u + u)))))) | Odd  | Odd
       = let x = (S (S (S ((S (u + u)) + (S (u + u))))))
         in [[2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [6, -2, -4] `dsp` divSeq (9*x+16), [6, -3, -2] `dsp` divSeq (4*x+2*u+8)]
-            ++ allDivSeq (12*x+7) ++ allDivSeq (3*x+2) ++ allDivSeq (6*x+3) ++ allDivSeq (9*x+16) ++ allDivSeq (4*x+2*u+8)
--- ---------------------------------
-
-
--- ---------------------------------
-syntax no02_12t07 = (S (S (S (S (S ((l+l)+(l+l)) + S ((l+l)+(l+l)) + S ((l+l)+(l+l)))))))
-syntax noxx_12t13 = (S (S (S (S (S (S (l+l)+S (l+l)) + S (S (l+l)+S (l+l)) + S (S (l+l)+S (l+l)))))))
-
-syntax no03_36t13 = (S (S (S (S (S (S ((m+m+m)+(m+m+m))+S ((m+m+m)+(m+m+m))) + S (S ((m+m+m)+(m+m+m))+S ((m+m+m)+(m+m+m))) + S (S ((m+m+m)+(m+m+m))+S ((m+m+m)+(m+m+m))))))))
-syntax no04_36t25 = (S (S (S (S (S (S (S (m+m+m)+S (m+m+m))+S (S (m+m+m)+S (m+m+m))) + S (S (S (m+m+m)+S (m+m+m))+S (S (m+m+m)+S (m+m+m))) + S (S (S (m+m+m)+S (m+m+m))+S (S (m+m+m)+S (m+m+m))))))))
-syntax no05_36t37 = (S (S (S (S (S (S (S (S (m+m+m))+S (S (m+m+m)))+S (S (S (m+m+m))+S (S (m+m+m)))) + S (S (S (S (m+m+m))+S (S (m+m+m)))+S (S (S (m+m+m))+S (S (m+m+m)))) + S (S (S (S (m+m+m))+S (S (m+m+m)))+S (S (S (m+m+m))+S (S (m+m+m)))))))))
-
-syntax no06_18t04 = (S (S (S (S (((l+l+l)+(l+l+l)) + ((l+l+l)+(l+l+l)) + ((l+l+l)+(l+l+l)))))))
-syntax no07_18t10 = (S (S (S (S ((S (l+l+l)+S (l+l+l)) + (S (l+l+l)+S (l+l+l)) + (S (l+l+l)+S (l+l+l)))))))
-syntax no08_18t16 = (S (S (S (S ((S (S (l+l+l))+S (S (l+l+l))) + (S (S (l+l+l))+S (S (l+l+l))) + (S (S (l+l+l))+S (S (l+l+l))))))))
-
-syntax no12_18t06 = (S (S (S ((S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l)))))))
-syntax no13_18t12 = (S (S (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))))
-syntax no14_18t18 = (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l)))))))))
-
-
+                              -- (12*x+7) = (S (((S (l+l))+(S (l+l))) + ((S (l+l))+(S (l+l))) + ((S (l+l))+(S (l+l)))))
+-- 十分条件を証明するために変更しました
+-- ExtsLimited とは引数が逆になっている事に注目
 public export
-data ExtsLimited : List (CoList Integer) -> Type where
-  IsExtsLimited01 : (ExtsLimited . ProofColDivSeqBase.allDivSeq) 1 -- 6*<1>+3 = 9
+data AllDivSeq : List (CoList Integer) -> Type where
+  IsAllDivSeq01 : (AllDivSeq . ProofColDivSeqBase.allDivSeq) 1 -- 6*<1>+3 = 9
+  IsAllDivSeq02 : (l : Nat)
+    -> (AllDivSeq . ProofColDivSeqBase.allDivSeq) no02_12t07
+      -> (AllDivSeq . ProofColDivSeqBase.allDivSeq) l
+  IsAllDivSeq03 : (m : Nat)
+    -> (AllDivSeq . ProofColDivSeqBase.allDivSeq) no03_36t13
+      -> (AllDivSeq . ProofColDivSeqBase.allDivSeq) (m+m)
+  IsAllDivSeq04 : (m : Nat)
+    -> (AllDivSeq . ProofColDivSeqBase.allDivSeq) no04_36t25
+      -> (AllDivSeq . ProofColDivSeqBase.allDivSeq) (S ((m+m)+(m+m)))
+  IsAllDivSeq05 : (m : Nat)
+    -> (AllDivSeq . ProofColDivSeqBase.allDivSeq) no05_36t37
+      -> (AllDivSeq . ProofColDivSeqBase.allDivSeq) (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
+  IsAllDivSeq06 : (l : Nat)
+    -> (AllDivSeq . ProofColDivSeqBase.allDivSeq) no06_18t04
+      -> (AllDivSeq . ProofColDivSeqBase.allDivSeq) (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
+  IsAllDivSeq07 : (l : Nat)
+    -> (AllDivSeq . ProofColDivSeqBase.allDivSeq) no07_18t10
+      -> (AllDivSeq . ProofColDivSeqBase.allDivSeq) (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
+  IsAllDivSeq08 : (l : Nat)
+    -> (AllDivSeq . ProofColDivSeqBase.allDivSeq) no08_18t16
+      -> (AllDivSeq . ProofColDivSeqBase.allDivSeq) (S (S (S ((l+l)+(l+l)))))
+  IsAllDivSeq09 : (j : Nat)
+    -> (AllDivSeq . ProofColDivSeqBase.allDivSeq) (S (S (plus (plus j j) j)))
+      -> (AllDivSeq . ProofColDivSeqBase.allDivSeq) j
+  IsAllDivSeq10 : (AllDivSeq . ProofColDivSeqBase.allDivSeq) 0 -- 6*<0>+3 = 3
+  IsAllDivSeq11 : (k : Nat)
+    -> (AllDivSeq . ProofColDivSeqBase.allDivSeq) (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
+      -> (AllDivSeq . ProofColDivSeqBase.allDivSeq) k
+  IsAllDivSeq12 : (l : Nat)
+    -> (AllDivSeq . ProofColDivSeqBase.allDivSeq) no12_18t06
+      -> (AllDivSeq . ProofColDivSeqBase.allDivSeq) (l+l)
+  IsAllDivSeq13 : (l : Nat)
+    -> (AllDivSeq . ProofColDivSeqBase.allDivSeq) no13_18t12
+      -> (AllDivSeq . ProofColDivSeqBase.allDivSeq) (S ((l+l)+(l+l)))
+  IsAllDivSeq14 : (l : Nat)
+    -> (AllDivSeq . ProofColDivSeqBase.allDivSeq) no14_18t18
+      -> (AllDivSeq . ProofColDivSeqBase.allDivSeq) (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
+-- ---------------------------------
+
+
+-- ---------------------------------
+public export
+data ExtsLimited : Type -> Type where
+  IsExtsLimited01 : (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) 1 -- 6*<1>+3 = 9
   IsExtsLimited02 : (l : Nat)
-    -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) l
-      -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) no02_12t07
+    -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) l
+      -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) no02_12t07
   IsExtsLimited03 : (m : Nat)
-    -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (m+m)
-      -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) no03_36t13
+    -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) (m+m)
+      -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) no03_36t13
   IsExtsLimited04 : (m : Nat)
-    -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (S ((m+m)+(m+m)))
-      -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) no04_36t25
+    -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) (S ((m+m)+(m+m)))
+      -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) no04_36t25
   IsExtsLimited05 : (m : Nat)
-    -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
-      -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) no05_36t37
+    -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
+      -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) no05_36t37
   IsExtsLimited06 : (l : Nat)
-    -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
-      -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) no06_18t04
+    -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
+      -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) no06_18t04
   IsExtsLimited07 : (l : Nat)
-    -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
-      -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) no07_18t10
+    -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
+      -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) no07_18t10
   IsExtsLimited08 : (l : Nat)
-    -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (S (S (S ((l+l)+(l+l)))))
-      -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) no08_18t16
+    -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) (S (S (S ((l+l)+(l+l)))))
+      -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) no08_18t16
   IsExtsLimited09 : (j : Nat)
-    -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) j
-      -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (S (S (plus (plus j j) j)))
-  IsExtsLimited10 : (ExtsLimited . ProofColDivSeqBase.allDivSeq) 0 -- 6*<0>+3 = 3
+    -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) j
+      -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) (S (S (plus (plus j j) j)))
+  IsExtsLimited10 : (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) 0 -- 6*<0>+3 = 3
   IsExtsLimited11 : (k : Nat)
-    -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) k
-      -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
+    -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) k
+      -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
   IsExtsLimited12 : (l : Nat)
-    -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (l+l)
-      -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) no12_18t06
+    -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) (l+l)
+      -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) no12_18t06
   IsExtsLimited13 : (l : Nat)
-    -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (S ((l+l)+(l+l)))
-      -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) no13_18t12
+    -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) (S ((l+l)+(l+l)))
+      -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) no13_18t12
   IsExtsLimited14 : (l : Nat)
-    -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
-      -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) no14_18t18
+    -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
+      -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) no14_18t18
 
 
 public export
 data SingleLimited : Nat -> Type where
   IsSingleLimited01 : SingleLimited 1 -- 6*<1>+3 = 9
   IsSingleLimited02 : (l : Nat)
-    -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) l
+    -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) l
       -> SingleLimited no02_12t07
   IsSingleLimited03 : (m : Nat)
-    -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (m+m)
+    -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) (m+m)
       -> SingleLimited no03_36t13
   IsSingleLimited04 : (m : Nat)
-    -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (S ((m+m)+(m+m)))
+    -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) (S ((m+m)+(m+m)))
       -> SingleLimited no04_36t25
   IsSingleLimited05 : (m : Nat)
-    -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
+    -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
       -> SingleLimited no05_36t37
   IsSingleLimited06 : (l : Nat)
-    -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
+    -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
       -> SingleLimited no06_18t04
   IsSingleLimited07 : (l : Nat)
-    -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
+    -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
       -> SingleLimited no07_18t10
   IsSingleLimited08 : (l : Nat)
-    -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (S (S (S ((l+l)+(l+l)))))
+    -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) (S (S (S ((l+l)+(l+l)))))
       -> SingleLimited no08_18t16
   IsSingleLimited09 : (j : Nat)
-    -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) j
+    -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) j
       -> SingleLimited (S (S (plus (plus j j) j)))
   IsSingleLimited10 : SingleLimited 0 -- 6*<0>+3 = 3
   IsSingleLimited11 : (k : Nat)
-    -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) k
+    -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) k
       -> SingleLimited (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
   IsSingleLimited12 : (l : Nat)
-    -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (l+l)
+    -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) (l+l)
       -> SingleLimited no12_18t06
   IsSingleLimited13 : (l : Nat)
-    -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (S ((l+l)+(l+l)))
+    -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) (S ((l+l)+(l+l)))
       -> SingleLimited no13_18t12
   IsSingleLimited14 : (l : Nat)
-    -> (ExtsLimited . ProofColDivSeqBase.allDivSeq) (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
+    -> (ExtsLimited . AllDivSeq . ProofColDivSeqBase.allDivSeq) (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
       -> SingleLimited no14_18t18
 -- ---------------------------------
 

@@ -25,9 +25,9 @@ import Sub14LTE108t111
 
 
 -- 示すのに、整礎帰納法を使っている
-makeLimitedDivSeq : ((k : Nat) -> SingleLimited k -> (ExtsLimited . B.allDivSeq) k) -> (n : Nat) -> SingleLimited n
+makeLimitedDivSeq : ((k : Nat) -> SingleLimited k -> (ExtsLimited . AllDivSeq . B.allDivSeq) k) -> (n : Nat) -> SingleLimited n
 makeLimitedDivSeq sToE n = wfInd {P=SingleLimited} {rel=LT'} (step sToE) n where
-  step : ((k : Nat) -> SingleLimited k -> (ExtsLimited . B.allDivSeq) k)
+  step : ((k : Nat) -> SingleLimited k -> (ExtsLimited . AllDivSeq . B.allDivSeq) k)
     -> (x : Nat) -> ((y : Nat) -> LT' y x -> SingleLimited y)
       -> SingleLimited x
   step sToE Z         _  = IsSingleLimited10 -- 6*<0>+3 = 3
@@ -73,7 +73,7 @@ makeLimitedDivSeq sToE n = wfInd {P=SingleLimited} {rel=LT'} (step sToE) n where
               IsSingleLimited05 m $ sToE x $ rs x $ lteToLt' $ lte216t225_2 m
 
 -- 十分条件
-singleToExts : (n : Nat) -> SingleLimited n -> (ExtsLimited . B.allDivSeq) n
+singleToExts : (n : Nat) -> SingleLimited n -> (ExtsLimited . AllDivSeq . B.allDivSeq) n
 singleToExts n rs = case rs of
   IsSingleLimited10     => IsExtsLimited10 -- 6*<0>+3 = 3
   IsSingleLimited01     => IsExtsLimited01 -- 6*<1>+3 = 9
@@ -88,7 +88,7 @@ singleToExts n rs = case rs of
   IsSingleLimited02 l p => IsExtsLimited02 l p
   IsSingleLimited03 m p => IsExtsLimited03 m p
   IsSingleLimited04 m p => IsExtsLimited04 m p
-  IsSingleLimited05 m p => IsExtsLimited05 m p -- allDivSeq の皮を一段はがすイメージ
+  IsSingleLimited05 m p => IsExtsLimited05 m p -- 型 AllDivSeq より言える
 
 -- 最終的な定理
 limitedDivSeq : (n : Nat) -> SingleLimited n
