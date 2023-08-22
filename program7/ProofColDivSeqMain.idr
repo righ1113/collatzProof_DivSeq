@@ -6,7 +6,7 @@ $ idris
 -}
 module ProofColDivSeqMain
 
-import ProofColDivSeqBase as B
+import ProofColDivSeqBase
 import ProofColDivSeqPostulate
 import Sub02LTE72t45
 import Sub03LTE216t81
@@ -26,10 +26,10 @@ import Sub14LTE108t111
 
 -- 示すのに、整礎帰納法を使っている
 -- 最終的な定理
-LimitedDivSeq : (n : Nat) -> (FirstLimited . B.allDivSeq) n
-LimitedDivSeq n = wfInd {P=(\z=>(FirstLimited . B.allDivSeq) z)} {rel=LT'} (step) n where
-  step : (x : Nat) -> ((y : Nat) -> LT' y x -> (FirstLimited . B.allDivSeq) y) -> (FirstLimited . B.allDivSeq) x
-  step           Z     _  = IsFirstLimited10                                                          -- 6*<0>+3 = 3
+LimitedDivSeq : (n : Nat) -> FirstLimited n
+LimitedDivSeq n = wfInd {P=(\z=>FirstLimited z)} {rel=LT'} step n where
+  step : (x : Nat) -> ((y : Nat) -> LT' y x -> FirstLimited y) -> FirstLimited x
+  step           Z     _  = IsFirstLimited10                                                -- 6*<0>+3 = 3
   step (S x) rs with (mod3 x)
     -- 0 mod 9
     step (S (j + j + j)) rs | ThreeZero with (parity j)
