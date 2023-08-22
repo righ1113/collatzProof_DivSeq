@@ -208,6 +208,13 @@ limitedNStep (_ :: _)  Z     = False
 limitedNStep (_ :: xs) (S n) = limitedNStep xs n
 data Limited : CoList a -> Type where
   IsLimited : (n : Nat ** limitedNStep xs n = True) -> Limited xs
+-- base.Data.List.Quantifiers
+-- A proof that all elements of a list satisfy a property. It is a list of
+-- proofs, corresponding element-wise to the `List`.
+namespace A
+  data All : (P : a -> Type) -> List a -> Type where
+    Nil : {P : a -> Type} -> All P Nil
+    (::) : {P : a -> Type} -> {xs : List a} -> P x -> All P xs -> All P (x :: xs)
 -- ---------------------------------
 mutual
   public export
@@ -258,8 +265,7 @@ mutual
   public export
   data AllLimited : Nat -> Type where
     -- 割数列が全て有限長なら AllLimited
-    MakeAllLimited : (n : Nat) -> (the (List Type -> Type) head) (map Limited (ProofColDivSeqBase.allDivSeq n))
-      -> AllLimited n
+    MakeAllLimited : (n : Nat) -> All Limited (ProofColDivSeqBase.allDivSeq n) -> AllLimited n
     -- このコンストラクタの正当性は、拙作 "divseq2" より保証される
     IsFtoA : (z : Nat) -> FirstLimited z -> AllLimited z
   --Uninhabited (AllLimited xs) where --使わなかった
