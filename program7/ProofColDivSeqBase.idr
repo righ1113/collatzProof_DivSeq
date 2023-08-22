@@ -219,9 +219,6 @@ mutual
     IsFirstLimited02    : (l : Nat)
       -> AllLimited l
         -> FirstLimited (S (((S (l+l))+(S (l+l))) + ((S (l+l))+(S (l+l))) + ((S (l+l))+(S (l+l)))))
-    IsFirstLimited02_2    : (l : Nat)
-      -> AllLimited l
-        -> FirstLimited (S (S (S (S (((l+l)+(l+l)) + ((l+l)+(l+l)) + ((l+l)+(l+l)))))))
     IsFirstLimited03    : (m : Nat)
       -> AllLimited (m+m)
         -> FirstLimited (S (((S (S ((m+m+m)+(m+m+m))))+(S (S ((m+m+m)+(m+m+m))))) + ((S (S ((m+m+m)+(m+m+m))))+(S (S ((m+m+m)+(m+m+m))))) + ((S (S ((m+m+m)+(m+m+m))))+(S (S ((m+m+m)+(m+m+m)))))))
