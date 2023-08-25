@@ -216,6 +216,21 @@ namespace A
     Nil : {P : a -> Type} -> All P Nil
     (::) : {P : a -> Type} -> {xs : List a} -> P x -> All P xs -> All P (x :: xs)
 -- ---------------------------------
+syntax no02_12t07 = (S (S (S (S (S ((l+l)+(l+l)) + S ((l+l)+(l+l)) + S ((l+l)+(l+l)))))))
+syntax noxx_12t13 = (S (S (S (S (S (S (l+l)+S (l+l)) + S (S (l+l)+S (l+l)) + S (S (l+l)+S (l+l)))))))
+
+syntax no03_36t13 = (S (S (S (S (S (S ((m+m+m)+(m+m+m))+S ((m+m+m)+(m+m+m))) + S (S ((m+m+m)+(m+m+m))+S ((m+m+m)+(m+m+m))) + S (S ((m+m+m)+(m+m+m))+S ((m+m+m)+(m+m+m))))))))
+syntax no04_36t25 = (S (S (S (S (S (S (S (m+m+m)+S (m+m+m))+S (S (m+m+m)+S (m+m+m))) + S (S (S (m+m+m)+S (m+m+m))+S (S (m+m+m)+S (m+m+m))) + S (S (S (m+m+m)+S (m+m+m))+S (S (m+m+m)+S (m+m+m))))))))
+syntax no05_36t37 = (S (S (S (S (S (S (S (S (m+m+m))+S (S (m+m+m)))+S (S (S (m+m+m))+S (S (m+m+m)))) + S (S (S (S (m+m+m))+S (S (m+m+m)))+S (S (S (m+m+m))+S (S (m+m+m)))) + S (S (S (S (m+m+m))+S (S (m+m+m)))+S (S (S (m+m+m))+S (S (m+m+m)))))))))
+
+syntax no06_18t04 = (S (S (S (S (((l+l+l)+(l+l+l)) + ((l+l+l)+(l+l+l)) + ((l+l+l)+(l+l+l)))))))
+syntax no07_18t10 = (S (S (S (S ((S (l+l+l)+S (l+l+l)) + (S (l+l+l)+S (l+l+l)) + (S (l+l+l)+S (l+l+l)))))))
+syntax no08_18t16 = (S (S (S (S ((S (S (l+l+l))+S (S (l+l+l))) + (S (S (l+l+l))+S (S (l+l+l))) + (S (S (l+l+l))+S (S (l+l+l))))))))
+
+syntax no12_18t06 = (S (S (S ((S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l)))))))
+syntax no13_18t12 = (S (S (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))))
+syntax no14_18t18 = (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l)))))))))
+
 mutual
   public export
   data FirstLimited : Nat -> Type where
@@ -225,25 +240,25 @@ mutual
     IsFirstLimited01    : FirstLimited 1 -- 6*<1>+3 = 9
     IsFirstLimited02    : (l : Nat)
       -> AllLimited l
-        -> FirstLimited (S (((S (l+l))+(S (l+l))) + ((S (l+l))+(S (l+l))) + ((S (l+l))+(S (l+l)))))
+        -> FirstLimited no02_12t07
     IsFirstLimited03    : (m : Nat)
       -> AllLimited (m+m)
-        -> FirstLimited (S (((S (S ((m+m+m)+(m+m+m))))+(S (S ((m+m+m)+(m+m+m))))) + ((S (S ((m+m+m)+(m+m+m))))+(S (S ((m+m+m)+(m+m+m))))) + ((S (S ((m+m+m)+(m+m+m))))+(S (S ((m+m+m)+(m+m+m)))))))
+        -> FirstLimited no03_36t13
     IsFirstLimited04    : (m : Nat)
       -> AllLimited (S ((m+m)+(m+m)))
-        -> FirstLimited (S (((S (S ((S (m+m+m))+(S (m+m+m)))))+(S (S ((S (m+m+m))+(S (m+m+m)))))) + ((S (S ((S (m+m+m))+(S (m+m+m)))))+(S (S ((S (m+m+m))+(S (m+m+m)))))) + ((S (S ((S (m+m+m))+(S (m+m+m)))))+(S (S ((S (m+m+m))+(S (m+m+m))))))))
+        -> FirstLimited no04_36t25
     IsFirstLimited05    : (m : Nat)
       -> AllLimited (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
-        -> FirstLimited (S (((S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))+(S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))) + ((S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))+(S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))) + ((S (S ((S (S (m+m+m)))+(S (S (m+m+m))))))+(S (S ((S (S (m+m+m)))+(S (S (m+m+m)))))))))
+        -> FirstLimited no05_36t37
     IsFirstLimited06    : (l : Nat)
       -> AllLimited (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
-        -> FirstLimited (S ((S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l)))))
+        -> FirstLimited no06_18t04
     IsFirstLimited07    : (l : Nat)
       -> AllLimited (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
-        -> FirstLimited (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))
+        -> FirstLimited no07_18t10
     IsFirstLimited08    : (l : Nat)
       -> AllLimited (S (S (S ((l+l)+(l+l)))))
-        -> FirstLimited (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l)))))))
+        -> FirstLimited no08_18t16
     IsFirstLimited09    : (j : Nat)
       -> AllLimited j
         -> FirstLimited (S (S (plus (plus j j) j)))
@@ -253,13 +268,13 @@ mutual
         -> FirstLimited (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
     IsFirstLimited12    : (l : Nat)
       -> AllLimited (l+l)
-        -> FirstLimited (S (S (S ((S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l))) + (S ((l+l+l)+(l+l+l)))))))
+        -> FirstLimited no12_18t06
     IsFirstLimited13    : (l : Nat)
       -> AllLimited (S ((l+l)+(l+l)))
-        -> FirstLimited (S (S (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S (l+l+l))))))))
+        -> FirstLimited no13_18t12
     IsFirstLimited14    : (l : Nat)
       -> AllLimited (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
-        -> FirstLimited (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l)))))))))
+        -> FirstLimited no14_18t18
 
 
   public export
