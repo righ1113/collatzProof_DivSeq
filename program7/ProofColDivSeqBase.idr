@@ -162,7 +162,7 @@ divSeq n = divSeq' (S (S (S (n+n+n+n+n+n)))) (S (S (S (n+n+n+n+n+n)))) where
       3+4(2t)
         3+8(2s)         2. 9. 11.  8.  6.
         3+8(1+2s)       2. 9. 11.  8.
-      3+4(1+2t)         2. 9. 11.  5. 14.
+      3+4(1+2t)         2. 9. 11.  8.  5. 14.
   1+1+2v
     1+1+2(2u)           2. 9. 11.  3. 12.
     1+1+2(1+2u)
@@ -187,7 +187,7 @@ allDivSeq (S w) with (parity w)
             in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [2, 1, -2] `dsp` divSeq (4*x+8*s+4)]
       allDivSeq (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t)))))) | Even | Odd  | Odd
         = let x = (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t))))))
-          in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [5, 0, -4] `dsp` divSeq (4*x+4*t+9), [5, -1, -2] `dsp` divSeq (2*x+2*t+11)]
+          in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [2, 1, -2] `dsp` divSeq (4*x+4+4*t), [5, 0, -4] `dsp` divSeq (4*x+4*t+9), [5, -1, -2] `dsp` divSeq (2*x+2*t+11)]
   allDivSeq (S (S (v + v))) | Odd  with (parity v)
     allDivSeq (S (S ((u + u) + (u + u))))         | Odd  | Even
       = let x = (S (S ((u + u) + (u + u))))
