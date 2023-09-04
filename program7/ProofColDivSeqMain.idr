@@ -26,8 +26,8 @@ import Sub14LTE108t111
 
 -- 示すのに、整礎帰納法を使っている
 -- 最終的な定理
-LimitedDivSeq : (n : Nat) -> FirstLimited n
-LimitedDivSeq n = wfInd {P=FirstLimited} {rel=LT'} step n where
+limitedDivSeq : (n : Nat) -> FirstLimited n
+limitedDivSeq n = wfInd {P=FirstLimited} {rel=LT'} step n where
   step : (x : Nat) -> ((y : Nat) -> LT' y x -> FirstLimited y) -> FirstLimited x
   step Z         _  = IsFirstLimited10 -- 6*<0>+3 = 3
   step (S Z)     _  = IsFirstLimited01 -- 6*<1>+3 = 9
