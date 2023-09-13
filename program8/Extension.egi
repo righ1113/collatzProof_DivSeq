@@ -1,0 +1,87 @@
+-- Egison Version == 4.1.2
+
+--
+-- Codes
+--
+
+{-
+  star変換
+  x ≡ 3 mod 9 	A[6,-4] y=4x/3-7 	B[1,-2] y=x/6-1/2
+  x ≡ 6 mod 9 	C[4,-4] y=x/3-2 	D[3,-2] y=2x/3-1
+  x ≡ 0 mod 9 	E[2,-4] y=x/12-3/4 	F[5,-2] y=8x/3-3
+-}
+def A (x, sequ) := ((4 * x) / 3  - 7    , 6 :: (((head sequ) - 4) :: (tail sequ)) )
+def B (x, sequ) := (      x / 6  - 1 / 2, 1 :: (((head sequ) - 2) :: (tail sequ)) )
+def C (x, sequ) := (      x / 3  - 2    , 4 :: (((head sequ) - 4) :: (tail sequ)) )
+def D (x, sequ) := ((2 * x) / 3  - 1    , 3 :: (((head sequ) - 2) :: (tail sequ)) )
+def E (x, sequ) := (      x / 12 - 3 / 4, 2 :: (((head sequ) - 4) :: (tail sequ)) )
+def F (x, sequ) := ((8 * x) / 3  - 3    , 5 :: (((head sequ) - 2) :: (tail sequ)) )
+
+
+-- 拡張star変換
+-- No.1 none
+
+-- No.2 E
+
+-- No.3 DE
+def DE (x, sequ) := D (E (x, sequ))
+-- No.4 AE
+def AE (x, sequ) := A (E (x, sequ))
+-- No.5 FE
+def FE (x, sequ) := F (E (x, sequ))
+
+-- No.6 CF
+def CF (x, sequ) := C (F (x, sequ))
+-- No.7 BF
+def BF (x, sequ) := B (F (x, sequ))
+-- No.8 EF
+def EF (x, sequ) := E (F (x, sequ))
+
+-- No.9 C
+
+-- No.10 none
+
+-- No.11 B
+
+-- No.12 DB
+def DB (x, sequ) := D (B (x, sequ))
+-- No.13 AB
+def AB (x, sequ) := A (B (x, sequ))
+-- No.14 FB
+def FB (x, sequ) := F (B (x, sequ))
+
+
+-- 拡張コラッツ操作
+def extCollatz (x, sequ) :=
+  (((3 * x) + 1) / (2 ^ (head sequ)), tail sequ)
+
+def rewriteRuleForCollatz term :=
+  match term as mathExpr with
+    | $a / (#16 * #`(^) #2 ($y + #(-4))) -> a /' (2 ^' y)
+    | $a / (#4  * #`(^) #2 ($y + #(-2))) -> a /' (2 ^' y)
+    | _                                  -> term
+
+def exponentRewrite (x, sequ) := (rewriteRuleForCollatz x, sequ)
+
+def myTest := extCollatz (x, [y, s]) = exponentRewrite (extCollatz (extCollatz (E (x, [y, s]))))
+def myTest2 := extCollatz (x, [y, s1, s2]) = exponentRewrite (extCollatz (extCollatz (extCollatz (DE (x, [y, s1, s2])))))
+
+
+
+--
+-- Tests
+--
+-- $ egison -t Extension.egi
+
+-- 拡張コラッツ操作2回
+assertEqual "twice"
+  (map 1#(extCollatz (x, [y, s]) = exponentRewrite (extCollatz (extCollatz (%1 (x, [y, s]))))) [E, C, B])
+  [True, True, True]
+
+-- 拡張コラッツ操作3回
+assertEqual "third time"
+  (map 1#(extCollatz (x, [y, s]) = exponentRewrite (extCollatz (extCollatz (extCollatz (%1 (x, [y, s])))))) [DE, AE, FE, CF, BF, EF, DB, AB, FB])
+  [True, True, True, True, True, True, True, True, True]
+
+
+
