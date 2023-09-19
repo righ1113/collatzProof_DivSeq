@@ -250,9 +250,9 @@ namespace A
 -- FirstLimited, AllLimited
 public export
 data AllL : Nat -> Type where
--- postulate で定義
---  MakeAllL : (n : Nat) -> All Limited (Base.allDivSeq n)
---    -> Cont (AllL n) (FirstL n)
+-- 割数列が全て有限長なら AllLimited
+  MakeAllL : (n : Nat) -> All Limited (ProofColDivSeqBase.allDivSeq n)
+    -> AllL n
 --Uninhabited (AllLimited xs) where --使わなかった
 --  uninhabited a impossible
 --allToVoid : (x : Nat) -> Not $ AllLimited (allDivSeq (S x))
@@ -263,6 +263,7 @@ data FirstL : Nat -> Type where
   MakeFirstL : (n : Nat) -> Limited ((the (List (CoList Integer) -> CoList Integer) head) (ProofColDivSeqBase.allDivSeq n))
     -> FirstL n
   IsFirstL01 : FirstL 1 -- 6*<1>+3 = 9
+  -- allToCont より Cont (AllL l) (FirstL l) は AllL l を内包しているから、そこから FirstL no02_12t07 が言える
   IsFirstL02 : (l : Nat)
     -> Cont (AllL l) (FirstL l)
       -> FirstL no02_12t07
@@ -300,6 +301,14 @@ data FirstL : Nat -> Type where
   IsFirstL14 : (l : Nat)
     -> Cont (AllL (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))) (FirstL (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l)))))))))
       -> FirstL no14_18t18
+-- ---------------------------------
+
+-- ---------------------------------
+allToCont : (n : Nat) -> AllL n -> Cont (AllL n) (FirstL n)
+allToCont n a = MkCont (\_=> a)
+-- 割数列が全て有限長なら Cont AllLimited
+makeContAllL : (n : Nat) -> All Limited (ProofColDivSeqBase.allDivSeq n) -> Cont (AllL n) (FirstL n)
+makeContAllL n = allToCont n . MakeAllL n
 -- ---------------------------------
 
 
