@@ -263,7 +263,7 @@ data FirstL : Nat -> Type where
   MakeFirstL : (n : Nat) -> Limited ((the (List (CoList Integer) -> CoList Integer) head) (ProofColDivSeqBase.allDivSeq n))
     -> FirstL n
   IsFirstL01 : FirstL 1 -- 6*<1>+3 = 9
-  -- allToCont より Cont (AllL l) (FirstL l) は AllL l を内包しているから、そこから FirstL no02_12t07 が言える
+  -- makeContAllL より All Limited (allDivSeq l) -> Cont (AllL l) (FirstL l) だから、そこから FirstL no02_12t07 が言える
   IsFirstL02 : (l : Nat)
     -> Cont (AllL l) (FirstL l)
       -> FirstL no02_12t07
