@@ -84,4 +84,10 @@ limitedDivSeq n = runCont callCC id where
   callCC = MkCont (\k => runCont ((wfCollatz (\_,a => MkCont (\q => q a))) n) k)
 
 
+-- おまけ
+-- allDivSeq の先頭要素(つまり divSeq n)が有限長であるということ
+bonus : (n : Nat) -> Limited ((myHead (divSeq Z)) (ProofColDivSeqBase.allDivSeq n))
+bonus n = MakeLimited n (limitedDivSeq n)
+
+
 

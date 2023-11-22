@@ -229,14 +229,14 @@ record Cont (r : Type) (a : Type) where
 -- ---------------------------------
 
 -- ---------------------------------
+myHead : a -> List a -> a
+myHead a []       = a
+myHead _ (x :: _) = x
 -- Limited
 limitedNStep : CoList a -> Nat -> Bool
 limitedNStep []        _     = True
 limitedNStep (_ :: _)  Z     = False
 limitedNStep (_ :: xs) (S n) = limitedNStep xs n
-public export
-data Limited : CoList a -> Type where
-  IsLimited : (n : Nat ** limitedNStep xs n = True) -> Limited xs
 -- base.Data.List.Quantifiers
 -- A proof that all elements of a list satisfy a property. It is a list of
 -- proofs, corresponding element-wise to the `List`.
@@ -244,63 +244,68 @@ namespace A
   data All : (P : a -> Type) -> List a -> Type where
     Nil : {P : a -> Type} -> All P Nil
     (::) : {P : a -> Type} -> {xs : List a} -> P x -> All P xs -> All P (x :: xs)
+mutual
+  public export
+  data Limited : CoList a -> Type where
+    IsLimited   : (n : Nat ** limitedNStep xs n = True) -> Limited xs
+    MakeLimited : (n : Nat) -> FirstL n -> Limited ((myHead (divSeq Z)) (ProofColDivSeqBase.allDivSeq n))
 -- ---------------------------------
 
 -- ---------------------------------
 -- FirstLimited, AllLimited
-public export
-data AllL : Nat -> Type where
--- 割数列が全て有限長なら AllLimited
-  MakeAllL : (n : Nat) -> All Limited (ProofColDivSeqBase.allDivSeq n)
-    -> AllL n
+  public export
+  data AllL : Nat -> Type where
+  -- 割数列が全て有限長なら AllLimited
+    MakeAllL : (n : Nat) -> All Limited (ProofColDivSeqBase.allDivSeq n)
+      -> AllL n
 --Uninhabited (AllLimited xs) where --使わなかった
 --  uninhabited a impossible
 --allToVoid : (x : Nat) -> Not $ AllLimited (allDivSeq (S x))
 --allToVoid x prf impossible
-public export
-data FirstL : Nat -> Type where
-  -- 先頭の割数列が有限長なら FirstLimited
-  MakeFirstL : (n : Nat) -> Limited ((the (List (CoList Integer) -> CoList Integer) head) (ProofColDivSeqBase.allDivSeq n))
-    -> FirstL n
-  IsFirstL01 : FirstL 1 -- 6*<1>+3 = 9
-  -- makeContAllL より All Limited (allDivSeq l) -> Cont (AllL l) (FirstL l) だから、そこから FirstL no02_12t07 が言える
-  IsFirstL02 : (l : Nat)
-    -> Cont (AllL l) (FirstL l)
-      -> FirstL no02_12t07
-  IsFirstL03 : (m : Nat)
-    -> Cont (AllL (m+m)) (FirstL (m+m))
-      -> FirstL no03_36t13
-  IsFirstL04 : (m : Nat)
-    -> Cont (AllL (S ((m+m)+(m+m)))) (FirstL (S ((m+m)+(m+m))))
-      -> FirstL no04_36t25
-  IsFirstL05 : (m : Nat)
-    -> Cont (AllL (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))) (FirstL (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m)))))))))
-      -> FirstL no05_36t37
-  IsFirstL06 : (l : Nat)
-    -> Cont (AllL (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))) (FirstL (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l)))))
-      -> FirstL no06_18t04
-  IsFirstL07 : (l : Nat)
-    -> Cont (AllL (S (S (S (S (l+l+l+l)+(l+l+l+l)))))) (FirstL (S (S (S (S (l+l+l+l)+(l+l+l+l))))))
-      -> FirstL no07_18t10
-  IsFirstL08 : (l : Nat)
-    -> Cont (AllL (S (S (S ((l+l)+(l+l)))))) (FirstL (S (S (S ((l+l)+(l+l))))))
-      -> FirstL no08_18t16
-  IsFirstL09 : (j : Nat)
-    -> Cont (AllL j) (FirstL j)
-      -> FirstL (S (S (plus (plus j j) j)))
-  IsFirstL10 : FirstL 0 -- 6*<0>+3 = 3
-  IsFirstL11 : (k : Nat)
-    -> Cont (AllL k) (FirstL k)
-      -> FirstL (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
-  IsFirstL12 : (l : Nat)
-    -> Cont (AllL (l+l)) (FirstL (l+l))
-      -> FirstL no12_18t06
-  IsFirstL13 : (l : Nat)
-    -> Cont (AllL (S ((l+l)+(l+l)))) (FirstL (S ((l+l)+(l+l))))
-      -> FirstL no13_18t12
-  IsFirstL14 : (l : Nat)
-    -> Cont (AllL (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))) (FirstL (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l)))))))))
-      -> FirstL no14_18t18
+  public export
+  data FirstL : Nat -> Type where
+    -- 先頭の割数列が有限長なら FirstLimited
+    MakeFirstL : (n : Nat) -> Limited ((myHead (divSeq Z)) (ProofColDivSeqBase.allDivSeq n))
+      -> FirstL n
+    IsFirstL01 : FirstL 1 -- 6*<1>+3 = 9
+    -- makeContAllL より All Limited (allDivSeq l) -> Cont (AllL l) (FirstL l) だから、そこから FirstL no02_12t07 が言える
+    IsFirstL02 : (l : Nat)
+      -> Cont (AllL l) (FirstL l)
+        -> FirstL no02_12t07
+    IsFirstL03 : (m : Nat)
+      -> Cont (AllL (m+m)) (FirstL (m+m))
+        -> FirstL no03_36t13
+    IsFirstL04 : (m : Nat)
+      -> Cont (AllL (S ((m+m)+(m+m)))) (FirstL (S ((m+m)+(m+m))))
+        -> FirstL no04_36t25
+    IsFirstL05 : (m : Nat)
+      -> Cont (AllL (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))) (FirstL (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m)))))))))
+        -> FirstL no05_36t37
+    IsFirstL06 : (l : Nat)
+      -> Cont (AllL (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))) (FirstL (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l)))))
+        -> FirstL no06_18t04
+    IsFirstL07 : (l : Nat)
+      -> Cont (AllL (S (S (S (S (l+l+l+l)+(l+l+l+l)))))) (FirstL (S (S (S (S (l+l+l+l)+(l+l+l+l))))))
+        -> FirstL no07_18t10
+    IsFirstL08 : (l : Nat)
+      -> Cont (AllL (S (S (S ((l+l)+(l+l)))))) (FirstL (S (S (S ((l+l)+(l+l))))))
+        -> FirstL no08_18t16
+    IsFirstL09 : (j : Nat)
+      -> Cont (AllL j) (FirstL j)
+        -> FirstL (S (S (plus (plus j j) j)))
+    IsFirstL10 : FirstL 0 -- 6*<0>+3 = 3
+    IsFirstL11 : (k : Nat)
+      -> Cont (AllL k) (FirstL k)
+        -> FirstL (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
+    IsFirstL12 : (l : Nat)
+      -> Cont (AllL (l+l)) (FirstL (l+l))
+        -> FirstL no12_18t06
+    IsFirstL13 : (l : Nat)
+      -> Cont (AllL (S ((l+l)+(l+l)))) (FirstL (S ((l+l)+(l+l))))
+        -> FirstL no13_18t12
+    IsFirstL14 : (l : Nat)
+      -> Cont (AllL (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))) (FirstL (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l)))))))))
+        -> FirstL no14_18t18
 -- ---------------------------------
 
 -- ---------------------------------
