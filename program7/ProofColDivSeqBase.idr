@@ -281,7 +281,9 @@ mutual
   data AllLimited : Nat -> Type where
     -- 割数列が全て有限長なら AllLimited
     MakeAllLimited : (n : Nat) -> All Limited (ProofColDivSeqBase.allDivSeq n) -> AllLimited n
-    -- このコンストラクタの正当性は、拙作 "divseq2" より保証される
+    -- ↓このコンストラクタの正当性は、以下より保証される
+    -- 6t+3(このプログラムの全ての数) は合流する。（剰余コラッツ予想より）
+    -- よって、z と同じコラッツ値を持つ拡張完全割数列が合流する -> First z -> All z
     IsFtoA : (z : Nat) -> FirstLimited z -> AllLimited z
   --Uninhabited (AllLimited xs) where --使わなかった
   --  uninhabited a impossible
