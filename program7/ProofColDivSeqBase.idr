@@ -282,8 +282,8 @@ mutual
     -- 割数列が全て有限長なら AllLimited
     MakeAllLimited : (n : Nat) -> All Limited (ProofColDivSeqBase.allDivSeq n) -> AllLimited n
     -- ↓このコンストラクタの正当性は、以下より保証される
-    -- Allの各要素 はそれぞれ剰余コラッツ予想が成り立つ。
-    -- コラッツに反例がある場合、 Allの各要素 全てに反例がある。
+    -- First はそれぞれ剰余コラッツ予想が成り立つ。
+    -- なのであるAllでコラッツが偽の場合、あるAll の中にある First にも反例がある。
     -- よって、¬All z -> ¬First z
     IsFtoA : (z : Nat) -> FirstLimited z -> AllLimited z
   --Uninhabited (AllLimited xs) where --使わなかった
