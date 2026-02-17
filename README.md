@@ -6,6 +6,7 @@
 <br />
 
 # 変更履歴
+26/02/17　program9 をリリースしました  
 23/09/13　program7 と program8 は両方有効です  
 23/08/22　復活しました。　program7 を見てください  
 23/01/07　こちらは閉めます。続きはこっちで [divseq2](https://github.com/righ1113/divSeq2)  
