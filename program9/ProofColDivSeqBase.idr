@@ -116,13 +116,6 @@ mod3 (S (S (S k))) with (mod3 k)
 
 
 -- ---------------------------------
-dsp : List Integer -> CoList Integer -> CoList Integer
-dsp _                      []        = []
-dsp []                    (y :: ys) = y  :: ys
-dsp (x :: [])             (y :: ys) = y  :: ys
-dsp (x1 :: x2 :: [])      (y :: ys) = x1 :: (x2 + y) :: ys
-dsp (x1 :: x2 :: x3 :: _) (y :: ys) = x1 :: x2       :: (x3 + y) :: ys
-
 countEven : Nat -> Nat -> Nat -> (Nat, Nat)
 countEven n Z      acc = (acc, n)
 countEven n (S nn) acc =
@@ -143,63 +136,6 @@ divSeq n = divSeq' (S (S (S (n+n+n+n+n+n)))) (S (S (S (n+n+n+n+n+n)))) where
         (unfoldr (\b => if b <= 1 then Nothing
                                   else Just (countEven (b*3+1) (b*3+1) 0) ) (S (j + j)))
 
-{-
-72t+45  E[2,-4] y=x/12-3/4  6t+3        12x+7
-*8.                    <---------------------
-108t+99=6(18t+16)+3 EF[2,1,-2] y=2x/9-1 24t+21=6(4t+3)+3         4x+4+2t
-*6.
-108t+27=6(18t+4)+3  CF[4,1,-2] y=8x/9-3  96t+21=6(16t+3)+3       x+1+2t
-*5.
-216t+225=6(36t+37)+3  FE[5,0,-4] y=2x/9-5  48t+45=6(8t+7)+3      4x+9+4t
-*14.
-108t+111=6(18t+18)+3  FB[5,-1,-2] y=4x/9-13/3  48t+45=6(8t+7)+3  2x+11+2t
-
-0
-1+w
-  1+2v
-    1+2(2u)             2. 9. 11.  4. 13.
-    1+2(1+2u)
-      3+4(2t)
-        3+8(2s)         2. 9. 11.  8.  6.
-        3+8(1+2s)       2. 9. 11.  8.
-      3+4(1+2t)         2. 9. 11.  8.  5. 14.
-  1+1+2v
-    1+1+2(2u)           2. 9. 11.  3. 12.
-    1+1+2(1+2u)
-      4+4(2t)           2. 9. 11.  3. 12.  7.
-      4+4(1+2t)         2. 9. 11.  3. 12.
--}
--- この部分の実装は、コンストラクタIsFirstLimited01~14の正当性を補強している
-allDivSeq : Nat -> List (CoList Integer)
-allDivSeq Z     = [[1, 4], [2, -4] `dsp` [3,2,3,4], [3, 0, -4] `dsp` [2,3,1,1,5,4], [4, -4] `dsp` [1,1,1,5,4], [1, -2] `dsp` [6], [3, -1, -2] `dsp` [1,1,2,1,4,1,3,1,2,3,4]] -- 6*<0>+3 = 3
-allDivSeq (S w) with (parity w)
-  allDivSeq (S (v + v))     | Even with (parity v)
-    allDivSeq (S ((u + u) + (u + u)))         | Even | Even
-      = let x = (S ((u + u) + (u + u)))
-        in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [6, -2, -4] `dsp` divSeq (9*x+16), [6, -3, -2] `dsp` divSeq (4*x+2*u+8)]
-    allDivSeq (S ((S (u + u)) + (S (u + u)))) | Even | Odd  with (parity u)
-      allDivSeq (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t)))))                 | Even | Odd  | Even with (parity t)
-        allDivSeq (S ((S (((s + s) + (s + s)) + ((s + s) + (s + s)))) + (S (((s + s) + (s + s)) + ((s + s) + (s + s))))))                                 | Even | Odd  | Even | Even
-          = let x = (S ((S (((s + s) + (s + s)) + ((s + s) + (s + s)))) + (S (((s + s) + (s + s)) + ((s + s) + (s + s))))))
-            in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [2, 1, -2] `dsp` divSeq (4*x+8*s+4), [4, 1, -2] `dsp` divSeq (x+2*s+1)]
-        allDivSeq (S ((S (((S (s + s)) + (S (s + s))) + ((S (s + s)) + (S (s + s))))) + (S (((S (s + s)) + (S (s + s))) + ((S (s + s)) + (S (s + s))))))) | Even | Odd  | Even | Odd
-          = let x = (S ((S (((S (s + s)) + (S (s + s))) + ((S (s + s)) + (S (s + s))))) + (S (((S (s + s)) + (S (s + s))) + ((S (s + s)) + (S (s + s)))))))
-            in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [2, 1, -2] `dsp` divSeq (4*x+8*s+4)]
-      allDivSeq (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t)))))) | Even | Odd  | Odd
-        = let x = (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t))))))
-          in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [2, 1, -2] `dsp` divSeq (4*x+4+4*t), [5, 0, -4] `dsp` divSeq (4*x+4*t+9), [5, -1, -2] `dsp` divSeq (2*x+2*t+11)]
-  allDivSeq (S (S (v + v))) | Odd  with (parity v)
-    allDivSeq (S (S ((u + u) + (u + u))))         | Odd  | Even
-      = let x = (S (S ((u + u) + (u + u))))
-        in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` divSeq (18*x+13), [3, -1, -2] `dsp` divSeq (9*x+6)]
-    allDivSeq (S (S ((S (u + u)) + (S (u + u))))) | Odd  | Odd with (parity u)
-      allDivSeq (S (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t))))))                 | Odd  | Odd | Even
-        = let x = (S (S ((S ((t + t) + (t + t))) + (S ((t + t) + (t + t))))))
-          in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` divSeq (18*x+13), [3, -1, -2] `dsp` divSeq (9*x+6), [1, 3, -2] `dsp` divSeq (2*x+2*t+2)]
-      allDivSeq (S (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t))))))) | Odd  | Odd | Odd
-        = let x = (S (S ((S ((S (t + t)) + (S (t + t)))) + (S ((S (t + t)) + (S (t + t)))))))
-          in [divSeq x, [2, -4] `dsp` divSeq (12*x+7), [4, -4] `dsp` divSeq (3*x+2), [1, -2] `dsp` divSeq (6*x+3), [3, 0, -4] `dsp` divSeq (18*x+13), [3, -1, -2] `dsp` divSeq (9*x+6)]
--- ---------------------------------
 
 
 limitedNStep : CoList a -> Nat -> Bool
@@ -208,13 +144,7 @@ limitedNStep (_ :: _)  Z     = False
 limitedNStep (_ :: xs) (S n) = limitedNStep xs n
 data Limited : CoList a -> Type where
   IsLimited : (n : Nat ** limitedNStep xs n = True) -> Limited xs
--- base.Data.List.Quantifiers
--- A proof that all elements of a list satisfy a property. It is a list of
--- proofs, corresponding element-wise to the `List`.
-namespace A
-  data All : (P : a -> Type) -> List a -> Type where
-    Nil : {P : a -> Type} -> All P Nil
-    (::) : {P : a -> Type} -> {xs : List a} -> P x -> All P xs -> All P (x :: xs)
+
 -- ---------------------------------
 syntax no02_12t07 = (S (S (S (S (S ((l+l)+(l+l)) + S ((l+l)+(l+l)) + S ((l+l)+(l+l)))))))
 syntax noxx_12t13 = (S (S (S (S (S (S (l+l)+S (l+l)) + S (S (l+l)+S (l+l)) + S (S (l+l)+S (l+l)))))))
@@ -273,58 +203,16 @@ data SameDesti : Nat -> Type where
     -> SameDesti (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
       -> SameDesti no14_18t18
 
-mutual
-  public export
-  data FirstLimited : Nat -> Type where
-    -- 先頭の割数列が有限長なら FirstLimited
-    MakeFirstLimited : (n : Nat) -> Limited ((the (List (CoList Integer) -> CoList Integer) head) (ProofColDivSeqBase.allDivSeq n))
-      -> FirstLimited n
-    IsFirstLimited01    : FirstLimited 1 -- 6*<1>+3 = 9
-    IsFirstLimited02    : (l : Nat)
-      -> AllLimited l
-        -> FirstLimited no02_12t07
-    IsFirstLimited03    : (m : Nat)
-      -> AllLimited (m+m)
-        -> FirstLimited no03_36t13
-    IsFirstLimited04    : (m : Nat)
-      -> AllLimited (S ((m+m)+(m+m)))
-        -> FirstLimited no04_36t25
-    IsFirstLimited05    : (m : Nat)
-      -> AllLimited (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
-        -> FirstLimited no05_36t37
-    IsFirstLimited06    : (l : Nat)
-      -> AllLimited (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
-        -> FirstLimited no06_18t04
-    IsFirstLimited07    : (l : Nat)
-      -> AllLimited (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
-        -> FirstLimited no07_18t10
-    IsFirstLimited08    : (l : Nat)
-      -> AllLimited (S (S (S ((l+l)+(l+l)))))
-        -> FirstLimited no08_18t16
-    IsFirstLimited09    : (j : Nat)
-      -> AllLimited j
-        -> FirstLimited (S (S (plus (plus j j) j)))
-    IsFirstLimited10    : FirstLimited 0 -- 6*<0>+3 = 3
-    IsFirstLimited11    : (k : Nat)
-      -> AllLimited k
-        -> FirstLimited (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
-    IsFirstLimited12    : (l : Nat)
-      -> AllLimited (l+l)
-        -> FirstLimited no12_18t06
-    IsFirstLimited13    : (l : Nat)
-      -> AllLimited (S ((l+l)+(l+l)))
-        -> FirstLimited no13_18t12
-    IsFirstLimited14    : (l : Nat)
-      -> AllLimited (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
-        -> FirstLimited no14_18t18
-
-
-  public export
-  data AllLimited : Nat -> Type where
-    -- 割数列が全て有限長なら AllLimited
-    MakeAllLimited : (n : Nat) -> All Limited (ProofColDivSeqBase.allDivSeq n) -> AllLimited n
-    -- 完全割数列と拡張完全割数列の行き先が同じで、First z なら All z
-    IsFtoA : ((u : Nat) -> SameDesti u) -> (z : Nat) -> FirstLimited z -> AllLimited z
+public export
+data FirstLimited : Nat -> Type where
+  -- 完全割数列が有限長なら FirstLimited
+  MakeFirstLimited : (n : Nat) -> Limited (divSeq n) -> FirstLimited n
+  IsFirstLimited01 : FirstLimited 1 -- 6*<1>+3 = 9
+  IsFirstLimited10 : FirstLimited 0 -- 6*<0>+3 = 3
+  -- 完全割数列と拡張完全割数列の行き先が同じなら、全ての完全割数列の行き先も同じ
+  -- その上で BaseCase が 1 に辿り着くなら、全ての完全割数列が 1 に辿り着く
+  IsFirstLimited   : ((u : Nat) -> SameDesti u)
+    -> FirstLimited 0 -> FirstLimited 1 -> ((n : Nat) -> FirstLimited n)
 -- ---------------------------------
 
 
