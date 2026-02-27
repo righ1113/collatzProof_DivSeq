@@ -1,6 +1,7 @@
 {-
 Docker 起動
 .bashrc に alias idris1='docker run -it --rm -v $(pwd):/src -w /src nixos/nix:latest nix-shell -p idris'
+$ source ~/.bashrc
 $ cd collatzProof_DivSeq/program9
 $ idris1
 $ idris
