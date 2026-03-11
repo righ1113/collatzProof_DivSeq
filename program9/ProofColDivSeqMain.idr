@@ -27,7 +27,6 @@ import Sub14LTE108t111
 %default total
 
 
--- (画像参照)この命題を、最小反例を使う無限降下法に書き換えられる
 -- 示すのに、整礎帰納法を使っている
 -- コラッツ値が同じ完全割数列と拡張完全割数列は、行き先が同じ
 isSameDesti : (u : Nat) -> SameDesti u
