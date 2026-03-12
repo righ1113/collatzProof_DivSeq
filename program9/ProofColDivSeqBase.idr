@@ -162,6 +162,31 @@ syntax no13_18t12 = (S (S (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S
 syntax no14_18t18 = (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l)))))))))
 
 
+data Ext : Bool -> Type where
+  E  : Ext True
+  DE : Ext True
+  AE : Ext True
+  FE : Ext True
+  CF : Ext True
+  BF : Ext True
+  EF : Ext True
+  C  : Ext True
+  B  : Ext True
+  DB : Ext True
+  AB : Ext True
+  FB : Ext True
+  Ω : Ext True -> Ext True -> Ext False
+
+data SameDestiSeed : Nat -> Type where
+  MakeSameDestiSeed : (x : Nat)
+    -> Ext True
+      -> Ext False
+        -> SameDestiSeed x
+
+confirm : (x : Nat) -> Ext True -> Ext True -> SameDestiSeed x
+confirm x ext1 ext2 = MakeSameDestiSeed x ext1 $ Ω ext1 ext2
+
+
 public export
 data SameDesti : Nat -> Type where
   IsSameDesti01    : SameDesti 1 -- 6*<1>+3 = 9
