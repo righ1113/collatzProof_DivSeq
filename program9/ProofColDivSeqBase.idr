@@ -165,17 +165,17 @@ syntax no14_18t18 = (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S 
 public export
 data Ext : Bool -> Nat -> Type where
   E  : (x : Nat) -> Ext True x
-  DE : (x : Nat) -> Ext True x
-  AE : (x : Nat) -> Ext True x
-  FE : (x : Nat) -> Ext True x
-  CF : (x : Nat) -> Ext True x
-  BF : (x : Nat) -> Ext True x
-  EF : (x : Nat) -> Ext True x
+  DE : (m : Nat) -> Ext True (m+m)
+  AE : (m : Nat) -> Ext True (S ((m+m)+(m+m)))
+  FE : (m : Nat) -> Ext True (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
+  CF : (l : Nat) -> Ext True (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
+  BF : (l : Nat) -> Ext True (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
+  EF : (l : Nat) -> Ext True (S (S (S ((l+l)+(l+l)))))
   C  : (x : Nat) -> Ext True x
   B  : (x : Nat) -> Ext True x
-  DB : (x : Nat) -> Ext True x
-  AB : (x : Nat) -> Ext True x
-  FB : (x : Nat) -> Ext True x
+  DB : (l : Nat) -> Ext True (l+l)
+  AB : (l : Nat) -> Ext True (S ((l+l)+(l+l)))
+  FB : (l : Nat) -> Ext True (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
   Ω : (x, y : Nat) -> Ext True x -> Ext True y -> Ext False x
 
 public export
