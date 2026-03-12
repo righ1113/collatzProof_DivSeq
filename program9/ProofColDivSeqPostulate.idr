@@ -14,6 +14,7 @@ import ProofColDivSeqBase
 
 --            from ProofColDivSeqMain
 -- ########################################
+postulate extAny : (x : Nat) -> Ext True x
 -- ########################################
 
 

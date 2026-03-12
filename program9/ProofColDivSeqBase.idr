@@ -162,69 +162,112 @@ syntax no13_18t12 = (S (S (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S
 syntax no14_18t18 = (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l)))))))))
 
 
-data Ext : Bool -> Type where
-  E  : Ext True
-  DE : Ext True
-  AE : Ext True
-  FE : Ext True
-  CF : Ext True
-  BF : Ext True
-  EF : Ext True
-  C  : Ext True
-  B  : Ext True
-  DB : Ext True
-  AB : Ext True
-  FB : Ext True
-  Ω : Ext True -> Ext True -> Ext False
+public export
+data Ext : Bool -> Nat -> Type where
+  E  : (x : Nat) -> Ext True x
+  DE : (x : Nat) -> Ext True x
+  AE : (x : Nat) -> Ext True x
+  FE : (x : Nat) -> Ext True x
+  CF : (x : Nat) -> Ext True x
+  BF : (x : Nat) -> Ext True x
+  EF : (x : Nat) -> Ext True x
+  C  : (x : Nat) -> Ext True x
+  B  : (x : Nat) -> Ext True x
+  DB : (x : Nat) -> Ext True x
+  AB : (x : Nat) -> Ext True x
+  FB : (x : Nat) -> Ext True x
+  Ω : (x, y : Nat) -> Ext True x -> Ext True y -> Ext False x
 
+public export
 data SameDestiSeed : Nat -> Type where
-  MakeSameDestiSeed : (x : Nat)
-    -> Ext True
-      -> Ext False
-        -> SameDestiSeed x
-
-confirm : (x : Nat) -> Ext True -> Ext True -> SameDestiSeed x
-confirm x ext1 ext2 = MakeSameDestiSeed x ext1 $ Ω ext1 ext2
+  MakeSameDestiSeed02 : (l : Nat)
+    -> Ext True l
+      -> Ext False l
+        -> SameDestiSeed l
+  MakeSameDestiSeed03 : (m : Nat)
+    -> Ext True (m+m)
+      -> Ext False (m+m)
+        -> SameDestiSeed (m+m)
+  MakeSameDestiSeed04 : (m : Nat)
+    -> Ext True (S ((m+m)+(m+m)))
+      -> Ext False (S ((m+m)+(m+m)))
+        -> SameDestiSeed (S ((m+m)+(m+m)))
+  MakeSameDestiSeed05 : (m : Nat)
+    -> Ext True (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
+      -> Ext False (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
+        -> SameDestiSeed (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
+  MakeSameDestiSeed06 : (l : Nat)
+    -> Ext True (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
+      -> Ext False (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
+        -> SameDestiSeed (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
+  MakeSameDestiSeed07 : (l : Nat)
+    -> Ext True (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
+      -> Ext False (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
+        -> SameDestiSeed (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
+  MakeSameDestiSeed08 : (l : Nat)
+    -> Ext True (S (S (S ((l+l)+(l+l)))))
+      -> Ext False (S (S (S ((l+l)+(l+l)))))
+        -> SameDestiSeed (S (S (S ((l+l)+(l+l)))))
+  MakeSameDestiSeed09 : (j : Nat)
+    -> Ext True j
+      -> Ext False j
+        -> SameDestiSeed j
+  MakeSameDestiSeed11 : (k : Nat)
+    -> Ext True k
+      -> Ext False k
+        -> SameDestiSeed k
+  MakeSameDestiSeed12 : (l : Nat)
+    -> Ext True (l+l)
+      -> Ext False (l+l)
+        -> SameDestiSeed (l+l)
+  MakeSameDestiSeed13 : (l : Nat)
+    -> Ext True (S ((l+l)+(l+l)))
+      -> Ext False (S ((l+l)+(l+l)))
+        -> SameDestiSeed (S ((l+l)+(l+l)))
+  MakeSameDestiSeed14 : (l : Nat)
+    -> Ext True (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
+      -> Ext False (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
+        -> SameDestiSeed (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
 
 
 public export
 data SameDesti : Nat -> Type where
   IsSameDesti01    : SameDesti 1 -- 6*<1>+3 = 9
-  IsSameDesti02    : (l : Nat)
+  IsSameDesti02    : (l : Nat) -> SameDestiSeed l
     -> SameDesti l
       -> SameDesti no02_12t07
-  IsSameDesti03    : (m : Nat)
+  IsSameDesti03    : (m : Nat) -> SameDestiSeed (m+m)
     -> SameDesti (m+m)
       -> SameDesti no03_36t13
-  IsSameDesti04    : (m : Nat)
+  IsSameDesti04    : (m : Nat) -> SameDestiSeed (S ((m+m)+(m+m)))
     -> SameDesti (S ((m+m)+(m+m)))
       -> SameDesti no04_36t25
-  IsSameDesti05    : (m : Nat)
+  IsSameDesti05    : (m : Nat) -> SameDestiSeed (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
     -> SameDesti (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
       -> SameDesti no05_36t37
-  IsSameDesti06    : (l : Nat)
+  IsSameDesti06    : (l : Nat) -> SameDestiSeed (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
     -> SameDesti (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
       -> SameDesti no06_18t04
-  IsSameDesti07    : (l : Nat)
+  IsSameDesti07    : (l : Nat) -> SameDestiSeed (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
     -> SameDesti (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
       -> SameDesti no07_18t10
-  IsSameDesti08    : (l : Nat)
+  IsSameDesti08    : (l : Nat) -> SameDestiSeed (S (S (S ((l+l)+(l+l)))))
     -> SameDesti (S (S (S ((l+l)+(l+l)))))
       -> SameDesti no08_18t16
-  IsSameDesti09    : (j : Nat)
+  IsSameDesti09    : (j : Nat) -> SameDestiSeed j
     -> SameDesti j
       -> SameDesti (S (S (plus (plus j j) j)))
   IsSameDesti10    : SameDesti 0 -- 6*<0>+3 = 3
-  IsSameDesti11    : (k : Nat)
+  IsSameDesti11    : (k : Nat) -> SameDestiSeed k
     -> SameDesti k
       -> SameDesti (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
-  IsSameDesti12    : (l : Nat)
+  IsSameDesti12    : (l : Nat) -> SameDestiSeed (l+l)
     -> SameDesti (l+l)
       -> SameDesti no12_18t06
-  IsSameDesti13    : (l : Nat)
+  IsSameDesti13    : (l : Nat) -> SameDestiSeed (S ((l+l)+(l+l)))
     -> SameDesti (S ((l+l)+(l+l)))
       -> SameDesti no13_18t12
-  IsSameDesti14    : (l : Nat)
+  IsSameDesti14    : (l : Nat) -> SameDestiSeed (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
     -> SameDesti (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
       -> SameDesti no14_18t18
 
