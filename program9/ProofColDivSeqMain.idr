@@ -43,9 +43,9 @@ isSameDesti u = wfInd {P=SameDesti} {rel=LT'} step u where
     -- 3 mod 9
     step (S (S (S (j + j + j))))     rs | ThreeOne with (parity j)
       step (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))  rs | ThreeOne | Even
-            = let x = (S (S (S (   (k+k)  +    (k+k)  +    (k+k))))) in
+            = let y = (S (S (S (   (k+k)  +    (k+k)  +    (k+k))))) in
               IsSameDesti11 k
-                (MakeSameDestiSeed11 k (B  k) (Ω x z (extAnyX x) (extAnyU z)))
+                (MakeSameDestiSeed11 k (B  k) (Ω y z (extAnyX y) (extAnyU z)))
                   $ rs k $ lteToLt' $ lte36t21 k
       step (S (S (S ((S (k+k)) + (S (k+k)) + (S (k+k)))))) rs | ThreeOne | Odd  with (mod3 k)
         step no12_18t06 rs | ThreeOne | Odd  | ThreeZero
