@@ -37,44 +37,67 @@ isSameDesti u = wfInd {P=SameDesti} {rel=LT'} step u where
   step (S (S x)) rs with (mod3 x)
     -- 6 mod 9
     step (S (S (j + j + j)))         rs | ThreeZero
-            = IsSameDesti09 j (MakeSameDestiSeed09 j (C j) (Ω j (S (S (j + j + j))) (C j) (extAny (S (S (j + j + j)))))) $ rs j $ lteToLt' $ lte18t15 j
+            = IsSameDesti09 j
+                (MakeSameDestiSeed09 j (C  j) (Ω (S (S (j + j + j))) z (extAnyX (S (S (j + j + j)))) (extAnyU z)))
+                  $ rs j $ lteToLt' $ lte18t15 j
     -- 3 mod 9
     step (S (S (S (j + j + j))))     rs | ThreeOne with (parity j)
       step (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))  rs | ThreeOne | Even
             = let x = (S (S (S (   (k+k)  +    (k+k)  +    (k+k))))) in
-              IsSameDesti11 k (MakeSameDestiSeed11 k (B k) (Ω k x (B k) (extAny x))) $ rs k $ lteToLt' $ lte36t21 k
+              IsSameDesti11 k
+                (MakeSameDestiSeed11 k (B  k) (Ω x z (extAnyX x) (extAnyU z)))
+                  $ rs k $ lteToLt' $ lte36t21 k
       step (S (S (S ((S (k+k)) + (S (k+k)) + (S (k+k)))))) rs | ThreeOne | Odd  with (mod3 k)
         step no12_18t06 rs | ThreeOne | Odd  | ThreeZero
-            = IsSameDesti12 l (MakeSameDestiSeed12 l (DB l) (Ω (l+l) no12_18t06 (DB l) (extAny no12_18t06))) $ rs (l+l) $ lteToLt' $ lte108t39 l
+            = IsSameDesti12 l
+                (MakeSameDestiSeed12 l (DB l) (Ω no12_18t06 z (extAnyX no12_18t06) (extAnyU z)))
+                  $ rs (l+l) $ lteToLt' $ lte108t39 l
         step no13_18t12 rs | ThreeOne | Odd  | ThreeOne
-            = let omega = Ω (S ((l+l)+(l+l))) no13_18t12 (AB l) (extAny no13_18t12) in
-              IsSameDesti13 l (MakeSameDestiSeed13 l (AB l) omega) $ rs (S ((l+l)+(l+l))) $ lteToLt' $ lte108t75 l
+            = IsSameDesti13 l
+                (MakeSameDestiSeed13 l (AB l) (Ω no13_18t12 z (extAnyX no13_18t12) (extAnyU z)))
+                  $ rs (S ((l+l)+(l+l))) $ lteToLt' $ lte108t75 l
         step no14_18t18 rs | ThreeOne | Odd  | ThreeTwo
             = let x = (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l)))))))) in
-              IsSameDesti14 l (MakeSameDestiSeed14 l (FB l) (Ω x no14_18t18 (FB l) (extAny no14_18t18))) $ rs x $ lteToLt' $ lte108t111 l
+              IsSameDesti14 l
+                (MakeSameDestiSeed14 l (FB l) (Ω no14_18t18 z (extAnyX no14_18t18) (extAnyU z)))
+                  $ rs x $ lteToLt' $ lte108t111 l
     -- 0 mod 9
     step (S (S (S (S (j + j + j))))) rs | ThreeTwo with (parity j)
       step (S (S (S (S ((k+k) + (k+k) + (k+k)))))) rs | ThreeTwo | Even with (mod3 k)
         step no06_18t04 rs | ThreeTwo | Even | ThreeZero
             = let x = (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l)))) in
-              IsSameDesti06 l (MakeSameDestiSeed06 l (CF l) (Ω x no06_18t04 (CF l) (extAny no06_18t04))) $ rs x $ lteToLt' $ lte108t27_2 l
+              IsSameDesti06 l
+                (MakeSameDestiSeed06 l (CF l) (Ω no06_18t04 z (extAnyX no06_18t04) (extAnyU z)))
+                  $ rs x $ lteToLt' $ lte108t27_2 l
         step no07_18t10 rs | ThreeTwo | Even | ThreeOne
             = let x = (S (S (S (S (l+l+l+l)+(l+l+l+l))))) in
-              IsSameDesti07 l (MakeSameDestiSeed07 l (BF l) (Ω x no07_18t10 (BF l) (extAny no07_18t10))) $ rs x $ lteToLt' $ lte108t63_2 l
+              IsSameDesti07 l
+                (MakeSameDestiSeed07 l (BF l) (Ω no07_18t10 z (extAnyX no07_18t10) (extAnyU z)))
+                  $ rs x $ lteToLt' $ lte108t63_2 l
         step no08_18t16 rs | ThreeTwo | Even | ThreeTwo
             = let x = (S (S (S ((l+l)+(l+l))))) in
-              IsSameDesti08 l (MakeSameDestiSeed08 l (EF l) (Ω x no08_18t16 (EF l) (extAny no08_18t16))) $ rs x $ lteToLt' $ lte108t99_2 l
+              IsSameDesti08 l
+                (MakeSameDestiSeed08 l (EF l) (Ω no08_18t16 z (extAnyX no08_18t16) (extAnyU z)))
+                  $ rs x $ lteToLt' $ lte108t99_2 l
       step (S (S (S (S (S (k+k) + S (k+k) + S (k+k)))))) rs | ThreeTwo | Odd with (parity k)
         step no02_12t07 rs | ThreeTwo | Odd | Even
-            = IsSameDesti02 l (MakeSameDestiSeed02 l (E l) (Ω l no02_12t07 (E l) (extAny no02_12t07))) $ rs l $ lteToLt' $ lte72t45_2 l
+            = IsSameDesti02 l
+                (MakeSameDestiSeed02 l (E  l) (Ω no02_12t07 z (extAnyX no02_12t07) (extAnyU z)))
+                  $ rs l $ lteToLt' $ lte72t45_2 l
         step noxx_12t13 rs | ThreeTwo | Odd | Odd  with (mod3 l)
           step no03_36t13 rs | ThreeTwo | Odd | Odd | ThreeZero
-            = IsSameDesti03 m (MakeSameDestiSeed03 m (DE m) (Ω (m+m) no03_36t13 (DE m) (extAny no03_36t13))) $ rs (m+m) $ lteToLt' $ lte216t81_2 m
+            = IsSameDesti03 m
+                (MakeSameDestiSeed03 m (DE m) (Ω no03_36t13 z (extAnyX no03_36t13) (extAnyU z)))
+                  $ rs (m+m) $ lteToLt' $ lte216t81_2 m
           step no04_36t25 rs | ThreeTwo | Odd | Odd | ThreeOne
-            = IsSameDesti04 m (MakeSameDestiSeed04 m (AE m) (Ω (S ((m+m)+(m+m))) no04_36t25 (AE m) (extAny no04_36t25))) $ rs (S ((m+m)+(m+m))) $ lteToLt' $ lte216t153_2 m
+            = IsSameDesti04 m
+                (MakeSameDestiSeed04 m (AE m) (Ω no04_36t25 z (extAnyX no04_36t25) (extAnyU z)))
+                  $ rs (S ((m+m)+(m+m))) $ lteToLt' $ lte216t153_2 m
           step no05_36t37 rs | ThreeTwo | Odd | Odd | ThreeTwo
             = let x = (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m)))))))) in
-              IsSameDesti05 m (MakeSameDestiSeed05 m (FE m) (Ω x no05_36t37 (FE m) (extAny no05_36t37))) $ rs x $ lteToLt' $ lte216t225_2 m
+              IsSameDesti05 m
+                (MakeSameDestiSeed05 m (FE m) (Ω no05_36t37 z (extAnyX no05_36t37) (extAnyU z)))
+                  $ rs x $ lteToLt' $ lte216t225_2 m
 
 -- 最終的な定理
 limitedDivSeq : (n : Nat) -> FirstLimited n

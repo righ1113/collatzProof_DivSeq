@@ -14,7 +14,9 @@ import ProofColDivSeqBase
 
 --            from ProofColDivSeqMain
 -- ########################################
-postulate extAny : (x : Nat) -> Ext True x
+postulate extAnyX : (y : Nat) -> Ext True y
+postulate extAnyU : (z : Nat) -> Ext True z
+postulate z       : Nat
 -- ########################################
 
 

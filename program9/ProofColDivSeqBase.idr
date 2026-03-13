@@ -176,57 +176,57 @@ data Ext : Bool -> Nat -> Type where
   DB : (l : Nat) -> Ext True (l+l)
   AB : (l : Nat) -> Ext True (S ((l+l)+(l+l)))
   FB : (l : Nat) -> Ext True (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
-  Ω : (x, y : Nat) -> Ext True x -> Ext True y -> Ext False x
+  Ω : (y, z : Nat) -> Ext True y -> Ext True z -> Ext False y
 
 public export
 data SameDestiSeed : Nat -> Type where
   MakeSameDestiSeed02 : (l : Nat)
     -> Ext True l
-      -> Ext False l
+      -> Ext False no02_12t07
         -> SameDestiSeed l
   MakeSameDestiSeed03 : (m : Nat)
     -> Ext True (m+m)
-      -> Ext False (m+m)
+      -> Ext False no03_36t13
         -> SameDestiSeed (m+m)
   MakeSameDestiSeed04 : (m : Nat)
     -> Ext True (S ((m+m)+(m+m)))
-      -> Ext False (S ((m+m)+(m+m)))
+      -> Ext False no04_36t25
         -> SameDestiSeed (S ((m+m)+(m+m)))
   MakeSameDestiSeed05 : (m : Nat)
     -> Ext True (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
-      -> Ext False (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
+      -> Ext False no05_36t37
         -> SameDestiSeed (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
   MakeSameDestiSeed06 : (l : Nat)
     -> Ext True (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
-      -> Ext False (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
+      -> Ext False no06_18t04
         -> SameDestiSeed (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
   MakeSameDestiSeed07 : (l : Nat)
     -> Ext True (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
-      -> Ext False (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
+      -> Ext False no07_18t10
         -> SameDestiSeed (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
   MakeSameDestiSeed08 : (l : Nat)
     -> Ext True (S (S (S ((l+l)+(l+l)))))
-      -> Ext False (S (S (S ((l+l)+(l+l)))))
+      -> Ext False no08_18t16
         -> SameDestiSeed (S (S (S ((l+l)+(l+l)))))
   MakeSameDestiSeed09 : (j : Nat)
     -> Ext True j
-      -> Ext False j
+      -> Ext False (S (S (plus (plus j j) j)))
         -> SameDestiSeed j
   MakeSameDestiSeed11 : (k : Nat)
     -> Ext True k
-      -> Ext False k
+      -> Ext False (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
         -> SameDestiSeed k
   MakeSameDestiSeed12 : (l : Nat)
     -> Ext True (l+l)
-      -> Ext False (l+l)
+      -> Ext False no12_18t06
         -> SameDestiSeed (l+l)
   MakeSameDestiSeed13 : (l : Nat)
     -> Ext True (S ((l+l)+(l+l)))
-      -> Ext False (S ((l+l)+(l+l)))
+      -> Ext False no13_18t12
         -> SameDestiSeed (S ((l+l)+(l+l)))
   MakeSameDestiSeed14 : (l : Nat)
     -> Ext True (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
-      -> Ext False (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
+      -> Ext False no14_18t18
         -> SameDestiSeed (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
 
 
