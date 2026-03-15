@@ -1,7 +1,5 @@
 module ProofColDivSeqBase
 
-import ProofColDivSeqPostulate
-
 %default total
 %access export
 
@@ -165,43 +163,54 @@ syntax no14_18t18 = (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S 
 
 
 public export
+data BaseCaseFlg : Type where
+  TrueBaseCaseFlg : BaseCaseFlg
+public export
+data NotStraddleSign : Type where
+  TrueNotStraddleSign : NotStraddleSign
+public export
+data JusticeWormhole : Type where
+  Prop : (BaseCaseFlg, NotStraddleSign) -> JusticeWormhole
+
+
+public export
 data SameDesti : Nat -> Type where
   IsSameDesti01    : SameDesti 1 -- 6*<1>+3 = 9
-  IsSameDesti02    : (l : Nat) -> JusticeWormHole
+  IsSameDesti02    : (l : Nat) -> JusticeWormhole
     -> SameDesti l
       -> SameDesti no02_12t07
-  IsSameDesti03    : (m : Nat) -> JusticeWormHole
+  IsSameDesti03    : (m : Nat) -> JusticeWormhole
     -> SameDesti (m+m)
       -> SameDesti no03_36t13
-  IsSameDesti04    : (m : Nat) -> JusticeWormHole
+  IsSameDesti04    : (m : Nat) -> JusticeWormhole
     -> SameDesti (S ((m+m)+(m+m)))
       -> SameDesti no04_36t25
-  IsSameDesti05    : (m : Nat) -> JusticeWormHole
+  IsSameDesti05    : (m : Nat) -> JusticeWormhole
     -> SameDesti (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
       -> SameDesti no05_36t37
-  IsSameDesti06    : (l : Nat) -> JusticeWormHole
+  IsSameDesti06    : (l : Nat) -> JusticeWormhole
     -> SameDesti (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
       -> SameDesti no06_18t04
-  IsSameDesti07    : (l : Nat) -> JusticeWormHole
+  IsSameDesti07    : (l : Nat) -> JusticeWormhole
     -> SameDesti (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
       -> SameDesti no07_18t10
-  IsSameDesti08    : (l : Nat) -> JusticeWormHole
+  IsSameDesti08    : (l : Nat) -> JusticeWormhole
     -> SameDesti (S (S (S ((l+l)+(l+l)))))
       -> SameDesti no08_18t16
-  IsSameDesti09    : (j : Nat) -> JusticeWormHole
+  IsSameDesti09    : (j : Nat) -> JusticeWormhole
     -> SameDesti j
       -> SameDesti (S (S (plus (plus j j) j)))
   IsSameDesti10    : SameDesti 0 -- 6*<0>+3 = 3
-  IsSameDesti11    : (k : Nat) -> JusticeWormHole
+  IsSameDesti11    : (k : Nat) -> JusticeWormhole
     -> SameDesti k
       -> SameDesti (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
-  IsSameDesti12    : (l : Nat) -> JusticeWormHole
+  IsSameDesti12    : (l : Nat) -> JusticeWormhole
     -> SameDesti (l+l)
       -> SameDesti no12_18t06
-  IsSameDesti13    : (l : Nat) -> JusticeWormHole
+  IsSameDesti13    : (l : Nat) -> JusticeWormhole
     -> SameDesti (S ((l+l)+(l+l)))
       -> SameDesti no13_18t12
-  IsSameDesti14    : (l : Nat) -> JusticeWormHole
+  IsSameDesti14    : (l : Nat) -> JusticeWormhole
     -> SameDesti (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
       -> SameDesti no14_18t18
 
