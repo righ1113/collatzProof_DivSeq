@@ -1,5 +1,7 @@
 module ProofColDivSeqBase
 
+import ProofColDivSeqPostulate
+
 %default total
 %access export
 
@@ -163,111 +165,43 @@ syntax no14_18t18 = (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S 
 
 
 public export
-data Ext : Bool -> Nat -> Type where
-  E  : (x : Nat) -> Ext True x
-  DE : (m : Nat) -> Ext True (m+m)
-  AE : (m : Nat) -> Ext True (S ((m+m)+(m+m)))
-  FE : (m : Nat) -> Ext True (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
-  CF : (l : Nat) -> Ext True (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
-  BF : (l : Nat) -> Ext True (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
-  EF : (l : Nat) -> Ext True (S (S (S ((l+l)+(l+l)))))
-  C  : (x : Nat) -> Ext True x
-  B  : (x : Nat) -> Ext True x
-  DB : (l : Nat) -> Ext True (l+l)
-  AB : (l : Nat) -> Ext True (S ((l+l)+(l+l)))
-  FB : (l : Nat) -> Ext True (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
-  Ω : (y, z : Nat) -> Ext True y -> Ext True z -> Ext False y
-
-public export
-data SameDestiSeed : Nat -> Type where
-  MakeSameDestiSeed02 : (l : Nat)
-    -> Ext True l
-      -> Ext False no02_12t07
-        -> SameDestiSeed l
-  MakeSameDestiSeed03 : (m : Nat)
-    -> Ext True (m+m)
-      -> Ext False no03_36t13
-        -> SameDestiSeed (m+m)
-  MakeSameDestiSeed04 : (m : Nat)
-    -> Ext True (S ((m+m)+(m+m)))
-      -> Ext False no04_36t25
-        -> SameDestiSeed (S ((m+m)+(m+m)))
-  MakeSameDestiSeed05 : (m : Nat)
-    -> Ext True (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
-      -> Ext False no05_36t37
-        -> SameDestiSeed (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
-  MakeSameDestiSeed06 : (l : Nat)
-    -> Ext True (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
-      -> Ext False no06_18t04
-        -> SameDestiSeed (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
-  MakeSameDestiSeed07 : (l : Nat)
-    -> Ext True (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
-      -> Ext False no07_18t10
-        -> SameDestiSeed (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
-  MakeSameDestiSeed08 : (l : Nat)
-    -> Ext True (S (S (S ((l+l)+(l+l)))))
-      -> Ext False no08_18t16
-        -> SameDestiSeed (S (S (S ((l+l)+(l+l)))))
-  MakeSameDestiSeed09 : (j : Nat)
-    -> Ext True j
-      -> Ext False (S (S (plus (plus j j) j)))
-        -> SameDestiSeed j
-  MakeSameDestiSeed11 : (k : Nat)
-    -> Ext True k
-      -> Ext False (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
-        -> SameDestiSeed k
-  MakeSameDestiSeed12 : (l : Nat)
-    -> Ext True (l+l)
-      -> Ext False no12_18t06
-        -> SameDestiSeed (l+l)
-  MakeSameDestiSeed13 : (l : Nat)
-    -> Ext True (S ((l+l)+(l+l)))
-      -> Ext False no13_18t12
-        -> SameDestiSeed (S ((l+l)+(l+l)))
-  MakeSameDestiSeed14 : (l : Nat)
-    -> Ext True (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
-      -> Ext False no14_18t18
-        -> SameDestiSeed (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
-
-
-public export
 data SameDesti : Nat -> Type where
   IsSameDesti01    : SameDesti 1 -- 6*<1>+3 = 9
-  IsSameDesti02    : (l : Nat) -> SameDestiSeed l
+  IsSameDesti02    : (l : Nat) -> JusticeWormHole
     -> SameDesti l
       -> SameDesti no02_12t07
-  IsSameDesti03    : (m : Nat) -> SameDestiSeed (m+m)
+  IsSameDesti03    : (m : Nat) -> JusticeWormHole
     -> SameDesti (m+m)
       -> SameDesti no03_36t13
-  IsSameDesti04    : (m : Nat) -> SameDestiSeed (S ((m+m)+(m+m)))
+  IsSameDesti04    : (m : Nat) -> JusticeWormHole
     -> SameDesti (S ((m+m)+(m+m)))
       -> SameDesti no04_36t25
-  IsSameDesti05    : (m : Nat) -> SameDestiSeed (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
+  IsSameDesti05    : (m : Nat) -> JusticeWormHole
     -> SameDesti (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
       -> SameDesti no05_36t37
-  IsSameDesti06    : (l : Nat) -> SameDestiSeed (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
+  IsSameDesti06    : (l : Nat) -> JusticeWormHole
     -> SameDesti (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
       -> SameDesti no06_18t04
-  IsSameDesti07    : (l : Nat) -> SameDestiSeed (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
+  IsSameDesti07    : (l : Nat) -> JusticeWormHole
     -> SameDesti (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
       -> SameDesti no07_18t10
-  IsSameDesti08    : (l : Nat) -> SameDestiSeed (S (S (S ((l+l)+(l+l)))))
+  IsSameDesti08    : (l : Nat) -> JusticeWormHole
     -> SameDesti (S (S (S ((l+l)+(l+l)))))
       -> SameDesti no08_18t16
-  IsSameDesti09    : (j : Nat) -> SameDestiSeed j
+  IsSameDesti09    : (j : Nat) -> JusticeWormHole
     -> SameDesti j
       -> SameDesti (S (S (plus (plus j j) j)))
   IsSameDesti10    : SameDesti 0 -- 6*<0>+3 = 3
-  IsSameDesti11    : (k : Nat) -> SameDestiSeed k
+  IsSameDesti11    : (k : Nat) -> JusticeWormHole
     -> SameDesti k
       -> SameDesti (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
-  IsSameDesti12    : (l : Nat) -> SameDestiSeed (l+l)
+  IsSameDesti12    : (l : Nat) -> JusticeWormHole
     -> SameDesti (l+l)
       -> SameDesti no12_18t06
-  IsSameDesti13    : (l : Nat) -> SameDestiSeed (S ((l+l)+(l+l)))
+  IsSameDesti13    : (l : Nat) -> JusticeWormHole
     -> SameDesti (S ((l+l)+(l+l)))
       -> SameDesti no13_18t12
-  IsSameDesti14    : (l : Nat) -> SameDestiSeed (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
+  IsSameDesti14    : (l : Nat) -> JusticeWormHole
     -> SameDesti (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
       -> SameDesti no14_18t18
 
