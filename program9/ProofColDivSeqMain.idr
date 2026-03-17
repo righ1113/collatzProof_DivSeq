@@ -38,66 +38,66 @@ isSameDesti u = wfInd {P=SameDesti} {rel=LT'} step u where
     -- 6 mod 9
     step (S (S (j + j + j)))         rs | ThreeZero
             = IsSameDesti09 j
-                (Prop (TrueBaseCaseFlg, TrueNotStraddleSign))
-                  $ rs j $ lteToLt' $ lte18t15 j
+                (Prop j (FalseStraddleSign,
+                  rs j $ lteToLt' $ lte18t15 j))
     -- 3 mod 9
     step (S (S (S (j + j + j))))     rs | ThreeOne with (parity j)
       step (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))  rs | ThreeOne | Even
             = let y = (S (S (S (   (k+k)  +    (k+k)  +    (k+k))))) in
               IsSameDesti11 k
-                (Prop (TrueBaseCaseFlg, TrueNotStraddleSign))
-                  $ rs k $ lteToLt' $ lte36t21 k
+                (Prop k (FalseStraddleSign,
+                  rs k $ lteToLt' $ lte36t21 k))
       step (S (S (S ((S (k+k)) + (S (k+k)) + (S (k+k)))))) rs | ThreeOne | Odd  with (mod3 k)
         step no12_18t06 rs | ThreeOne | Odd  | ThreeZero
             = IsSameDesti12 l
-                (Prop (TrueBaseCaseFlg, TrueNotStraddleSign))
-                  $ rs (l+l) $ lteToLt' $ lte108t39 l
+                (Prop (l+l) (FalseStraddleSign,
+                  rs (l+l) $ lteToLt' $ lte108t39 l))
         step no13_18t12 rs | ThreeOne | Odd  | ThreeOne
             = IsSameDesti13 l
-                (Prop (TrueBaseCaseFlg, TrueNotStraddleSign))
-                  $ rs (S ((l+l)+(l+l))) $ lteToLt' $ lte108t75 l
+                (Prop (S ((l+l)+(l+l))) (FalseStraddleSign,
+                  rs (S ((l+l)+(l+l))) $ lteToLt' $ lte108t75 l))
         step no14_18t18 rs | ThreeOne | Odd  | ThreeTwo
             = let x = (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l)))))))) in
               IsSameDesti14 l
-                (Prop (TrueBaseCaseFlg, TrueNotStraddleSign))
-                  $ rs x $ lteToLt' $ lte108t111 l
+                (Prop x (FalseStraddleSign,
+                  rs x $ lteToLt' $ lte108t111 l))
     -- 0 mod 9
     step (S (S (S (S (j + j + j))))) rs | ThreeTwo with (parity j)
       step (S (S (S (S ((k+k) + (k+k) + (k+k)))))) rs | ThreeTwo | Even with (mod3 k)
         step no06_18t04 rs | ThreeTwo | Even | ThreeZero
             = let x = (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l)))) in
               IsSameDesti06 l
-                (Prop (TrueBaseCaseFlg, TrueNotStraddleSign))
-                  $ rs x $ lteToLt' $ lte108t27_2 l
+                (Prop x (FalseStraddleSign,
+                  rs x $ lteToLt' $ lte108t27_2 l))
         step no07_18t10 rs | ThreeTwo | Even | ThreeOne
             = let x = (S (S (S (S (l+l+l+l)+(l+l+l+l))))) in
               IsSameDesti07 l
-                (Prop (TrueBaseCaseFlg, TrueNotStraddleSign))
-                  $ rs x $ lteToLt' $ lte108t63_2 l
+                (Prop x (FalseStraddleSign,
+                  rs x $ lteToLt' $ lte108t63_2 l))
         step no08_18t16 rs | ThreeTwo | Even | ThreeTwo
             = let x = (S (S (S ((l+l)+(l+l))))) in
               IsSameDesti08 l
-                (Prop (TrueBaseCaseFlg, TrueNotStraddleSign))
-                  $ rs x $ lteToLt' $ lte108t99_2 l
+                (Prop x (FalseStraddleSign,
+                  rs x $ lteToLt' $ lte108t99_2 l))
       step (S (S (S (S (S (k+k) + S (k+k) + S (k+k)))))) rs | ThreeTwo | Odd with (parity k)
         step no02_12t07 rs | ThreeTwo | Odd | Even
             = IsSameDesti02 l
-                (Prop (TrueBaseCaseFlg, TrueNotStraddleSign))
-                  $ rs l $ lteToLt' $ lte72t45_2 l
+                (Prop l (FalseStraddleSign,
+                  rs l $ lteToLt' $ lte72t45_2 l))
         step noxx_12t13 rs | ThreeTwo | Odd | Odd  with (mod3 l)
           step no03_36t13 rs | ThreeTwo | Odd | Odd | ThreeZero
             = IsSameDesti03 m
-                (Prop (TrueBaseCaseFlg, TrueNotStraddleSign))
-                  $ rs (m+m) $ lteToLt' $ lte216t81_2 m
+                (Prop (m+m) (FalseStraddleSign,
+                  rs (m+m) $ lteToLt' $ lte216t81_2 m))
           step no04_36t25 rs | ThreeTwo | Odd | Odd | ThreeOne
             = IsSameDesti04 m
-                (Prop (TrueBaseCaseFlg, TrueNotStraddleSign))
-                  $ rs (S ((m+m)+(m+m))) $ lteToLt' $ lte216t153_2 m
+                (Prop (S ((m+m)+(m+m))) (FalseStraddleSign,
+                  rs (S ((m+m)+(m+m))) $ lteToLt' $ lte216t153_2 m))
           step no05_36t37 rs | ThreeTwo | Odd | Odd | ThreeTwo
             = let x = (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m)))))))) in
               IsSameDesti05 m
-                (Prop (TrueBaseCaseFlg, TrueNotStraddleSign))
-                  $ rs x $ lteToLt' $ lte216t225_2 m
+                (Prop x (FalseStraddleSign,
+                  rs x $ lteToLt' $ lte216t225_2 m))
 
 -- 最終的な定理
 limitedDivSeq : (n : Nat) -> FirstLimited n
