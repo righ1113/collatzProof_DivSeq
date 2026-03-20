@@ -167,7 +167,6 @@ mutual
   data StraddleSign : Bool -> Type where
     TrueStraddleSign  : StraddleSign True
     FalseStraddleSign : StraddleSign False
-    Chg               : Not (StraddleSign True) -> StraddleSign False
   public export
   data JusticeWormhole : Type where
     Prop : (x : Nat) -> (StraddleSign False, SameDesti x) -> JusticeWormhole
