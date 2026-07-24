@@ -25,7 +25,7 @@ import Sub14LTE108t111
 
 
 -- 示すのに、整礎帰納法を使っている
--- 最終的な定理
+-- IsFtoA【仮定】全てのzにおいて、完全割数列と拡張完全割数列の行き先は一致する を使うとコラッツは真だし、体系は矛盾しない
 limitedDivSeq : (n : Nat) -> FirstLimited n
 limitedDivSeq n = wfInd {P=FirstLimited} {rel=LT'} step n where
   step : (x : Nat) -> ((y : Nat) -> LT' y x -> FirstLimited y) -> FirstLimited x
@@ -70,6 +70,10 @@ limitedDivSeq n = wfInd {P=FirstLimited} {rel=LT'} step n where
           step no05_36t37 rs | ThreeTwo | Odd | Odd | ThreeTwo
             = let x = (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m)))))))) in
               IsFirstLimited05 m $ IsFtoA x $ rs x $ lteToLt' $ lte216t225_2 m
+
+-- コラッツが真⇒全て同じ行き先_ほぼ自明
+-- 対偶_異なる行き先のxが存在⇒コラッツは偽⇒体系は矛盾しない
+-- 【結論】コラッツが真でも偽でも、体系は矛盾しない
 
 
 

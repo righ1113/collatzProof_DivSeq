@@ -281,10 +281,7 @@ mutual
   data AllLimited : Nat -> Type where
     -- 割数列が全て有限長なら AllLimited
     MakeAllLimited : (n : Nat) -> All Limited (ProofColDivSeqBase.allDivSeq n) -> AllLimited n
-    -- ↓このコンストラクタの正当性は、以下より保証される
-    -- First はそれぞれ剰余コラッツ予想が成り立つ。
-    -- なのであるAllでコラッツが偽の場合、あるAll の中にある First にも反例がある。
-    -- よって、¬All z -> ¬First z
+    -- 【仮定】全てのzにおいて、完全割数列と拡張完全割数列の行き先は一致する
     IsFtoA : (z : Nat) -> FirstLimited z -> AllLimited z
   --Uninhabited (AllLimited xs) where --使わなかった
   --  uninhabited a impossible
