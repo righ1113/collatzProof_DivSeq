@@ -1,6 +1,9 @@
 {-
+Docker 起動
+.bashrc に alias idris1='docker run -it --rm -v $(pwd):/src -w /src nixos/nix:latest nix-shell -p idris'
+$ source ~/.bashrc
 $ cd collatzProof_DivSeq/program7
-$ chcp 65001
+$ idris1
 $ idris
 > :l ProofColDivSeqMain
 -}
@@ -24,8 +27,8 @@ import Sub14LTE108t111
 %default total
 
 
--- 示すのに、整礎帰納法を使っている
--- IsFtoA【仮定】全てのzにおいて、完全割数列と拡張完全割数列の行き先は一致する を使うとコラッツは真だし、体系は矛盾しない
+-- 1. 示すのに、整礎帰納法を使っている
+-- IsFtoA【仮定】全てのzにおいて、完全割数列と拡張完全割数列の行き先は一致する を使うとコラッツは真
 limitedDivSeq : (n : Nat) -> FirstLimited n
 limitedDivSeq n = wfInd {P=FirstLimited} {rel=LT'} step n where
   step : (x : Nat) -> ((y : Nat) -> LT' y x -> FirstLimited y) -> FirstLimited x
@@ -71,8 +74,9 @@ limitedDivSeq n = wfInd {P=FirstLimited} {rel=LT'} step n where
             = let x = (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m)))))))) in
               IsFirstLimited05 m $ IsFtoA x $ rs x $ lteToLt' $ lte216t225_2 m
 
--- コラッツが真⇒全て同じ行き先_ほぼ自明
--- 対偶_異なる行き先のxが存在⇒コラッツは偽⇒体系は矛盾しない
+-- 2. コラッツが真⇒全て同じ行き先_ほぼ自明
+-- 対偶_異なる行き先のxが存在⇒コラッツは偽
+-- 1. 2. の定理証明自体を"モデル"とする、 モデルが存在する⇒体系は無矛盾
 -- 【結論】コラッツが真でも偽でも、体系は矛盾しない
 
 
