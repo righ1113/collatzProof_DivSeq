@@ -27,81 +27,77 @@ import Sub14LTE108t111
 %default total
 
 
+-- data ColDivSeq完全割数列    : Nat(6t+3のt) -> Type (3, 9, star(G含)で定義する)
+-- data ExtDivSeq拡張完全割数列 : t            -> Type (ColDivSeq, star, extで定義する)
+-- [view type] data LimitedExtDivSeq : Nat -> Type where
+--   Is : (t -> Not . LimitedExtDivSeq BIG -> Not . LimitedExtDivSeq SMALL) の対偶
+-- [view function] limitedExtDivSeq : (u : Nat) -> LimitedExtDivSeq u (反例の最小性に反する、もしくは整礎帰納法)
+-- [view function] limitedColDivSeq : (n : Nat) -> LimitedColDivSeq n (最終的な定理、完全割数列は拡張完全割数列の部分集合)
+
+
 -- 示すのに、整礎帰納法を使っている
--- コラッツ値が同じ完全割数列と拡張完全割数列は、行き先が同じ
-isSameDesti : (u : Nat) -> SameDesti u
-isSameDesti u = wfInd {P=SameDesti} {rel=LT'} step u where
-  step : (x : Nat) -> ((y : Nat) -> LT' y x -> SameDesti y) -> SameDesti x
-  step Z         _  = IsSameDesti10 -- 6*<0>+3 = 3
-  step (S Z)     _  = IsSameDesti01 -- 6*<1>+3 = 9
+-- 拡張完全割数列は有限長
+limitedExtDivSeq : (u : Nat) -> LimitedExtDivSeq u
+limitedExtDivSeq u = wfInd {P=LimitedExtDivSeq} {rel=LT'} step u where
+  step : (x : Nat) -> ((y : Nat) -> LT' y x -> LimitedExtDivSeq y) -> LimitedExtDivSeq x
+  step Z         _  = IsLimitedExtDivSeq10 -- 6*<0>+3 = 3
+  step (S Z)     _  = IsLimitedExtDivSeq01 -- 6*<1>+3 = 9
   step (S (S x)) rs with (mod3 x)
     -- 6 mod 9
     step (S (S (j + j + j)))         rs | ThreeZero
-            = IsSameDesti09 j
-                (Prop j (FalseStraddleSign,
-                  rs j $ lteToLt' $ lte18t15 j))
+            = IsLimitedExtDivSeq09 j
+                  (rs j $ lteToLt' $ lte18t15 j)
     -- 3 mod 9
     step (S (S (S (j + j + j))))     rs | ThreeOne with (parity j)
       step (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))  rs | ThreeOne | Even
             = let y = (S (S (S (   (k+k)  +    (k+k)  +    (k+k))))) in
-              IsSameDesti11 k
-                (Prop k (FalseStraddleSign,
-                  rs k $ lteToLt' $ lte36t21 k))
+              IsLimitedExtDivSeq11 k
+                  (rs k $ lteToLt' $ lte36t21 k)
       step (S (S (S ((S (k+k)) + (S (k+k)) + (S (k+k)))))) rs | ThreeOne | Odd  with (mod3 k)
         step no12_18t06 rs | ThreeOne | Odd  | ThreeZero
-            = IsSameDesti12 l
-                (Prop (l+l) (FalseStraddleSign,
-                  rs (l+l) $ lteToLt' $ lte108t39 l))
+            = IsLimitedExtDivSeq12 l
+                  (rs (l+l) $ lteToLt' $ lte108t39 l)
         step no13_18t12 rs | ThreeOne | Odd  | ThreeOne
-            = IsSameDesti13 l
-                (Prop (S ((l+l)+(l+l))) (FalseStraddleSign,
-                  rs (S ((l+l)+(l+l))) $ lteToLt' $ lte108t75 l))
+            = IsLimitedExtDivSeq13 l
+                  (rs (S ((l+l)+(l+l))) $ lteToLt' $ lte108t75 l)
         step no14_18t18 rs | ThreeOne | Odd  | ThreeTwo
             = let x = (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l)))))))) in
-              IsSameDesti14 l
-                (Prop x (FalseStraddleSign,
-                  rs x $ lteToLt' $ lte108t111 l))
+              IsLimitedExtDivSeq14 l
+                  (rs x $ lteToLt' $ lte108t111 l)
     -- 0 mod 9
     step (S (S (S (S (j + j + j))))) rs | ThreeTwo with (parity j)
       step (S (S (S (S ((k+k) + (k+k) + (k+k)))))) rs | ThreeTwo | Even with (mod3 k)
         step no06_18t04 rs | ThreeTwo | Even | ThreeZero
             = let x = (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l)))) in
-              IsSameDesti06 l
-                (Prop x (FalseStraddleSign,
-                  rs x $ lteToLt' $ lte108t27_2 l))
+              IsLimitedExtDivSeq06 l
+                  (rs x $ lteToLt' $ lte108t27_2 l)
         step no07_18t10 rs | ThreeTwo | Even | ThreeOne
             = let x = (S (S (S (S (l+l+l+l)+(l+l+l+l))))) in
-              IsSameDesti07 l
-                (Prop x (FalseStraddleSign,
-                  rs x $ lteToLt' $ lte108t63_2 l))
+              IsLimitedExtDivSeq07 l
+                  (rs x $ lteToLt' $ lte108t63_2 l)
         step no08_18t16 rs | ThreeTwo | Even | ThreeTwo
             = let x = (S (S (S ((l+l)+(l+l))))) in
-              IsSameDesti08 l
-                (Prop x (FalseStraddleSign,
-                  rs x $ lteToLt' $ lte108t99_2 l))
+              IsLimitedExtDivSeq08 l
+                  (rs x $ lteToLt' $ lte108t99_2 l)
       step (S (S (S (S (S (k+k) + S (k+k) + S (k+k)))))) rs | ThreeTwo | Odd with (parity k)
         step no02_12t07 rs | ThreeTwo | Odd | Even
-            = IsSameDesti02 l
-                (Prop l (FalseStraddleSign,
-                  rs l $ lteToLt' $ lte72t45_2 l))
+            = IsLimitedExtDivSeq02 l
+                  (rs l $ lteToLt' $ lte72t45_2 l)
         step noxx_12t13 rs | ThreeTwo | Odd | Odd  with (mod3 l)
           step no03_36t13 rs | ThreeTwo | Odd | Odd | ThreeZero
-            = IsSameDesti03 m
-                (Prop (m+m) (FalseStraddleSign,
-                  rs (m+m) $ lteToLt' $ lte216t81_2 m))
+            = IsLimitedExtDivSeq03 m
+                  (rs (m+m) $ lteToLt' $ lte216t81_2 m)
           step no04_36t25 rs | ThreeTwo | Odd | Odd | ThreeOne
-            = IsSameDesti04 m
-                (Prop (S ((m+m)+(m+m))) (FalseStraddleSign,
-                  rs (S ((m+m)+(m+m))) $ lteToLt' $ lte216t153_2 m))
+            = IsLimitedExtDivSeq04 m
+                  (rs (S ((m+m)+(m+m))) $ lteToLt' $ lte216t153_2 m)
           step no05_36t37 rs | ThreeTwo | Odd | Odd | ThreeTwo
             = let x = (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m)))))))) in
-              IsSameDesti05 m
-                (Prop x (FalseStraddleSign,
-                  rs x $ lteToLt' $ lte216t225_2 m))
+              IsLimitedExtDivSeq05 m
+                  (rs x $ lteToLt' $ lte216t225_2 m)
 
 -- 最終的な定理
-limitedDivSeq : (n : Nat) -> FirstLimited n
-limitedDivSeq = IsFirstLimited isSameDesti IsFirstLimited10 IsFirstLimited01
+limitedColDivSeq : (n : Nat) -> LimitedColDivSeq n
+limitedColDivSeq = IsLimitedColDivSeq limitedExtDivSeq
 
 
 

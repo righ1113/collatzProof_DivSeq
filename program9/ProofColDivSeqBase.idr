@@ -162,56 +162,41 @@ syntax no13_18t12 = (S (S (S ((S ((S (l+l+l))+(S (l+l+l)))) + (S ((S (l+l+l))+(S
 syntax no14_18t18 = (S (S (S ((S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l))))) + (S ((S (S (l+l+l)))+(S (S (l+l+l)))))))))
 
 
-mutual
-  public export
-  data StraddleSign : Bool -> Type where
-    TrueStraddleSign  : StraddleSign True
-    FalseStraddleSign : StraddleSign False
-  public export
-  data JusticeWormhole : Type where
-    Prop : (x : Nat) -> (StraddleSign False, SameDesti x) -> JusticeWormhole
-  -- ∀x.(ドボン ⇒ 正負をまたぐ(ext 3 or 9 -> -3) ∨ ￢SameDesti 上x)
-  -- ∀x.(またがない ∧ SameDesti 下x ⇒ ￢ドボン)
-
-  public export
-  data SameDesti : Nat -> Type where
-    IsSameDesti01    : SameDesti 1 -- 6*<1>+3 = 9
-    IsSameDesti02    : (l : Nat) -> JusticeWormhole
-        -> SameDesti no02_12t07
-    IsSameDesti03    : (m : Nat) -> JusticeWormhole
-        -> SameDesti no03_36t13
-    IsSameDesti04    : (m : Nat) -> JusticeWormhole
-        -> SameDesti no04_36t25
-    IsSameDesti05    : (m : Nat) -> JusticeWormhole
-        -> SameDesti no05_36t37
-    IsSameDesti06    : (l : Nat) -> JusticeWormhole
-        -> SameDesti no06_18t04
-    IsSameDesti07    : (l : Nat) -> JusticeWormhole
-        -> SameDesti no07_18t10
-    IsSameDesti08    : (l : Nat) -> JusticeWormhole
-        -> SameDesti no08_18t16
-    IsSameDesti09    : (j : Nat) -> JusticeWormhole
-        -> SameDesti (S (S (plus (plus j j) j)))
-    IsSameDesti10    : SameDesti 0 -- 6*<0>+3 = 3
-    IsSameDesti11    : (k : Nat) -> JusticeWormhole
-        -> SameDesti (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
-    IsSameDesti12    : (l : Nat) -> JusticeWormhole
-        -> SameDesti no12_18t06
-    IsSameDesti13    : (l : Nat) -> JusticeWormhole
-        -> SameDesti no13_18t12
-    IsSameDesti14    : (l : Nat) -> JusticeWormhole
-        -> SameDesti no14_18t18
+public export
+data LimitedExtDivSeq : Nat -> Type where
+  IsLimitedExtDivSeq01    : LimitedExtDivSeq 1 -- 6*<1>+3 = 9
+  IsLimitedExtDivSeq02    : (l : Nat) -> LimitedExtDivSeq l
+      -> LimitedExtDivSeq no02_12t07
+  IsLimitedExtDivSeq03    : (m : Nat) -> LimitedExtDivSeq (m+m)
+      -> LimitedExtDivSeq no03_36t13
+  IsLimitedExtDivSeq04    : (m : Nat) -> LimitedExtDivSeq (S ((m+m)+(m+m)))
+      -> LimitedExtDivSeq no04_36t25
+  IsLimitedExtDivSeq05    : (m : Nat) -> LimitedExtDivSeq (S (S (S (S (S (S (S (m+m+m+m)+(m+m+m+m))))))))
+      -> LimitedExtDivSeq no05_36t37
+  IsLimitedExtDivSeq06    : (l : Nat) -> LimitedExtDivSeq (S (S (S (l+l+l+l)+(l+l+l+l)+(l+l+l+l)+(l+l+l+l))))
+      -> LimitedExtDivSeq no06_18t04
+  IsLimitedExtDivSeq07    : (l : Nat) -> LimitedExtDivSeq (S (S (S (S (l+l+l+l)+(l+l+l+l)))))
+      -> LimitedExtDivSeq no07_18t10
+  IsLimitedExtDivSeq08    : (l : Nat) -> LimitedExtDivSeq (S (S (S ((l+l)+(l+l)))))
+      -> LimitedExtDivSeq no08_18t16
+  IsLimitedExtDivSeq09    : (j : Nat) -> LimitedExtDivSeq j
+      -> LimitedExtDivSeq (S (S (plus (plus j j) j)))  -- Not . LimitedExtDivSeq BIG -> Not . LimitedExtDivSeq SMALL
+  IsLimitedExtDivSeq10    : LimitedExtDivSeq 0 -- 6*<0>+3 = 3
+  IsLimitedExtDivSeq11    : (k : Nat) -> LimitedExtDivSeq k
+      -> LimitedExtDivSeq (S (S (S (   (k+k)  +    (k+k)  +    (k+k)))))
+  IsLimitedExtDivSeq12    : (l : Nat) -> LimitedExtDivSeq (l+l)
+      -> LimitedExtDivSeq no12_18t06
+  IsLimitedExtDivSeq13    : (l : Nat) -> LimitedExtDivSeq (S ((l+l)+(l+l)))
+      -> LimitedExtDivSeq no13_18t12
+  IsLimitedExtDivSeq14    : (l : Nat) -> LimitedExtDivSeq (S (S (S (S (S (S (S (l+l+l+l)+(l+l+l+l))))))))
+      -> LimitedExtDivSeq no14_18t18
 
 public export
-data FirstLimited : Nat -> Type where
-  -- 完全割数列が有限長なら FirstLimited
-  MakeFirstLimited : (n : Nat) -> Limited (divSeq n) -> FirstLimited n
-  IsFirstLimited01 : FirstLimited 1 -- 6*<1>+3 = 9
-  IsFirstLimited10 : FirstLimited 0 -- 6*<0>+3 = 3
-  -- 完全割数列と拡張完全割数列の行き先が同じなら、全ての完全割数列の行き先も同じ
-  -- その上で BaseCase が 1 に辿り着くなら、全ての完全割数列が 1 に辿り着く
-  IsFirstLimited   : ((u : Nat) -> SameDesti u)
-    -> FirstLimited 0 -> FirstLimited 1 -> ((n : Nat) -> FirstLimited n)
+data LimitedColDivSeq : Nat -> Type where
+  -- 完全割数列が有限長なら LimitedColDivSeq
+  MakeLimitedColDivSeq : (n : Nat) -> Limited (divSeq n) -> LimitedColDivSeq n
+  IsLimitedColDivSeq   : ((u : Nat) -> LimitedExtDivSeq u)
+    -> ((n : Nat) -> LimitedColDivSeq n)
 -- ---------------------------------
 
 
