@@ -137,13 +137,25 @@ divSeq n = divSeq' (S (S (S (n+n+n+n+n+n)))) (S (S (S (n+n+n+n+n+n)))) where
                                   else Just (countEven (b*3+1) (b*3+1) 0) ) (S (j + j)))
 
 
+iterateMaybe : (f : a -> Maybe a) -> Maybe a -> CoList a
+iterateMaybe _ Nothing  = Nil
+iterateMaybe f (Just x) = x :: iterateMaybe f (f x)
+-- コラッツ操作
+col : Nat -> Maybe Nat
+col x with (parity x)
+  col (S (y + y)) | Odd  = if y == 0 then Nothing -- x = 1
+                                     else Just (3 * (S (y + y)) + 1)
+  col (y + y)     | Even = if y == 0 then Nothing -- x = 0
+                                      else Just y
 
 limitedNStep : CoList a -> Nat -> Bool
 limitedNStep []        _     = True
 limitedNStep (_ :: _)  Z     = False
 limitedNStep (_ :: xs) (S n) = limitedNStep xs n
-data Limited : CoList a -> Type where
-  IsLimited : (n : Nat ** limitedNStep xs n = True) -> Limited xs
+public export
+data Limited : Nat -> CoList a -> Type where
+  IsLimited : (n : Nat) -> (cnt ** limitedNStep (divSeq n) cnt = True)
+    -> Limited n (divSeq n)
 
 -- ---------------------------------
 syntax no02_12t07 = (S (S (S (S (S ((l+l)+(l+l)) + S ((l+l)+(l+l)) + S ((l+l)+(l+l)))))))
@@ -194,7 +206,8 @@ data LimitedExtDivSeq : Nat -> Type where
 public export
 data LimitedColDivSeq : Nat -> Type where
   -- 完全割数列が有限長なら LimitedColDivSeq
-  MakeLimitedColDivSeq : (n : Nat) -> Limited (divSeq n) -> LimitedColDivSeq n
+  MakeLimitedColDivSeq : (n : Nat) -> Limited n (divSeq n)
+    -> LimitedColDivSeq n
   IsLimitedColDivSeq   : ((u : Nat) -> LimitedExtDivSeq u)
     -> ((n : Nat) -> LimitedColDivSeq n)
 -- ---------------------------------

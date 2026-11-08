@@ -29,10 +29,10 @@ import Sub14LTE108t111
 
 -- data ColDivSeq完全割数列    : Nat(6t+3のt) -> Type (3, 9, star(G含)で定義する)
 -- data ExtDivSeq拡張完全割数列 : t            -> Type (ColDivSeq, star, extで定義する)
--- [view type] data LimitedExtDivSeq : Nat -> Type where
+-- data LimitedExtDivSeq : Nat -> Type where
 --   Is : (t -> Not . LimitedExtDivSeq BIG -> Not . LimitedExtDivSeq SMALL) の対偶
--- [view function] limitedExtDivSeq : (u : Nat) -> LimitedExtDivSeq u (反例の最小性に反する、もしくは整礎帰納法)
--- [view function] limitedColDivSeq : (n : Nat) -> LimitedColDivSeq n (最終的な定理、完全割数列は拡張完全割数列の部分集合)
+-- limitedExtDivSeq : (u : Nat) -> LimitedExtDivSeq u (反例の最小性に反する、もしくは整礎帰納法)
+-- limitedColDivSeq : (n : Nat) -> LimitedColDivSeq n (最終的な定理、完全割数列は拡張完全割数列の部分集合)
 
 
 -- 示すのに、整礎帰納法を使っている
@@ -98,6 +98,14 @@ limitedExtDivSeq u = wfInd {P=LimitedExtDivSeq} {rel=LT'} step u where
 -- 最終的な定理
 limitedColDivSeq : (n : Nat) -> LimitedColDivSeq n
 limitedColDivSeq = IsLimitedColDivSeq limitedExtDivSeq
+
+partial
+theorem : (n : Nat) -> LimitedColDivSeq n
+  -> (cnt ** limitedNStep (divSeq n) cnt = True)
+theorem n (MakeLimitedColDivSeq n (IsLimited n p)) = p
+partial
+nearCollatz : (n : Nat) -> (cnt ** limitedNStep (divSeq n) cnt = True)
+nearCollatz n = theorem n $ limitedColDivSeq n
 
 
 
