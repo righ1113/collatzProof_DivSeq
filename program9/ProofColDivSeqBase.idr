@@ -154,8 +154,8 @@ limitedNStep (_ :: _)  Z     = False
 limitedNStep (_ :: xs) (S n) = limitedNStep xs n
 public export
 data Limited : Nat -> CoList a -> Type where
-  IsLimited : (n : Nat) -> (cnt ** limitedNStep (divSeq n) cnt = True)
-    -> Limited n (divSeq n)
+  IsLimited : (n : Nat) -> (cnt ** limitedNStep (iterateMaybe ProofColDivSeqBase.col (Just (S (S (S (n+n+n+n+n+n)))))) cnt = True)
+    -> Limited n (iterateMaybe ProofColDivSeqBase.col (Just (S (S (S (n+n+n+n+n+n))))))
 
 -- ---------------------------------
 syntax no02_12t07 = (S (S (S (S (S ((l+l)+(l+l)) + S ((l+l)+(l+l)) + S ((l+l)+(l+l)))))))
@@ -206,7 +206,7 @@ data LimitedExtDivSeq : Nat -> Type where
 public export
 data LimitedColDivSeq : Nat -> Type where
   -- 完全割数列が有限長なら LimitedColDivSeq
-  MakeLimitedColDivSeq : (n : Nat) -> Limited n (divSeq n)
+  MakeLimitedColDivSeq : (n : Nat) -> Limited n (iterateMaybe ProofColDivSeqBase.col (Just (S (S (S (n+n+n+n+n+n))))))
     -> LimitedColDivSeq n
   IsLimitedColDivSeq   : ((u : Nat) -> LimitedExtDivSeq u)
     -> ((n : Nat) -> LimitedColDivSeq n)

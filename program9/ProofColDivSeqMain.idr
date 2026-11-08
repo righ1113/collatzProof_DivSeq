@@ -101,10 +101,10 @@ limitedColDivSeq = IsLimitedColDivSeq limitedExtDivSeq
 
 partial
 theorem : (n : Nat) -> LimitedColDivSeq n
-  -> (cnt ** limitedNStep (divSeq n) cnt = True)
+  -> (cnt ** limitedNStep (iterateMaybe ProofColDivSeqBase.col (Just (S (S (S (n+n+n+n+n+n)))))) cnt = True)
 theorem n (MakeLimitedColDivSeq n (IsLimited n p)) = p
 partial
-nearCollatz : (n : Nat) -> (cnt ** limitedNStep (divSeq n) cnt = True)
+nearCollatz : (n : Nat) -> (cnt ** limitedNStep (iterateMaybe ProofColDivSeqBase.col (Just (S (S (S (n+n+n+n+n+n)))))) cnt = True)
 nearCollatz n = theorem n $ limitedColDivSeq n
 
 
